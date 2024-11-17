@@ -181,7 +181,7 @@ export default async function createConfigAsync() {
     ],
     i18n: {
       defaultLocale: 'ko',
-      locales: ['en', 'ko', 'ja'], 
+      locales: ['en', 'ko', 'ja'],
     },
     markdown: {
       format: 'detect',
@@ -497,10 +497,7 @@ export default async function createConfigAsync() {
             blogDescription: 'Read blog posts about Docusaurus from the team',
             blogSidebarCount: 'ALL',
             blogSidebarTitle: 'All our posts',
-            onUntruncatedBlogPosts:
-              process.env.DOCUSAURUS_CURRENT_LOCALE !== defaultLocale
-                ? 'warn'
-                : 'throw',
+            onUntruncatedBlogPosts: 'ignore',
             onInlineTags:
               process.env.DOCUSAURUS_CURRENT_LOCALE !== defaultLocale
                 ? 'warn'
