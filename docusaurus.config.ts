@@ -425,7 +425,6 @@ export default async function createConfigAsync() {
         {
           debug: true, // force debug plugin usage
           docs: {
-            // routeBasePath: '/',
             path: 'docs/en',
             sidebarPath: 'sidebars.ts',
             // sidebarCollapsible: false,
@@ -473,36 +472,7 @@ export default async function createConfigAsync() {
               },
             },
           },
-          blog: {
-            // routeBasePath: '/',
-            path: 'blog',
-            showLastUpdateAuthor: true,
-            showLastUpdateTime: true,
-            editUrl: ({locale, blogDirPath, blogPath}) => {
-              if (locale !== defaultLocale) {
-                return `https://crowdin.com/project/docusaurus-v2/${locale}`;
-              }
-              return `https://github.com/facebook/docusaurus/edit/main/website/${blogDirPath}/${blogPath}`;
-            },
-            remarkPlugins: [npm2yarn],
-            postsPerPage: 5,
-            feedOptions: {
-              type: 'all',
-              description:
-                'Keep up to date with upcoming Docusaurus releases and articles by following our feed!',
-              copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc.`,
-              xslt: true,
-            },
-            blogTitle: 'Docusaurus blog',
-            blogDescription: 'Read blog posts about Docusaurus from the team',
-            blogSidebarCount: 'ALL',
-            blogSidebarTitle: 'All our posts',
-            onUntruncatedBlogPosts: 'ignore',
-            onInlineTags:
-              process.env.DOCUSAURUS_CURRENT_LOCALE !== defaultLocale
-                ? 'warn'
-                : 'throw',
-          } satisfies BlogOptions,
+          blog: false,
           pages: {
             remarkPlugins: [npm2yarn],
             editUrl: ({locale, pagesPath}) => {
@@ -623,14 +593,6 @@ export default async function createConfigAsync() {
             sidebarId: 'api',
             label: 'API',
           },
-          {to: 'blog', label: 'Blog', position: 'left'},
-          {to: 'showcase', label: 'Showcase', position: 'left'},
-          {
-            to: '/community/support',
-            label: 'Community',
-            position: 'left',
-            activeBaseRegex: `/community/`,
-          },
           // This item links to a draft doc: only displayed in dev
           {
             type: 'doc',
@@ -650,25 +612,6 @@ export default async function createConfigAsync() {
             position: 'right',
             dropdownActiveClassDisabled: true,
             dropdownItemsAfter: [
-              {
-                type: 'html',
-                value: '<hr class="dropdown-separator">',
-              },
-              {
-                type: 'html',
-                className: 'dropdown-archived-versions',
-                value: '<b>Archived versions</b>',
-              },
-              ...ArchivedVersionsDropdownItems.map(
-                ([versionName, versionUrl]) => ({
-                  label: versionName,
-                  href: versionUrl,
-                }),
-              ),
-              {
-                href: 'https://v1.docusaurus.io',
-                label: '1.x.x',
-              },
               {
                 type: 'html',
                 value: '<hr class="dropdown-separator">',
