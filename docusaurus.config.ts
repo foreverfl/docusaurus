@@ -272,30 +272,6 @@ export default async function createConfigAsync() {
         },
       ],
       [
-        './src/plugins/changelog/index.js',
-        {
-          blogTitle: 'Docusaurus changelog',
-          blogDescription:
-            'Keep yourself up-to-date about new features in every release',
-          blogSidebarCount: 'ALL',
-          blogSidebarTitle: 'Changelog',
-          routeBasePath: '/changelog',
-          showReadingTime: false,
-          postsPerPage: 20,
-          archiveBasePath: null,
-          authorsMapPath: 'authors.json',
-          feedOptions: {
-            type: 'all',
-            title: 'Docusaurus changelog',
-            description:
-              'Keep yourself up-to-date about new features in every release',
-            copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc.`,
-            language: defaultLocale,
-          },
-          onInlineAuthors: 'warn',
-        },
-      ],
-      [
         'content-docs',
         {
           id: 'community',
