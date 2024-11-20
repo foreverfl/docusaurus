@@ -1,47 +1,47 @@
 ---
 id: introduction
-sidebar_label: Introduction
+sidebar_label: 소개
 slug: /docs-introduction
 ---
 
-# Docs Introduction
+# 문서 소개
 
-The docs feature provides users with a way to organize Markdown files in a hierarchical format.
+문서 기능은 사용자가 Markdown 파일을 계층적 형식으로 구성할 수 있게 해줍니다.
 
 :::info
 
-Check the [Docs Plugin API Reference documentation](./../../api/plugins/plugin-content-docs.mdx) for an exhaustive list of options.
+전체 옵션 목록은 [문서 플러그인 API 참조 문서](./../../api/plugins/plugin-content-docs.mdx)를 확인하세요.
 
 :::
 
-Your site's documentation is organized by four levels, from lowest to highest:
+사이트의 문서는 가장 기본적인 단계부터 가장 고급 단계까지 네 가지 수준으로 구성됩니다:
 
-1. Individual pages.
-2. Sidebars.
-3. Versions.
-4. Plugin instances.
+1. 개별 페이지
+2. 사이드바
+3. 버전
+4. 플러그인 인스턴스
 
-The guide will introduce them in that order: starting from [how individual pages can be configured](./docs-create-doc.mdx), to [how to create a sidebar or multiple ones](./sidebar/index.mdx), to [how to create and manage versions](./versioning.mdx), to [how to use multiple docs plugin instances](./docs-multi-instance.mdx).
+이 가이드는 해당 순서대로 소개합니다: [개별 페이지를 구성하는 방법](./docs-create-doc.mdx)부터 시작하여, [사이드바를 하나 또는 여러 개 만드는 방법](./sidebar/index.mdx), [버전을 만들고 관리하는 방법](./versioning.mdx), [여러 문서 플러그인 인스턴스를 사용하는 방법](./docs-multi-instance.mdx)까지 설명합니다.
 
-## Docs-only mode {#docs-only-mode}
+## 문서 전용 모드 {#docs-only-mode}
 
-A freshly initialized Docusaurus site has the following structure:
+새로 초기화된 Docusaurus 사이트는 다음과 같은 구조를 가집니다:
 
 ```
-example.com/                                -> generated from `src/pages/index.js`
+example.com/                                -> `src/pages/index.js`에서 생성
 
-example.com/docs/intro                      -> generated from `docs/intro.md`
-example.com/docs/tutorial-basics/...        -> generated from `docs/tutorial-basics/...`
+example.com/docs/intro                      -> `docs/intro.md`에서 생성
+example.com/docs/tutorial-basics/...        -> `docs/tutorial-basics/...`에서 생성
 ...
 
-example.com/blog/2021/08/26/welcome         -> generated from `blog/2021-08-26-welcome/index.md`
-example.com/blog/2021/08/01/mdx-blog-post   -> generated from `blog/2021-08-01-mdx-blog-post.mdx`
+example.com/blog/2021/08/26/welcome         -> `blog/2021-08-26-welcome/index.md`에서 생성
+example.com/blog/2021/08/01/mdx-blog-post   -> `blog/2021-08-01-mdx-blog-post.mdx`에서 생성
 ...
 ```
 
-All docs will be served under the subroute `docs/`. But what if **your site only has docs**, or you want to prioritize your docs by putting them at the root?
+모든 문서는 하위 경로 `docs/`에서 제공됩니다. 하지만 **사이트가 문서만 있거나**, 문서를 루트에 배치하여 우선순위를 주고 싶다면 어떨까요?
 
-Assume that you have the following in your configuration:
+구성에 다음과 같은 내용이 있다고 가정해보겠습니다:
 
 ```js title="docusaurus.config.js"
 export default {
@@ -51,10 +51,10 @@ export default {
       '@docusaurus/preset-classic',
       {
         docs: {
-          /* docs plugin options */
+          /* 문서 플러그인 옵션 */
         },
         blog: {
-          /* blog plugin options */
+          /* 블로그 플러그인 옵션 */
         },
         // ...
       },
@@ -63,7 +63,7 @@ export default {
 };
 ```
 
-To enter docs-only mode, change it to like this:
+문서 전용 모드로 전환하려면 다음과 같이 변경하세요:
 
 ```js title="docusaurus.config.js"
 export default {
@@ -74,11 +74,11 @@ export default {
       {
         docs: {
           // highlight-next-line
-          routeBasePath: '/', // Serve the docs at the site's root
-          /* other docs plugin options */
+          routeBasePath: '/', // 사이트의 루트에서 문서 제공
+          /* 기타 문서 플러그인 옵션 */
         },
         // highlight-next-line
-        blog: false, // Optional: disable the blog plugin
+        blog: false, // 선택사항: 블로그 플러그인 비활성화
         // ...
       },
     ],
@@ -86,9 +86,9 @@ export default {
 };
 ```
 
-Note that you **don't necessarily have to give up on using the blog** or other plugins; all that `routeBasePath: '/'` does is that instead of serving the docs through `https://example.com/docs/some-doc`, they are now at the site root: `https://example.com/some-doc`. The blog, if enabled, can still be accessed through the `blog/` subroute.
+**블로그나 다른 플러그인 사용을 포기할 필요는 없습니다**. `routeBasePath: '/'`는 문서를 `https://example.com/docs/some-doc`가 아닌 사이트 루트 `https://example.com/some-doc`에서 제공한다는 의미일 뿐입니다. 블로그가 활성화된 경우 여전히 `blog/` 하위 경로를 통해 접근할 수 있습니다.
 
-Don't forget to put some page at the root (`https://example.com/`) through adding the front matter:
+프론트매터를 추가하여 루트(`https://example.com/`)에 페이지를 배치하는 것을 잊지 마세요:
 
 ```md title="docs/intro.md"
 ---
@@ -96,25 +96,25 @@ Don't forget to put some page at the root (`https://example.com/`) through addin
 slug: /
 ---
 
-This page will be the home page when users visit https://example.com/.
+이 페이지는 사용자가 https://example.com/을 방문할 때 홈페이지가 됩니다.
 ```
 
 :::warning
 
-If you added `slug: /` to a doc to make it the homepage, you should delete the existing homepage at `./src/pages/index.js`, or else there will be two files mapping to the same route!
+문서를 홈페이지로 만들기 위해 `slug: /`를 추가한 경우, `./src/pages/index.js`에 있는 기존 홈페이지를 삭제해야 합니다. 그렇지 않으면 동일한 경로에 두 개의 파일이 매핑됩니다!
 
 :::
 
-Now, the site's structure will be like the following:
+이제 사이트의 구조는 다음과 같습니다:
 
 ```
-example.com/                       -> generated from `docs/intro.md`
-example.com/tutorial-basics/...    -> generated from `docs/tutorial-basics/...`
+example.com/                       -> `docs/intro.md`에서 생성
+example.com/tutorial-basics/...    -> `docs/tutorial-basics/...`에서 생성
 ...
 ```
 
 :::tip
 
-There's also a "blog-only mode" for those who only want to use the blog feature of Docusaurus. You can use the same method detailed above. Follow the setup instructions on [Blog-only mode](../../blog.mdx#blog-only-mode).
+Docusaurus의 블로그 기능만 사용하고 싶은 사람들을 위한 "블로그 전용 모드"도 있습니다. 위에서 설명한 것과 같은 방법을 사용할 수 있습니다. [블로그 전용 모드](../../blog.mdx#blog-only-mode)의 설정 지침을 따르세요.
 
 :::
