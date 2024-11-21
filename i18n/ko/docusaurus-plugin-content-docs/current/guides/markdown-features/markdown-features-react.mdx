@@ -1,6 +1,6 @@
 ---
 id: react
-description: MDX 덕분에 Docusaurus Markdown 문서에서 React의 힘을 사용하기
+description: MDX 덕분에 Docusaurus Markdown 문서에서 React의 강점을 활용하기
 slug: /markdown-features/react
 ---
 
@@ -21,19 +21,13 @@ MDX로 할 수 있는 멋진 것들을 보려면 [MDX 문서](https://mdxjs.com/
 
 MDX 형식은 매우 엄격하여 컴파일 오류가 발생할 수 있습니다.
 
-**[MDX 플레이그라운드](https://mdxjs.com/playground/)**를 사용하여 디버깅하고 구문이 유효한지 확인하세요.
-
-:::
-
-:::info
-
-가장 인기 있는 포맷터인 Prettier는 [레거시 MDX v1만 지원합니다](https://github.com/prettier/prettier/issues/12209). 의도하지 않은 포맷팅 결과가 나온다면, 문제가 있는 영역 앞에 `{/* prettier-ignore */}`를 추가하거나, Prettier가 MDX v3를 제대로 지원할 때까지 `.prettierignore`에 `*.mdx`를 추가하는 것이 좋습니다. [MDX의 주요 저자 중 한 명은 `remark-mdx`와 함께 `remark-cli`를 추천합니다](https://github.com/orgs/mdx-js/discussions/2067).
+[**MDX 플레이그라운드**](https://mdxjs.com/playground/)를 사용하여 디버깅하고 구문이 유효한지 확인하세요.
 
 :::
 
 ### 컴포넌트 내보내기 {#exporting-components}
 
-MDX 파일 내에서 사용자 정의 컴포넌트를 정의하려면 내보내기를 해야 합니다: `export`로 시작하는 단락만 프로즈 대신 컴포넌트로 파싱됩니다.
+MDX 파일 내에서 사용자 정의 컴포넌트를 정의하려면 내보내기를 해야 합니다. `export`로 시작하는 단락만 일반 텍스트 대신 컴포넌트로 파싱됩니다.
 
 ```jsx
 export const Highlight = ({children, color}) => (
@@ -246,7 +240,7 @@ Docusaurus v3는 [MDX v3](https://mdxjs.com/blog/v3/)를 사용합니다.
 
 :::danger 실험적 CommonMark 지원
 
-Docusaurus v3는 다음 옵션을 통해 덜 엄격하고 표준 [CommonMark](https://commonmark.org/) 지원을 사용할 수 있는 옵트인 기능을 제공합니다:
+Docusaurus v3는 다음 옵션을 통해 덜 엄격하고 표준 [CommonMark](https://commonmark.org/) 지원을 사용할 수 있는 선택적으로 활성화 할 수 있습니다:
 
 - 프론트매터의 `format: md`
 - `.md` 파일 확장자와 `siteConfig.markdown.format: "detect"` 설정 조합
@@ -302,7 +296,7 @@ Markdown 트리플 백틱 ` ``` ` 대신 `<CodeBlock>`을 사용해야 합니다
 
 Markdown 파일을 컴포넌트로 사용하고 다른 곳에서 가져올 수 있습니다. Markdown 파일이나 React 페이지 모두에서 가능합니다.
 
-관례적으로, **`_` 파일 이름 접두사**를 사용하면 문서 페이지가 생성되지 않으며 이는 다른 파일에서 가져올 **"부분"**임을 의미합니다.
+관례적으로, **`_` 파일 이름 접두사**를 사용하면 문서 페이지가 생성되지 않으며 이는 다른 파일에서 가져올 "**부분**"임을 의미합니다.
 
 ```md title="_markdown-partial-example.mdx"
 <span>안녕하세요 {props.name}</span>
