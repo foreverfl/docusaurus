@@ -14,7 +14,7 @@ Docusaurus는 다양한 방식으로 검색 엔진 최적화를 지원합니다.
 
 ## 전역 메타데이터 {#global-metadata}
 
-[사이트 구성](./configuration.mdx#site-metadata)을 통해 전체 사이트에 대한 전역 메타 속성을 제공합니다. 메타데이터는 모두 HTML `<head>`에 키-값 쌍을 prop 이름과 값으로 사용하여 렌더링됩니다. `metadata` 속성은 `<meta>` 태그를 선언하는 편리한 단축키이지만, `headTags` 속성을 사용하여 `<head>`에 임의의 태그를 주입하는 것도 가능합니다.
+[사이트 구성](./configuration.mdx#site-metadata)을 통해 전체 사이트에 대한 전역 메타 속성을 제공합니다. 메타데이터는 모두 HTML `<head>`에 키-값 쌍을 속성 이름과 값으로 사용하여 렌더링됩니다. `metadata` 속성은 `<meta>` 태그를 선언하는 편리한 단축키이지만, `headTags` 속성을 사용하여 `<head>`에 임의의 태그를 주입하는 것도 가능합니다.
 
 ```js title="docusaurus.config.js"
 export default {
@@ -81,7 +81,7 @@ Docusaurus는 기본적으로 일부 메타데이터를 추가합니다. 예를 
 일부 내용...
 ```
 
-Docusaurus는 각 Markdown 페이지에 `description`, `title`, 정규 URL 링크 및 기타 유용한 메타데이터를 자동으로 추가합니다. 이들은 [front matter](./guides/markdown-features/markdown-features-intro.mdx#front-matter)를 통해 구성할 수 있습니다:
+Docusaurus는 각 Markdown 페이지에 `description`, `title`, 정규 URL 링크 및 기타 유용한 메타데이터를 자동으로 추가합니다. 이들은 [프론트 매터](./guides/markdown-features/markdown-features-intro.mdx#front-matter)를 통해 구성할 수 있습니다:
 
 ```md
 ---
@@ -96,17 +96,17 @@ React 페이지를 만들 때 `Layout`에 이러한 필드를 추가하면 SEO�
 
 :::tip
 
-`description`과 `keywords`와 같은 필드에는 [front matter](./guides/markdown-features/markdown-features-intro.mdx#front-matter)를 사용하는 것이 좋습니다: Docusaurus는 이를 자동으로 `description`과 `og:description` 모두에 적용하지만, `<head>` 태그를 사용할 때는 두 메타데이터 태그를 수동으로 선언해야 합니다.
+`description`과 `keywords`와 같은 필드에는 [프론트 매터](./guides/markdown-features/markdown-features-intro.mdx#front-matter)를 사용하는 것이 좋습니다: Docusaurus는 이를 자동으로 `description`과 `og:description` 모두에 적용하지만, `<head>` 태그를 사용할 때는 두 메타데이터 태그를 수동으로 선언해야 합니다.
 
 :::
 
 :::info
 
-공식 플러그인은 모두 다음과 같은 [front matter](./guides/markdown-features/markdown-features-intro.mdx#front-matter)를 지원합니다: `title`, `description`, `keywords`, `image`. 추가적인 [front matter](./guides/markdown-features/markdown-features-intro.mdx#front-matter) 지원은 각 플러그인의 API 문서를 참조하세요:
+공식 플러그인은 모두 다음과 같은 [프론트 매터](./guides/markdown-features/markdown-features-intro.mdx#front-matter)를 지원합니다: `title`, `description`, `keywords`, `image`. 추가적인 [프론트 매터](./guides/markdown-features/markdown-features-intro.mdx#front-matter) 지원은 각 플러그인의 API 문서를 참조하세요:
 
-- [Docs front matter](./api/plugins/plugin-content-docs.mdx#markdown-front-matter)
-- [Blog front matter](./api/plugins/plugin-content-blog.mdx#markdown-front-matter)
-- [Pages front matter](./api/plugins/plugin-content-pages.mdx#markdown-front-matter)
+- [Docs 프론트 매터](./api/plugins/plugin-content-docs.mdx#markdown-front-matter)
+- [Blog 프론트 매터](./api/plugins/plugin-content-blog.mdx#markdown-front-matter)
+- [Pages 프론트 매터](./api/plugins/plugin-content-pages.mdx#markdown-front-matter)
 
 :::
 
@@ -142,7 +142,7 @@ export default function page() {
 
 :::tip
 
-편의를 위해 기본 테마 `<Layout>` 컴포넌트는 `title`과 `description`을 props로 받습니다.
+편의를 위해 기본 테마 `<Layout>` 컴포넌트는 `title`과 `description`을 속성으로 받습니다.
 
 :::
 
@@ -217,4 +217,4 @@ Docusaurus는 파일 이름을 링크로 사용하지만 슬러그를 사용하�
 
 검색 엔진은 웹페이지의 구조를 이해하기 위해 `<h2>`, `<table>` 등과 같은 HTML 마크업에 의존합니다. Docusaurus가 페이지를 렌더링할 때, `<aside>`, `<nav>`, `<main>`과 같은 의미론적 마크업이 사용되어 페이지의 다른 섹션을 구분하며, 이는 검색 엔진이 사이드바, 내비게이션 바, 메인 페이지 콘텐츠와 같은 부분을 찾는 데 도움을 줍니다.
 
-대부분의 [CommonMark](https://spec.commonmark.org
+대부분의 [CommonMark](https://spec.commonmark.org/0.30/#atx-headings) 문법은 해당하는 HTML 태그를 가지고 있습니다. 프로젝트에서 Markdown을 일관되게 사용하면 검색 엔진이 페이지 콘텐츠를 더 쉽게 이해할 수 있습니다.

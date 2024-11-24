@@ -1,27 +1,27 @@
-# Plugin Method References
+# 플러그인 메서드 레퍼런스 {#plugin-method-references}
 
 :::warning
 
-This section is a work in progress. Anchor links or even URLs are not guaranteed to be stable.
+이 섹션은 작성 중입니다. 앵커 링크나 URL의 안정성이 보장되지 않습니다.
 
 :::
 
-Plugin APIs are shared by themes and plugins—themes are loaded just like plugins.
+플러그인 API는 테마와 플러그인이 공유합니다. 테마는 플러그인처럼 로드됩니다.
 
-## Plugin module {#plugin-module}
+## 플러그인 모듈 {#plugin-module}
 
-Every plugin is imported as a module. The module is expected to have the following members:
+모든 플러그인은 모듈로 임포트됩니다. 모듈에는 다음과 같은 멤버가 있어야 합니다:
 
-- A **default export**: the constructor function for the plugin.
-- **Named exports**: the [static methods](./static-methods.mdx) called before plugins are initialized.
+- **기본 내보내기(default export)**: 플러그인의 생성자 함수입니다.
+- **명명된 내보내기(Named exports)**: 플러그인이 초기화되기 전에 호출되는 [정적 메서드](./static-methods.mdx)입니다.
 
-## Plugin constructor {#plugin-constructor}
+## 플러그인 생성자 {#plugin-constructor}
 
-The plugin module's default export is a constructor function with the signature `(context: LoadContext, options: PluginOptions) => Plugin | Promise<Plugin>`.
+플러그인 모듈의 기본 내보내기는 `(context: LoadContext, options: PluginOptions) => Plugin | Promise<Plugin>` 시그니처를 가진 생성자 함수입니다.
 
 ### `context` {#context}
 
-`context` is plugin-agnostic, and the same object will be passed into all plugins used for a Docusaurus website. The `context` object contains the following fields:
+`context`는 플러그인에 구애받지 않으며, Docusaurus 웹사이트에 사용되는 모든 플러그인에 동일한 객체가 전달됩니다. `context` 객체는 다음 필드들을 포함합니다:
 
 ```ts
 type LoadContext = {
@@ -35,44 +35,43 @@ type LoadContext = {
 
 ### `options` {#options}
 
-`options` are the [second optional parameter when the plugins are used](../../using-plugins.mdx#configuring-plugins). `options` are plugin-specific and are specified by users when they use them in `docusaurus.config.js`. If there's a [`validateOptions`](./static-methods.mdx#validateOptions) function exported, the `options` will be validated and normalized beforehand.
+`options`는 [플러그인 사용 시 두 번째 선택적 매개변수](../../using-plugins.mdx#configuring-plugins)입니다. `options`는 플러그인별로 다르며 사용자가 `docusaurus.config.js`에서 플러그인을 사용할 때 지정합니다. [`validateOptions`](./static-methods.mdx#validateOptions) 함수가 내보내진 경우, `options`는 미리 검증되고 정규화됩니다.
 
-Alternatively, if a preset contains the plugin, the preset will then be in charge of passing the correct options into the plugin. It is up to the individual plugin to define what options it takes.
+또는 프리셋에 플러그인이 포함된 경우, 프리셋이 플러그인에 올바른 옵션을 전달할 책임이 있습니다. 각 플러그인이 어떤 옵션을 사용할지 정의하는 것은 해당 플러그인의 몫입니다.
 
-## Example {#example}
+## 예시 {#example}
 
-Here's a mental model for a presumptuous plugin implementation.
+다음은 가상의 플러그인 구현을 위한 멘탈 모델입니다.
 
 ```js
-// A JavaScript function that returns an object.
-// `context` is provided by Docusaurus. Example: siteConfig can be accessed from context.
-// `opts` is the user-defined options.
+// JavaScript 함수로 객체를 반환합니다.
+// `context`는 Docusaurus가 제공합니다. 예: siteConfig는 context에서 접근할 수 있습니다.
+// `opts`는 사용자가 정의한 옵션입니다.
 export default async function myPlugin(context, opts) {
   return {
-    // A compulsory field used as the namespace for directories to cache
-    // the intermediate data for each plugin.
-    // If you're writing your own local plugin, you will want it to
-    // be unique in order not to potentially conflict with imported plugins.
-    // A good way will be to add your own project name within.
+    // 각 플러그인의 중간 데이터를 캐시하기 위한 디렉터리의 네임스페이스로 사용되는 필수 필드입니다.
+    // 자체 로컬 플러그인을 작성하는 경우, 임포트된 플러그인과의 잠재적 충돌을 피하기 위해
+    // 고유한 값을 사용해야 합니다.
+    // 자신의 프로젝트 이름을 포함시키는 것이 좋은 방법이 될 것입니다.
     name: 'docusaurus-my-project-cool-plugin',
 
     async loadContent() {
-      // The loadContent hook is executed after siteConfig and env has been loaded.
-      // You can return a JavaScript object that will be passed to contentLoaded hook.
+      // loadContent 훅은 siteConfig와 env가 로드된 후 실행됩니다.
+      // contentLoaded 훅으로 전달될 JavaScript 객체를 반환할 수 있습니다.
     },
 
     async contentLoaded({content, actions}) {
-      // The contentLoaded hook is done after loadContent hook is done.
-      // `actions` are set of functional API provided by Docusaurus (e.g. addRoute)
+      // contentLoaded 훅은 loadContent 훅이 완료된 후 실행됩니다.
+      // `actions`는 Docusaurus가 제공하는 함수형 API 세트입니다(예: addRoute).
     },
 
     async postBuild(props) {
-      // After docusaurus <build> finish.
+      // docusaurus <build> 완료 후 실행됩니다.
     },
 
     // TODO
     async postStart(props) {
-      // docusaurus <start> finish
+      // docusaurus <start> 완료
     },
 
     // TODO
@@ -86,48 +85,46 @@ export default async function myPlugin(context, opts) {
     },
 
     configureWebpack(config, isServer, utils, content) {
-      // Modify internal webpack config. If returned value is an Object, it
-      // will be merged into the final config using webpack-merge;
-      // If the returned value is a function, it will receive the config as the 1st argument and an isServer flag as the 2nd argument.
+      // 내부 webpack 설정을 수정합니다. 반환값이 객체인 경우,
+      // webpack-merge를 사용하여 최종 설정에 병합됩니다;
+      // 반환값이 함수인 경우, 첫 번째 인수로 설정을, 두 번째 인수로 isServer 플래그를 받습니다.
     },
 
     getPathsToWatch() {
-      // Paths to watch.
+      // 감시할 경로들입니다.
     },
 
     getThemePath() {
-      // Returns the path to the directory where the theme components can
-      // be found.
+      // 테마 컴포넌트를 찾을 수 있는 디렉터리 경로를 반환합니다.
     },
 
     getClientModules() {
-      // Return an array of paths to the modules that are to be imported
-      // in the client bundle. These modules are imported globally before
-      // React even renders the initial UI.
+      // 클라이언트 번들에 임포트될 모듈의 경로 배열을 반환합니다.
+      // 이 모듈들은 React가 초기 UI를 렌더링하기 전에 전역적으로 임포트됩니다.
     },
 
     extendCli(cli) {
-      // Register an extra command to enhance the CLI of Docusaurus
+      // Docusaurus CLI를 향상시키기 위한 추가 명령을 등록합니다
     },
 
     injectHtmlTags({content}) {
-      // Inject head and/or body HTML tags.
+      // head 및/또는 body HTML 태그를 주입합니다.
     },
 
     async getTranslationFiles({content}) {
-      // Return translation files
+      // 번역 파일을 반환합니다
     },
 
     translateContent({content, translationFiles}) {
-      // translate the plugin content here
+      // 여기서 플러그인 콘텐츠를 번역합니다
     },
 
     translateThemeConfig({themeConfig, translationFiles}) {
-      // translate the site themeConfig here
+      // 여기서 사이트 themeConfig를 번역합니다
     },
 
     async getDefaultCodeTranslationMessages() {
-      // return default theme translations here
+      // 여기서 기본 테마 번역을 반환합니다
     },
   };
 }

@@ -2,17 +2,17 @@
 sidebar_label: Client API
 ---
 
-# Docusaurus Client API
+# Docusaurus 클라이언트 API {#docusaurus-client-api}
 
-Docusaurus provides some APIs on the clients that can be helpful to you when building your site.
+Docusaurus는 사이트를 구축할 때 도움이 될 수 있는 몇 가지 클라이언트 API를 제공합니다.
 
-## Components {#components}
+## 컴포넌트 {#components}
 
 ### `<ErrorBoundary />` {#errorboundary}
 
-This component creates a [React error boundary](https://reactjs.org/docs/error-boundaries.html).
+이 컴포넌트는 [React 오류 경계](https://reactjs.org/docs/error-boundaries.html)를 생성합니다.
 
-Use it to wrap components that might throw, and display a fallback when that happens instead of crashing the whole app.
+오류를 발생시킬 수 있는 컴포넌트를 감싸서 사용하며, 전체 앱이 중단되는 대신 오류가 발생했을 때 대체 컨텐츠를 표시합니다.
 
 ```jsx
 import React from 'react';
@@ -37,37 +37,37 @@ import ErrorBoundaryTestButton from '@site/src/components/ErrorBoundaryTestButto
 
 :::tip
 
-To see it in action, click here: <ErrorBoundaryTestButton/>
+작동하는 것을 보려면 여기를 클릭하세요: <ErrorBoundaryTestButton/>
 
 :::
 
 :::info
 
-Docusaurus uses this component to catch errors within the theme's layout, and also within the entire app.
+Docusaurus는 이 컴포넌트를 사용하여 테마의 레이아웃 내부와 전체 앱 내부의 오류를 캐치합니다.
 
 :::
 
 :::note
 
-This component doesn't catch build-time errors and only protects against client-side render errors that can happen when using stateful React components.
+이 컴포넌트는 빌드 타임 오류를 캐치하지 않으며 상태를 가진 React 컴포넌트를 사용할 때 발생할 수 있는 클라이언트 사이드 렌더링 오류만 보호합니다.
 
 :::
 
-#### Props {#errorboundary-props}
+#### 속성 {#errorboundary-props}
 
-- `fallback`: an optional render callback returning a JSX element. It will receive an object with 2 attributes: `error`, the error that was caught, and `tryAgain`, a function (`() => void`) callback to reset the error in the component and try rendering it again. If not present, `@theme/Error` will be rendered instead. `@theme/Error` is used for the error boundaries wrapping the site, above the layout.
+- `fallback`: JSX 엘리먼트를 반환하는 선택적인 렌더링 콜백입니다. 발생한 오류 객체인 `error`와 컴포넌트의 오류를 재설정하고 다시 렌더링을 시도하는 함수 (`() => void`) 형식인 `tryAgain`이라는 2가지 속성이 있는 객체를 받습니다. `fallback`을 설정하지 않으면 대신 `@theme/Error`가 렌더링됩니다. `@theme/Error`는 사이트를 감싸는 오류 경계 컴포넌트로, 레이아웃 위에서 동작합니다.
 
 :::warning
 
-The `fallback` prop is a callback, and **not a React functional component**. You can't use React hooks inside this callback.
+`fallback` 속성(prop)은 콜백이며 **React 함수형 컴포넌트가 아닙니다**. 이 콜백 내에서 React 훅을 사용할 수 없습니다.
 
 :::
 
 ### `<Head/>` {#head}
 
-This reusable React component will manage all of your changes to the document head. It takes plain HTML tags and outputs plain HTML tags and is beginner-friendly. It is a wrapper around [React Helmet](https://github.com/nfl/react-helmet).
+이 재사용 가능한 React 컴포넌트는 문서 헤드에 대한 모든 변경사항을 관리합니다. 일반 HTML 태그를 받아서 일반 HTML 태그를 출력하며 초보자도 사용하기 쉽습니다. [React Helmet](https://github.com/nfl/react-helmet)을 감싼 래퍼입니다.
 
-Usage Example:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -86,7 +86,7 @@ const MySEO = () => (
 );
 ```
 
-Nested or latter components will override duplicate usages:
+중첩되거나 나중에 오는 컴포넌트는 중복 사용을 덮어씁니다:
 
 ```jsx
 <Parent>
@@ -107,7 +107,7 @@ Nested or latter components will override duplicate usages:
 </Parent>
 ```
 
-Outputs:
+출력:
 
 ```html
 <head>
@@ -118,11 +118,11 @@ Outputs:
 
 ### `<Link/>` {#link}
 
-This component enables linking to internal pages as well as a powerful performance feature called preloading. Preloading is used to prefetch resources so that the resources are fetched by the time the user navigates with this component. We use an `IntersectionObserver` to fetch a low-priority request when the `<Link>` is in the viewport and then use an `onMouseOver` event to trigger a high-priority request when it is likely that a user will navigate to the requested resource.
+이 컴포넌트는 내부 페이지로의 링크와 프리로딩이라는 강력한 성능 기능을 제공합니다. 프리로딩은 사용자가 이 컴포넌트로 탐색할 때까지 리소스가 미리 가져와질 수 있도록 리소스를 미리 가져오는 데 사용됩니다. `IntersectionObserver`를 사용하여 `<Link>`가 뷰포트에 있을 때 낮은 우선순위 요청을 가져오고, 사용자가 요청된 리소스로 이동할 가능성이 높을 때 `onMouseOver` 이벤트를 사용하여 높은 우선순위 요청을 트리거합니다.
 
-The component is a wrapper around react-router’s `<Link>` component that adds useful enhancements specific to Docusaurus. All props are passed through to react-router’s `<Link>` component.
+이 컴포넌트는 Docusaurus에 특화된 유용한 개선 사항이 추가된 react-router의 `<Link>` 컴포넌트의 래퍼입니다. 모든 속성은 react-router의 `<Link>` 컴포넌트로 전달됩니다.
 
-External links also work, and automatically have these props: `target="_blank" rel="noopener noreferrer"`.
+외부 링크도 작동하며, 자동으로 다음과 같은 속성을 가집니다: `target="_blank" rel="noopener noreferrer"`.
 
 ```jsx
 import React from 'react';
@@ -145,7 +145,7 @@ const Page = () => (
 
 #### `to`: string {#to-string}
 
-The target location to navigate to. Example: `/docs/introduction`.
+탐색할 대상 위치입니다. 예: `/docs/introduction`.
 
 ```jsx
 <Link to="/courses" />
@@ -153,15 +153,15 @@ The target location to navigate to. Example: `/docs/introduction`.
 
 :::tip
 
-Prefer this component to vanilla `<a>` tags because Docusaurus does a lot of optimizations (e.g. broken path detection, prefetching, applying base URL...) if you use `<Link>`.
+기본 `<a>` 태그 대신 이 컴포넌트를 사용하는 것이 좋습니다. Docusaurus는 `<Link>`를 사용하면 많은 최적화(예: 끊어진 경로 감지, 프리페칭, 기본 URL 적용 등)를 수행하기 때문입니다.
 
 :::
 
 ### `<Redirect/>` {#redirect}
 
-Rendering a `<Redirect>` will navigate to a new location. The new location will override the current location in the history stack like server-side redirects (HTTP 3xx) do. You can refer to [React Router's Redirect documentation](https://reacttraining.com/react-router/web/api/Redirect) for more info on available props.
+`<Redirect>`를 렌더링하면 새로운 위치로 이동합니다. 새 위치는 서버 측 리디렉션(HTTP 3xx)처럼 히스토리 스택의 현재 위치를 덮어씁니다. 사용 가능한 속성에 대한 자세한 정보는 [React Router의 Redirect 문서](https://reactrouter.com/home)를 참조할 수 있습니다.
 
-Example usage:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -176,26 +176,26 @@ const Home = () => {
 
 :::note
 
-`@docusaurus/router` implements [React Router](https://reacttraining.com/react-router/web/guides/quick-start) and supports its features.
+`@docusaurus/router`는 [React Router](https://reactrouter.com/home)를 구현하며 그 기능들을 지원합니다.
 
 :::
 
 ### `<BrowserOnly/>` {#browseronly}
 
-The `<BrowserOnly>` component permits to render React components only in the browser after the React app has hydrated.
+`<BrowserOnly>` 컴포넌트는 React 앱이 하이드레이션 된 후 브라우저에서만 React 컴포넌트를 렌더링할 수 있게 합니다.
 
 :::tip
 
-Use it for integrating with code that can't run in Node.js, because the `window` or `document` objects are being accessed.
+`window` 또는 `document` 객체에 접근하기 때문에 Node.js에서 실행할 수 없는 코드를 통합할 때 사용하세요.
 
 :::
 
-#### Props {#browseronly-props}
+#### 속성 {#browseronly-props}
 
-- `children`: render function prop returning browser-only JSX. Will not be executed in Node.js
-- `fallback` (optional): JSX to render on the server (Node.js) and until React hydration completes.
+- `children`: 브라우저 전용 JSX를 반환하는 렌더 함수 속성. Node.js에서는 실행되지 않습니다
+- `fallback` (선택사항): 서버(Node.js)와 React hydration이 완료될 때까지 렌더링할 JSX
 
-#### Example with code {#browseronly-example-code}
+#### 코드 예시 {#browseronly-example-code}
 
 ```jsx
 // highlight-start
@@ -213,7 +213,7 @@ const MyComponent = () => {
 };
 ```
 
-#### Example with a library {#browseronly-example-library}
+#### 라이브러리 예시 {#browseronly-example-library}
 
 ```jsx
 // highlight-start
@@ -236,14 +236,14 @@ const MyComponent = (props) => {
 
 ### `<Interpolate/>` {#interpolate}
 
-A simple interpolation component for text containing dynamic placeholders.
+동적 플레이스홀더가 포함된 텍스트를 위한 간단한 보간(동적 텍스트 삽입) 컴포넌트입니다.
 
-The placeholders will be replaced with the provided dynamic values and JSX elements of your choice (strings, links, styled elements...).
+플레이스홀더는 제공된 동적 값과 선택한 JSX 요소(문자열, 링크, 스타일이 지정된 요소 등)로 대체됩니다.
 
-#### Props {#interpolate-props}
+#### 속성 {#interpolate-props}
 
-- `children`: text containing interpolation placeholders like `{placeholderName}`
-- `values`: object containing interpolation placeholder values
+- `children`: `{placeholderName}`와 같은 보간 플레이스홀더가 포함된 텍스트
+- `values`: 보간 플레이스홀더 값을 포함하는 객체
 
 ```jsx
 import React from 'react';
@@ -271,26 +271,26 @@ export default function VisitMyWebsiteMessage() {
 
 ### `<Translate/>` {#translate}
 
-When [localizing your site](./i18n/i18n-introduction.mdx), the `<Translate/>` component will allow providing **translation support to React components**, such as your homepage. The `<Translate>` component supports [interpolation](#interpolate).
+[사이트를 현지화](./i18n/i18n-introduction.mdx)할 때, `<Translate/>` 컴포넌트를 사용하면 홈페이지와 같은 React 컴포넌트에 **번역 지원**을 제공할 수 있습니다. `<Translate>` 컴포넌트는 [보간](#interpolate)을 지원합니다.
 
-The translation strings will statically extracted from your code with the [`docusaurus write-translations`](./cli.mdx#docusaurus-write-translations-sitedir) CLI and a `code.json` translation file will be created in `website/i18n/[locale]`.
+번역 문자열은 [`docusaurus write-translations`](./cli.mdx#docusaurus-write-translations-sitedir) CLI로 코드에서 정적으로 추출되며 `website/i18n/[locale]`에 `code.json` 번역 파일이 생성됩니다.
 
 :::note
 
-The `<Translate/>` props **must be hardcoded strings**.
+`<Translate/>` 속성은 **반드시 하드코딩된 문자열**이어야 합니다.
 
-Apart from the `values` prop used for interpolation, it is **not possible to use variables**, or the static extraction wouldn't work.
+보간에 사용되는 `values` 속성을 제외하고, 변수를 사용하는 것은 **불가능**합니다. 이는 정적 번역 데이터 추출이 불가능하기 때문입니다.
 
 :::
 
-#### Props {#translate-props}
+#### 속성 {#translate-props}
 
-- `children`: untranslated string in the default site locale (can contain [interpolation placeholders](#interpolate))
-- `id`: optional value to be used as the key in JSON translation files
-- `description`: optional text to help the translator
-- `values`: optional object containing interpolation placeholder values
+- `children`: 기본 사이트 로케일의 번역되지 않은 문자열 ([보간 플레이스홀더](#interpolate) 포함 가능)
+- `id`: JSON 번역 파일에서 키로 사용될 선택적 값
+- `description`: 번역가를 돕기 위한 선택적 텍스트
+- `values`: 보간 플레이스홀더 값을 포함하는 선택적 객체
 
-#### Example {#example}
+#### 예시 {#example}
 
 ```jsx title="src/pages/index.js"
 import React from 'react';
@@ -326,7 +326,7 @@ export default function Home() {
 
 :::note
 
-You can even omit the children prop and specify a translation string in your `code.json` file manually after running the `docusaurus write-translations` CLI command.
+children 속성을 생략하고 `docusaurus write-translations` CLI 명령을 실행한 후 `code.json` 파일에 수동으로 번역 문자열을 지정할 수도 있습니다.
 
 ```jsx
 <Translate id="homepage.title" />
@@ -336,7 +336,7 @@ You can even omit the children prop and specify a translation string in your `co
 
 :::info
 
-The `<Translate>` component supports interpolation. You can also implement [string pluralization](https://github.com/facebook/docusaurus/pull/i18n/i18n-tutorial.mdx#pluralization) through some custom code and the [`translate` imperative API](#translate-imperative).
+`<Translate>` 컴포넌트는 보간을 지원합니다. 또한 커스텀 코드와 [`translate` 명령형 API](#translate-imperative)를 통해 [문자열 복수화](https://github.com/facebook/docusaurus/pull/i18n/i18n-tutorial.mdx#pluralization)를 구현할 수 있습니다.
 
 :::
 
@@ -344,7 +344,7 @@ The `<Translate>` component supports interpolation. You can also implement [stri
 
 ### `useDocusaurusContext` {#useDocusaurusContext}
 
-React hook to access Docusaurus Context. The context contains the `siteConfig` object from [docusaurus.config.js](api/docusaurus.config.js.mdx) and some additional site metadata.
+Docusaurus Context에 접근하기 위한 React 훅입니다. 컨텍스트에는 [docusaurus.config.js](api/docusaurus.config.js.mdx)의 `siteConfig` 객체와 일부 추가 사이트 메타데이터가 포함되어 있습니다.
 
 ```ts
 type PluginVersionInformation =
@@ -380,7 +380,7 @@ type DocusaurusContext = {
 };
 ```
 
-Usage example:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -403,23 +403,23 @@ const MyComponent = () => {
 
 :::note
 
-The `siteConfig` object only contains **serializable values** (values that are preserved after `JSON.stringify()`). Functions, regexes, etc. would be lost on the client side.
+`siteConfig` 객체는 **직렬화 가능한 값**만 포함합니다(`JSON.stringify()`로 보존되는 값). 함수, 정규식 등은 클라이언트 측에서 손실됩니다.
 
 :::
 
 ### `useIsBrowser` {#useIsBrowser}
 
-Returns `true` when the React app has successfully hydrated in the browser.
+React 앱이 브라우저에서 성공적으로 하이드레이션 되었을 때 `true`를 반환합니다.
 
 :::warning
 
-Use this hook instead of `typeof windows !== 'undefined'` in React rendering logic.
+React 렌더링 로직에서 `typeof windows !== 'undefined'` 대신 이 훅을 사용하세요.
 
-The first client-side render output (in the browser) **must be exactly the same** as the server-side render output (Node.js). Not following this rule can lead to unexpected hydration behaviors, as described in [The Perils of Rehydration](https://www.joshwcomeau.com/react/the-perils-of-rehydration/).
+첫 번째 클라이언트 사이드 렌더 출력(브라우저에서)은 서버 사이드 렌더 출력(Node.js)과 **정확히 동일**해야 합니다. 이 규칙을 따르지 않으면 [The Perils of Rehydration](https://www.joshwcomeau.com/react/the-perils-of-rehydration/)에 설명된 것처럼 예기치 않은 하이드레이션 동작이 발생할 수 있습니다.
 
 :::
 
-Usage example:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -435,20 +435,20 @@ const MyComponent = () => {
 
 ### `useBaseUrl` {#useBaseUrl}
 
-React hook to prepend your site `baseUrl` to a string.
+문자열 앞에 사이트의 `baseUrl`을 추가하기 위한 React 훅입니다.
 
 :::warning
 
-**Don't use it for regular links!**
+**일반 링크에는 사용하지 마세요!**
 
-The `/baseUrl/` prefix is automatically added to all **absolute paths** by default:
+`/baseUrl/` 접두사는 기본적으로 모든 **절대 경로**에 자동으로 추가됩니다:
 
-- Markdown: `[link](/my/path)` will link to `/baseUrl/my/path`
-- React: `<Link to="/my/path/">link</Link>` will link to `/baseUrl/my/path`
+- Markdown: `[link](/my/path)`는 `/baseUrl/my/path`로 연결됩니다
+- React: `<Link to="/my/path/">link</Link>`는 `/baseUrl/my/path`로 연결됩니다
 
 :::
 
-#### Options {#options}
+#### 옵션 {#options}
 
 ```ts
 type BaseUrlOptions = {
@@ -457,7 +457,7 @@ type BaseUrlOptions = {
 };
 ```
 
-#### Example usage: {#example-usage}
+#### 사용 예시: {#example-usage}
 
 ```jsx
 import React from 'react';
@@ -473,9 +473,9 @@ const SomeImage = () => {
 
 :::tip
 
-In most cases, you don't need `useBaseUrl`.
+대부분의 경우 `useBaseUrl`이 필요하지 않습니다.
 
-Prefer a `require()` call for [assets](./guides/markdown-features/markdown-features-assets.mdx):
+[정적 파일](./guides/markdown-features/markdown-features-assets.mdx)에는 `require()` 호출을 선호하세요:
 
 ```jsx
 <img src={require('@site/static/img/myImage.png').default} />
@@ -485,9 +485,9 @@ Prefer a `require()` call for [assets](./guides/markdown-features/markdown-featu
 
 ### `useBaseUrlUtils` {#useBaseUrlUtils}
 
-Sometimes `useBaseUrl` is not good enough. This hook return additional utils related to your site's base URL.
+때로는 `useBaseUrl`로는 충분하지 않습니다. 이 훅은 사이트의 기본 URL과 관련된 추가 유틸리티를 반환합니다.
 
-- `withBaseUrl`: useful if you need to add base URLs to multiple URLs at once.
+- `withBaseUrl`: 한 번에 여러 URL에 기본 URL을 추가해야 할 때 유용합니다.
 
 ```jsx
 import React from 'react';
@@ -505,27 +505,27 @@ const Component = () => {
 
 ### `useGlobalData` {#useGlobalData}
 
-React hook to access Docusaurus global data created by all the plugins.
+모든 플러그인에서 생성한 Docusaurus 전역 데이터에 접근하기 위한 React 훅입니다.
 
-Global data is namespaced by plugin name then by plugin ID.
+전역 데이터는 플러그인 이름으로 네임스페이스가 지정되고 그 다음 플러그인 ID로 네임스페이스가 지정됩니다.
 
 :::info
 
-Plugin ID is only useful when a plugin is used multiple times on the same site. Each plugin instance is able to create its own global data.
+플러그인 ID는 동일한 사이트에서 플러그인이 여러 번 사용될 때만 유용합니다. 각 플러그인 인스턴스는 자체 전역 데이터를 생성할 수 있습니다.
 
 :::
 
 ```ts
-type GlobalData = Record<
+type GlobalData = Record
   PluginName,
-  Record<
-    PluginId, // "default" by default
-    any // plugin-specific data
+  Record
+    PluginId, // 기본값은 "default"
+    any // 플러그인별 데이터
   >
 >;
 ```
 
-Usage example:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -543,17 +543,17 @@ const MyComponent = () => {
 
 :::tip
 
-Inspect your site's global data at `.docusaurus/globalData.json`
+`.docusaurus/globalData.json`에서 사이트의 전역 데이터를 확인할 수 있습니다.
 
 :::
 
 ### `usePluginData` {#usePluginData}
 
-Access global data created by a specific plugin instance.
+특정 플러그인 인스턴스에서 생성한 전역 데이터에 접근합니다.
 
-This is the most convenient hook to access plugin global data and should be used most of the time.
+이것은 플러그인 전역 데이터에 접근하는 가장 편리한 훅이며 대부분의 경우 이것을 사용해야 합니다.
 
-`pluginId` is optional if you don't use multi-instance plugins.
+다중 인스턴스 플러그인을 사용하지 않는 경우 `pluginId`는 선택사항입니다.
 
 ```ts
 function usePluginData(
@@ -563,7 +563,7 @@ function usePluginData(
 );
 ```
 
-Usage example:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -580,7 +580,7 @@ const MyComponent = () => {
 
 ### `useAllPluginInstancesData` {#useAllPluginInstancesData}
 
-Access global data created by a specific plugin. Given a plugin name, it returns the data of all the plugins instances of that name, by plugin id.
+특정 플러그인이 생성한 전역 데이터에 접근합니다. 플러그인 이름이 주어지면 플러그인 ID별로 해당 이름의 모든 플러그인 인스턴스의 데이터를 반환합니다.
 
 ```ts
 function useAllPluginInstancesData(
@@ -589,7 +589,7 @@ function useAllPluginInstancesData(
 );
 ```
 
-Usage example:
+사용 예시:
 
 ```jsx
 import React from 'react';
@@ -607,22 +607,22 @@ const MyComponent = () => {
 
 ### `useBrokenLinks` {#useBrokenLinks}
 
-React hook to access the Docusaurus broken link checker APIs, exposing a way for a Docusaurus pages to report and collect their links and anchors.
+Docusaurus 페이지가 링크와 앵커를 보고하고 수집할 수 있는 방법을 제공하는 Docusaurus 끊어진 링크 검사기 API에 접근하기 위한 React 훅입니다.
 
 :::warning
 
-This is an **advanced** API that **most Docusaurus users don't need to use directly**.
+이것은 **대부분의 Docusaurus 사용자가 직접 사용할 필요가 없는** **고급** API입니다.
 
-It is already **built-in** in existing high-level components:
+이미 기존 고수준 컴포넌트에 **내장**되어 있습니다:
 
-- the [`<Link>`](#link) component will collect links for you
-- the `@theme/Heading` (used for Markdown headings) will collect anchors
+- [`<Link>`](#link) 컴포넌트가 링크를 수집합니다
+- `@theme/Heading` (Markdown 헤딩에 사용됨)이 앵커를 수집합니다
 
-Use `useBrokenLinks()` if you implement your own `<Heading>` or `<Link>` component.
+자체 `<Heading>` 또는 `<Link>` 컴포넌트를 구현하는 경우 `useBrokenLinks()`를 사용하세요.
 
 :::
 
-Usage example:
+사용 예시:
 
 ```js title="MyHeading.js"
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
@@ -642,26 +642,26 @@ export default function MyLink(props) {
 }
 ```
 
-## Functions {#functions}
+## 함수 {#functions}
 
 ### `interpolate` {#interpolate-1}
 
-The imperative counterpart of the [`<Interpolate>`](#interpolate) component.
+[`<Interpolate>`](#interpolate) 컴포넌트의 명령형 대응입니다.
 
-#### Signature {#signature}
+#### 시그니처 {#signature}
 
 ```ts
-// Simple string interpolation
+// 단순 문자열 보간
 function interpolate(text: string, values: Record<string, string>): string;
 
-// JSX interpolation
+// JSX 보간
 function interpolate(
   text: string,
   values: Record<string, ReactNode>,
 ): ReactNode;
 ```
 
-#### Example {#example-1}
+#### 예시 {#example-1}
 
 ```js
 // highlight-next-line
@@ -672,19 +672,19 @@ const message = interpolate('Welcome {firstName}', {firstName: 'Sébastien'});
 
 ### `translate` {#translate-imperative}
 
-The imperative counterpart of the [`<Translate>`](#translate) component. Also supporting [placeholders interpolation](#interpolate).
+[`<Translate>`](#translate) 컴포넌트의 명령형 대응입니다. [플레이스홀더 보간](#interpolate)도 지원합니다.
 
 :::tip
 
-Use the imperative API for the **rare cases** where a **component cannot be used**, such as:
+컴포넌트를 사용할 수 없는 **드문 경우**에 명령형 API를 사용하세요, 예를 들면:
 
-- the page `title` metadata
-- the `placeholder` props of form inputs
-- the `aria-label` props for accessibility
+- 페이지 `title` 메타데이터
+- 폼 입력의 `placeholder` 속성
+- 접근성을 위한 `aria-label` 속성
 
 :::
 
-#### Signature {#signature-1}
+#### 시그니처 {#signature-1}
 
 ```ts
 function translate(
@@ -693,7 +693,7 @@ function translate(
 ): string;
 ```
 
-#### Example {#example-2}
+#### 예시 {#example-2}
 
 ```jsx title="src/pages/index.js"
 import React from 'react';
@@ -714,7 +714,7 @@ export default function Home() {
           translate(
             {
               message: 'The logo of site {siteName}',
-              // Optional
+              // 선택사항
               id: 'homepage.logo.ariaLabel',
               description: 'The home page logo aria label',
             },
@@ -728,19 +728,19 @@ export default function Home() {
 }
 ```
 
-## Modules {#modules}
+## 모듈 {#modules}
 
 ### `ExecutionEnvironment` {#executionenvironment}
 
-A module that exposes a few boolean variables to check the current rendering environment.
+현재 렌더링 환경을 확인하기 위한 몇 가지 bool 변수를 노출하는 모듈입니다.
 
 :::warning
 
-For React rendering logic, use [`useIsBrowser()`](#useIsBrowser) or [`<BrowserOnly>`](#browseronly) instead.
+React 렌더링 로직의 경우 대신 [`useIsBrowser()`](#useIsBrowser) 또는 [`<BrowserOnly>`](#browseronly)를 사용하세요.
 
 :::
 
-Example:
+예시:
 
 ```js
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
@@ -750,16 +750,16 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 ```
 
-| Field | Description |
+| 필드 | 설명 |
 | --- | --- |
-| `ExecutionEnvironment.canUseDOM` | `true` if on client/browser, `false` on Node.js/prerendering. |
-| `ExecutionEnvironment.canUseEventListeners` | `true` if on client and has `window.addEventListener`. |
-| `ExecutionEnvironment.canUseIntersectionObserver` | `true` if on client and has `IntersectionObserver`. |
-| `ExecutionEnvironment.canUseViewport` | `true` if on client and has `window.screen`. |
+| `ExecutionEnvironment.canUseDOM` | 클라이언트/브라우저에서는 `true`, Node.js/사전 렌더링에서는 `false`. |
+| `ExecutionEnvironment.canUseEventListeners` | 클라이언트이고 `window.addEventListener`가 있으면 `true`. |
+| `ExecutionEnvironment.canUseIntersectionObserver` | 클라이언트이고 `IntersectionObserver`가 있으면 `true`. |
+| `ExecutionEnvironment.canUseViewport` | 클라이언트이고 `window.screen`이 있으면 `true`. |
 
 ### `constants` {#constants}
 
-A module exposing useful constants to client-side theme code.
+클라이언트 측 테마 코드에 유용한 상수를 노출하는 모듈입니다.
 
 ```js
 import {DEFAULT_PLUGIN_ID} from '@docusaurus/constants';

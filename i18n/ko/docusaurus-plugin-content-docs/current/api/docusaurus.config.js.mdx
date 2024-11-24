@@ -38,7 +38,7 @@ import APITable from '@site/src/components/APITable';
 export default {
   title: 'Docusaurus',
   url: 'https://docusaurus.io',
-  // your site config ...
+  // 사이트 설정을 여기에 추가하세요...
 };
 ```
 
@@ -47,7 +47,7 @@ export default async function createConfigAsync() {
   return {
     title: 'Docusaurus',
     url: 'https://docusaurus.io',
-    // your site config ...
+    // 사이트 설정을 여기에 추가하세요...
   };
 }
 ```
@@ -102,7 +102,7 @@ export default {
 
 - 타입: `string | undefined`
 
-사이트 파비콘의 경로; 링크의 href에 사용될 수 있는 URL이어야 합니다. 예를 들어, 파비콘이 `static/img/favicon.ico`에 있는 경우:
+사이트 파비콘의 경로입니다. 링크의 href에 사용될 수 있는 URL이어야 합니다. 예를 들어, 파비콘이 `static/img/favicon.ico`에 있는 경우:
 
 ```js title="docusaurus.config.js"
 export default {
@@ -169,26 +169,26 @@ export default {
 - `path`: 모든 로케일 폴더의 기준이 되는 루트 폴더입니다. 구성 파일을 기준으로 절대 경로나 상대 경로일 수 있습니다. 기본값은 `i18n`입니다.
 - `localeConfigs`: 각 로케일에 대한 개별 옵션입니다.
   - `label`: 로케일 드롭다운에 표시되는 이 로케일의 라벨입니다.
-  - `direction`: `ltr` (기본값) 또는 `rtl` ([오른쪽에서 왼쪽으로 쓰는 언어](https://developer.mozilla.org/en-US/docs/Glossary/rtl)인 페르시아어, 아랍어, 히브리어 등을 위한). 로케일의 CSS와 HTML 메타 속성을 선택하는 데 사용됩니다.
+  - `direction`: 기본값인 `ltr` 또는 [오른쪽에서 왼쪽으로 쓰는 언어](https://developer.mozilla.org/en-US/docs/Glossary/rtl)인 페르시아어, 아랍어, 히브리어 등을 위한 `rtl`. 로케일의 CSS와 HTML 메타 속성을 선택하는 데 사용됩니다.
   - `htmlLang`: `<html lang="...">` (또는 다른 DOM 태그 이름)과 `<link ... hreflang="...">`에서 사용할 BCP 47 언어 태그
-  - `calendar`: 날짜 시대를 계산하는 데 사용되는 [달력](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/calendar)입니다. 실제로 표시되는 문자열을 제어하지 않습니다: `MM/DD/YYYY`와 `DD/MM/YYYY`는 모두 `gregory`입니다. 형식(`DD/MM/YYYY` 또는 `MM/DD/YYYY`)을 선택하려면 로케일 이름을 `en-GB` 또는 `en-US`로 설정하세요(`en`은 `en-US`를 의미합니다).
-  - `path`: 이 로케일의 모든 플러그인 현지화 폴더의 기준이 되는 루트 폴더입니다. `i18n.path`에 대해 해결됩니다. 기본값은 로케일의 이름입니다. 참고: 이는 로케일의 `baseUrl`에 영향을 미치지 않습니다—기본 URL 사용자 정의는 진행 중인 작업입니다.
+  - `calendar`: 날짜를 계산하는 데 사용되는 [달력](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/calendar)입니다. 실제로 표시되는 문자열을 제어하지 않습니다: `MM/DD/YYYY`와 `DD/MM/YYYY`는 모두 `gregory`입니다. 형식(`DD/MM/YYYY` 또는 `MM/DD/YYYY`)을 선택하려면 로케일 이름을 `en-GB` 또는 `en-US`로 설정하세요(`en`은 `en-US`를 의미합니다).
+  - `path`: 이 로케일의 모든 플러그인 현지화 폴더의 기준이 되는 루트 폴더입니다. `i18n.path`에 대해 해결됩니다. 기본값은 로케일의 이름입니다. 참고: 이는 로케일의 `baseUrl`에 영향을 미치지 않습니다. 기본 URL 사용자 정의는 진행 중인 작업입니다.
 
 ### `future` {#future}
 
 - 타입: `Object`
 
-`future` 구성 객체를 사용하면 프라임 타임에 준비되지 않은 예정된/불안정한/실험적인 Docusaurus 기능을 선택할 수 있습니다.
+`future` 설정 객체는 프로덕션에 아직 준비되지 않은 향후/불안정한/실험적인 Docusaurus 기능을 선택적으로 사용할 수 있게 해줍니다.
 
-또한 다음 주요 버전에서 예정된 중요한 변경 사항을 선택하여 이전 버전을 유지하면서 다음 버전을 대비할 수 있습니다. [Remix Future Flags 블로그 포스트](https://remix.run/blog/future-flags)는 이 아이디어를 잘 설명합니다.
+또한 다음 메이저 버전에서 예정된 주요 변경사항을 미리 적용할 수 있게 해주어, 이전 버전을 유지하면서도 다음 버전을 위해 사이트를 준비할 수 있습니다. [Remix Future Flags 블로그 포스트](https://remix.run/blog/future-flags)에서 이 개념을 자세히 설명하고 있습니다.
 
-:::danger 마이너 버전의 중요한 변경 사항
+:::danger 마이너 버전의 주요 변경사항
 
-`experimental_` 또는 `unstable_`로 시작하는 기능은 **마이너 버전**에서 변경될 수 있으며, [시맨틱 버저닝 중요 변경 사항](/community/release-process)으로 간주되지 않습니다.
+`experimental_` 또는 `unstable_` 접두사가 붙은 기능은 **마이너 버전**에서 변경될 수 있으며, [시맨틱 버저닝 주요 변경사항](/community/release-process)으로 간주되지 않습니다.
 
-`v<MajorVersion>_`(`v6_` `v7_` 등)로 시작하는 기능은 다음 주요 버전에서 기본적으로 켜질 것으로 예상되는 미래 플래그입니다. 이러한 기능은 변경될 가능성이 적지만, 변경 가능성을 열어두고 있습니다.
+`v<MajorVersion>_` (`v6_` `v7_` 등) 접두사가 붙은 기능은 다음 메이저 버전에서 기본적으로 활성화될 예정인 future 플래그입니다. 이러한 기능들은 변경될 가능성이 적지만, 변경될 수 있는 가능성은 여전히 존재합니다.
 
-`future` API의 중요한 변경 사항은 처리하기 쉬워야 하며, 마이너/메이저 버전 블로그 포스트에 문서화될 것입니다.
+`future` API의 주요 변경사항은 쉽게 처리할 수 있으며, 마이너/메이저 버전 블로그 포스트에 문서화될 것입니다.
 
 :::
 
@@ -197,6 +197,14 @@ export default {
 ```js title="docusaurus.config.js"
 export default {
   future: {
+    experimental_faster: {
+      swcJsLoader: true,
+      swcJsMinimizer: true,
+      swcHtmlMinimizer: true,
+      lightningCssMinimizer: true,
+      rspackBundler: true,
+      mdxCrossCompilerCache: true,
+    },
     experimental_storage: {
       type: 'localStorage',
       namespace: true,
@@ -206,10 +214,17 @@ export default {
 };
 ```
 
-- `experimental_storage`: 테마 작성자가 존중해야 하는 사이트 전체 브라우저 스토리지 옵션입니다.
-  - `type`: 테마 작성자가 사용해야 하는 브라우저 스토리지입니다. 가능한 값은 `localStorage`와 `sessionStorage`입니다. 기본값은 `localStorage`입니다.
-  - `namespace`: Docusaurus 사이트가 동일한 도메인이나 localhost에서 호스팅될 때 스토리지 키 충돌을 피하기 위해 브라우저 스토리지 키에 네임스페이스를 지정할지 여부입니다. 가능한 값은 `string | boolean`입니다. 네임스페이스는 스토리지 키 끝에 추가됩니다 `key-namespace`. `true`를 사용하여 사이트 `url + baseUrl`에서 자동으로 무작위 네임스페이스를 생성합니다. 기본값은 `false`입니다 (네임스페이스 없음, 기존 동작).
-- `experimental_router`: 사용할 라우터 유형입니다. 가능한 값은 `browser`와 `hash`입니다. 기본값은 `browser`입니다. `hash` 라우터는 정적 사이트 생성을 선택하지 않고 단일 `index.html` 진입점 파일로 완전히 클라이언트 측 앱을 갖고 싶은 드문 경우에만 유용합니다. 이는 Docusaurus 사이트를 [웹 서버를 실행하지 않고 로컬에서 탐색할 수 있는](https://github.com/facebook/docusaurus/issues/3825) `.zip` 아카이브로 배포하는 데 유용할 수 있습니다.
+- `experimental_faster`: Docusaurus 빌드를 더 빠르게 만들기 위한 기능 플래그를 포함하는 객체입니다. 이를 사용하려면 사이트의 의존성에 `@docusaurus/faster` 패키지를 추가해야 합니다. 모든 플래그를 활성화하려면 `true`를 사용하세요. [Docusaurus Faster](https://github.com/facebook/docusaurus/issues/10556) 이슈에서 자세한 내용을 확인할 수 있습니다. 사용 가능한 기능 플래그:
+  - [`swcJsLoader`](https://github.com/facebook/docusaurus/pull/10435): JS를 트랜스파일하기 위해 [Babel](https://babeljs.io/) 대신 [SWC](https://swc.rs/)를 사용합니다.
+  - [`swcJsMinimizer`](https://github.com/facebook/docusaurus/pull/10441): JS를 최소화하기 위해 [Terser](https://github.com/terser/terser) 대신 [SWC](https://swc.rs/)를 사용합니다.
+  - [`swcHtmlMinimizer`](https://github.com/facebook/docusaurus/pull/10554): HTML과 인라인 JS/CSS를 최소화하기 위해 [html-minifier-terser](https://github.com/terser/html-minifier-terser) 대신 [SWC](https://swc.rs/)를 사용합니다.
+  - [`lightningCssMinimizer`](https://github.com/facebook/docusaurus/pull/10522): CSS를 최소화하기 위해 [cssnano](https://github.com/cssnano/cssnano)와 [clean-css](https://github.com/clean-css/clean-css) 대신 [Lightning CSS](https://lightningcss.dev/)를 사용합니다.
+  - [`rspackBundler`](https://github.com/facebook/docusaurus/pull/10402): 앱을 번들링하기 위해 [webpack](https://webpack.js.org/) 대신 [Rspack](https://rspack.dev/)을 사용합니다 .
+  - [`mdxCrossCompilerCache`](https://github.com/facebook/docusaurus/pull/10479): MDX 파일을 브라우저/Node.js 환경 모두를 위해 두 번이 아닌 한 번만 컴파일합니다.
+- `experimental_storage`: 테마 제작자들이 준수해야 하는 사이트 전체 브라우저 스토리지 옵션입니다.
+  - `type`: 테마 제작자들이 사용해야 하는 브라우저 스토리지입니다. 가능한 값은 `localStorage`와 `sessionStorage`입니다. 기본값은 `localStorage`입니다.
+  - `namespace`: Docusaurus 사이트가 동일한 도메인이나 localhost에서 호스팅될 때 스토리지 키 충돌을 피하기 위해 브라우저 스토리지 키에 네임스페이스를 적용할지 여부입니다. 가능한 값은 `string | boolean`입니다. 네임스페이스는 스토리지 키 끝에 `key-namespace`로 추가됩니다. 사이트의 `url + baseUrl`에서 자동으로 랜덤 네임스페이스를 생성하려면 `true`를 사용하세요. 기본값은 네임스페이스가 없는 `false`입니다.
+- `experimental_router`: 사용할 라우터 타입입니다. 가능한 값은 `browser`와 `hash`입니다. 기본값은 `browser`입니다. `hash` 라우터는 정적 사이트 생성을 선택 해제하고 단일 `index.html` 진입점 파일이 있는 완전한 클라이언트 사이드 앱을 원하는 드문 경우에만 유용합니다. 이는 [웹 서버 실행 없이 로컬에서 탐색할 수 있는](https://github.com/facebook/docusaurus/issues/3825) Docusaurus 사이트를 `.zip` 아카이브로 배포하는 데 유용할 수 있습니다.
 
 ### `noIndex` {#noIndex}
 
@@ -272,7 +287,7 @@ Docusaurus의 `Heading` 컴포넌트로 선언된 깨진 앵커를 감지했을 
 ```js title="docusaurus.config.js"
 export default {
   tagline:
-    'Docusaurus makes it easy to maintain Open Source documentation websites.',
+    'Docusaurus는 오픈 소스 문서화 웹사이트를 쉽게 유지 관리할 수 있게 해줍니다.',
 };
 ```
 
@@ -284,7 +299,7 @@ export default {
 
 ```js title="docusaurus.config.js"
 export default {
-  // Docusaurus' organization is facebook
+  // Docusaurus의 조직은 Facebook입니다.
   organizationName: 'facebook',
 };
 ```
@@ -374,7 +389,7 @@ export default {
           label: 'docusaurus.config.js',
           position: 'left',
         },
-        // ... other links
+        // 다른 링크를 추가하세요
       ],
     },
     footer: {
@@ -389,7 +404,7 @@ export default {
             },
           ],
         },
-        // ... other links
+        // 다른 링크를 추가하세요
       ],
       logo: {
         alt: 'Meta Open Source Logo',
@@ -491,7 +506,7 @@ type MarkdownConfig = {
   preprocessor?: MarkdownPreprocessor;
   parseFrontMatter?: ParseFrontMatter;
   mdx1Compat: MDX1CompatOptions;
-  remarkRehypeOptions: object; // see https://github.com/remarkjs/remark-rehype#options
+  remarkRehypeOptions: object; // https://github.com/remarkjs/remark-rehype#options를 확인하세요
   anchors: MarkdownAnchorsConfig;
 };
 ```
@@ -614,9 +629,9 @@ export default {
 ```js title="docusaurus.config.js"
 export default {
   scripts: [
-    // String format.
+    // String 형식
     'https://docusaurus.io/script.js',
-    // Object format.
+    // Object 형식
     {
       src: 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
       async: true,
@@ -627,7 +642,7 @@ export default {
 
 ### `stylesheets` {#stylesheets}
 
-로드할 CSS 소스의 배열입니다. 값은 문자열이거나 속성-값 맵의 일반 객체일 수 있습니다. `<link>` 태그는 HTML `<head>`에 삽입됩니다. 객체를 사용하는 경우 유일한 필수 속성은 `href`이며, 다른 속성은 모두 허용됩니다 (각 속성은 부울/문자열 값을 가져야 합니다).
+로드할 CSS 소스의 배열입니다. 값은 문자열이거나 속성-값 맵의 일반 객체일 수 있습니다. `<link>` 태그는 HTML `<head>`에 삽입됩니다. 객체를 사용하는 경우 유일한 필수 속성은 `href`이며, 다른 속성은 모두 허용됩니다. 각 속성은 boolean/string 값을 가져야 합니다.
 
 - 타입: `(string | Object)[]`
 

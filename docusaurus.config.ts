@@ -604,7 +604,7 @@ export default async function createConfigAsync() {
             ],
           },
           {
-            href: 'https://github.com/foreverfl/docusauruss',
+            href: 'https://github.com/foreverfl/docusaurus',
             position: 'right',
             className: 'header-github-link',
             'aria-label': 'GitHub repository',
