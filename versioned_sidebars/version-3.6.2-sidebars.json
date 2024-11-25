@@ -22,9 +22,7 @@
         "type": "generated-index",
         "title": "Docusaurus Guides",
         "description": "Let's learn about the most important Docusaurus concepts!",
-        "keywords": [
-          "guides"
-        ],
+        "keywords": ["guides"],
         "image": "/img/docusaurus.png"
       },
       "items": [

@@ -4,35 +4,34 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import path from 'path';
 import npm2yarn from '@docusaurus/remark-plugin-npm2yarn';
-import remarkMath from 'remark-math';
+import path from 'path';
 import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 import configTabs from './src/remark/configTabs';
 
-import versions from './versions.json';
-import VersionsArchived from './versionsArchived.json';
 import {
   dogfoodingPluginInstances,
-  dogfoodingThemeInstances,
   dogfoodingRedirects,
+  dogfoodingThemeInstances,
   dogfoodingTransformFrontMatter,
   isArgosBuild,
 } from './_dogfooding/dogfooding.config';
+import versions from './versions.json';
+import VersionsArchived from './versionsArchived.json';
 
 import ConfigLocalized from './docusaurus.config.localized.json';
 
-import PrismLight from './src/utils/prismLight';
 import PrismDark from './src/utils/prismDark';
+import PrismLight from './src/utils/prismLight';
 
 import type {Config, DocusaurusConfig} from '@docusaurus/types';
 
-import type * as Preset from '@docusaurus/preset-classic';
+import type {ClientRedirectsOptions} from '@docusaurus/plugin-client-redirects';
 import type {Options as DocsOptions} from '@docusaurus/plugin-content-docs';
-import type {Options as BlogOptions} from '@docusaurus/plugin-content-blog';
 import type {Options as PageOptions} from '@docusaurus/plugin-content-pages';
 import type {Options as IdealImageOptions} from '@docusaurus/plugin-ideal-image';
-import type {ClientRedirectsOptions} from '@docusaurus/plugin-client-redirects';
+import type * as Preset from '@docusaurus/preset-classic';
 
 const ArchivedVersionsDropdownItems = Object.entries(VersionsArchived).splice(
   0,
@@ -599,7 +598,7 @@ export default async function createConfigAsync() {
               },
               {
                 href: 'https://github.com/facebook/docusaurus/issues/3526',
-                label: 'Help Us Translate',
+                label: '번역을 도와주세요!',
               },
             ],
           },
