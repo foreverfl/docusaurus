@@ -1,23 +1,23 @@
 ---
 id: links
-description: Links to other pages in Markdown
+description: Markdown에서 다른 페이지로 연결하기
 slug: /markdown-features/links
 ---
 
-# Markdown links
+# Markdown 링크 {#markdown-links}
 
-There are two ways of adding a link to another page: through a **URL path** and a **file path**.
+다른 페이지에 링크를 추가하는 방법에는 **URL 경로**와 **파일 경로** 두 가지가 있습니다.
 
 ```md
-- [URL path to another document](./installation)
-- [file path to another document](./installation.mdx)
+- [다른 문서로의 URL 경로](./installation)
+- [다른 문서로의 파일 경로](./installation.mdx)
 ```
 
-URL paths are unprocessed by Docusaurus, and you can see them as directly rendering to `<a href="./installation">`, i.e. it will be resolved according to the page's URL location, rather than its file-system location.
+URL 경로는 Docusaurus에서 처리되지 않으며 직접 `<a href="./installation">`로 렌더링됩니다. 즉, 파일 시스템 위치가 아닌 페이지의 URL 위치에 따라 해석됩니다.
 
-If you want to reference another Markdown file **included by the same plugin**, you could use the relative path of the document you want to link to. Docusaurus' Markdown loader will convert the file path to the target file's URL path (and hence remove the `.md` extension).
+**동일한 플러그인에 포함된** 다른 Markdown 파일을 참조하려면 연결하고자 하는 문서의 상대 경로를 사용할 수 있습니다. Docusaurus의 Markdown 로더는 파일 경로를 대상 파일의 URL 경로로 변환합니다(따라서 `.md` 확장자가 제거됨).
 
-For example, if you are in `docs/folder/doc1.md` and you want to reference `docs/folder/doc2.md`, `docs/folder/subfolder/doc3.md` and `docs/otherFolder/doc4.md`:
+예를 들어, `docs/folder/doc1.md`에 있고 `docs/folder/doc2.md`, `docs/folder/subfolder/doc3.md`, `docs/otherFolder/doc4.md`를 참조하려면:
 
 ```md title="docs/folder/doc1.md"
 I am referencing a [document](doc2.mdx).
@@ -27,9 +27,9 @@ Reference to another [document in a subfolder](subfolder/doc3.mdx).
 [Relative document](../otherFolder/doc4.mdx) referencing works as well.
 ```
 
-Relative file paths are resolved against the current file's directory. Absolute file paths, on the other hand, are resolved relative to the **content root**, usually `docs/`, `blog/`, or [localized ones](../../i18n/i18n-tutorial.mdx) like `i18n/zh-Hans/plugin-content-docs/current`.
+상대 파일 경로는 현재 파일의 디렉토리를 기준으로 해석됩니다. 반면 절대 파일 경로는 일반적으로 `docs/`, `blog/` 또는 `i18n/zh-Hans/plugin-content-docs/current`와 같은 [현지화 된](../../i18n/i18n-tutorial.mdx) **콘텐츠 루트**를 기준으로 해석됩니다.
 
-Absolute file paths can also be relative to the site directory. However, beware that links that begin with `/docs/` or `/blog/` are **not portable** as you would need to manually update them if you create new doc versions or localize them.
+절대 파일 경로는 사이트 디렉토리를 기준으로 지정할 수도 있습니다. 하지만 `/docs/` 또는 `/blog/`로 시작하는 링크는 새 문서 버전을 만들거나 현지화할 때 **직접 수정해야 하므로** 관리하기가 번거로울 수 있습니다.
 
 ```md
 You can write [links](/otherFolder/doc4.mdx) relative to the content root (`/docs/`).
@@ -37,16 +37,16 @@ You can write [links](/otherFolder/doc4.mdx) relative to the content root (`/doc
 You can also write [links](/docs/otherFolder/doc4.mdx) relative to the site directory, but it's not recommended.
 ```
 
-Using relative _file_ paths (with `.md` extensions) instead of relative _URL_ links provides the following benefits:
+상대 _URL_ 링크 대신 상대 _파일_ 경로(확장자 `.md` 포함)를 사용하면 다음과 같은 이점이 있습니다:
 
-- Links will keep working on the GitHub interface and many Markdown editors
-- You can customize the files' slugs without having to update all the links
-- Moving files around the folders can be tracked by your editor, and some editors may automatically update file links
-- A [versioned doc](../docs/versioning.mdx) will link to another doc of the exact same version
-- Relative URL links are very likely to break if you update the [`trailingSlash` config](../../api/docusaurus.config.js.mdx#trailingSlash)
+- GitHub 인터페이스와 많은 Markdown 편집기에서 링크가 계속 작동합니다
+- 모든 링크를 업데이트하지 않고도 파일의 슬러그를 사용자 정의할 수 있습니다
+- 폴더 간 파일 이동을 편집기에서 추적할 수 있으며, 일부 편집기는 파일 링크를 자동으로 업데이트할 수 있습니다
+- [버전 관리된 문서](../docs/versioning.mdx)는 정확히 동일한 버전의 다른 문서에 연결됩니다
+- [`trailingSlash` 설정](../../api/docusaurus.config.js.mdx#trailingSlash)을 업데이트하면 상대 URL 링크가 손상될 가능성이 매우 높습니다
 
 :::warning
 
-Markdown file references only work when the source and target files are processed by the same plugin instance. This is a technical limitation of our Markdown processing architecture and will be fixed in the future. If you are linking files between plugins (e.g. linking to a doc page from a blog post), you have to use URL links.
+Markdown 파일 참조는 소스 파일과 대상 파일이 동일한 플러그인 인스턴스에 의해 처리되는 경우에만 작동합니다. 이는 우리의 Markdown 처리 아키텍처의 기술적 한계이며 향후 수정될 예정입니다. 블로그 게시물에서 문서 페이지로 연결하는 사례와 같이 플러그인 간에 파일을 연결하는 경우에는 URL 링크를 사용해야 합니다.
 
 :::

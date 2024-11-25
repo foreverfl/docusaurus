@@ -1,22 +1,22 @@
 ---
 id: math-equations
-description: Writing LaTeX Math Equations
+description: LaTeX 수식 작성하기
 slug: /markdown-features/math-equations
 ---
 
-# Math Equations
+# 수학 방정식 {#math-equations}
 
 import BrowserWindow from '@site/src/components/BrowserWindow';
 
-Mathematical equations can be rendered using [KaTeX](https://katex.org).
+수식은 [KaTeX](https://katex.org)를 사용하여 렌더링할 수 있습니다.
 
-## Usage {#usage}
+## 사용법 {#usage}
 
-Please read [KaTeX](https://katex.org) documentation for more details.
+자세한 내용은 [KaTeX](https://katex.org) 문서를 참조하세요.
 
-### Inline {#inline}
+### 인라인 {#inline}
 
-Write inline math equations by wrapping LaTeX equations between `$`:
+LaTeX 방정식을 `$` 사이에 작성하여 인라인 수식을 만듭니다:
 
 ```latex
 Let $f\colon[a,b]\to\R$ be Riemann integrable. Let $F\colon[a,b]\to\R$ be
@@ -31,9 +31,9 @@ Let $f\colon[a,b] \to \R$ be Riemann integrable. Let $F\colon[a,b]\to\R$ be $F(x
 
 </BrowserWindow>
 
-### Blocks {#blocks}
+### 블록 {#blocks}
 
-For equation block or display mode, use line breaks and `$$`:
+방정식 블록이나 디스플레이 모드의 경우, 줄 바꿈과 `$$`를 사용하세요:
 
 ```latex
 $$
@@ -49,103 +49,100 @@ $$
 
 </BrowserWindow>
 
-## Enabling math equations {#configuration}
+## 수식 활성화하기 {#configuration}
 
-Enable KaTeX:
+KaTeX 활성화하기:
 
-1.  Install the `remark-math` and `rehype-katex` plugins:
+1. `remark-math`와 `rehype-katex` 플러그인을 설치하세요:
 
-    ```bash npm2yarn
-    npm install --save remark-math@6 rehype-katex@7
-    ```
+```bash npm2yarn
+npm install --save remark-math@6 rehype-katex@7
+```
 
-    :::warning
+:::warning
 
-    Make sure to use `remark-math 6` and `rehype-katex 7` for Docusaurus v3 (using MDX v3). We can't guarantee other versions will work.
+Docusaurus v3(MDX v3 사용)의 경우 `remark-math 6`과 `rehype-katex 7`을 사용해야 합니다. 다른 버전은 작동을 보장할 수 없습니다.
 
-    :::
+:::
 
-2.  These 2 plugins are [**only available as ES Modules**](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c). We recommended to use an [**ES Modules**](https://flaviocopes.com/es-modules/) config file:
+2. 이 두 플러그인은 [**ES 모듈로만 사용 가능**](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)합니다. [**ES 모듈**](https://flaviocopes.com/es-modules/) 설정 파일을 사용하는 것을 추천합니다:
 
-    ```js title="ES module docusaurus.config.js"
-    // highlight-start
-    import remarkMath from 'remark-math';
-    import rehypeKatex from 'rehype-katex';
-    // highlight-end
+```js title="ES module docusaurus.config.js"
+// highlight-start
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+// highlight-end
 
-    // highlight-start
-    export default {
-      presets: [
-        [
-          '@docusaurus/preset-classic',
-          {
-            docs: {
-              path: 'docs',
-              // highlight-start
-              remarkPlugins: [remarkMath],
-              rehypePlugins: [rehypeKatex],
-              // highlight-end
-            },
-          },
-        ],
-      ],
-    };
-    ```
-
-        <details>
-
-    <summary>
-      Using a
-      [**CommonJS**](https://nodejs.org/api/modules.html#modules-commonjs-modules)
-      config file?
-    </summary>
-
-            If you decide to use a CommonJS config file, it is possible to load those ES module plugins thanks to dynamic imports and an async config creator function:
-
-    ```js title="CommonJS module docusaurus.config.js"
-    // highlight-start
-    module.exports = async function createConfigAsync() {
-      // highlight-end
-      return {
-        presets: [
-          [
-            '@docusaurus/preset-classic',
-            {
-              docs: {
-                path: 'docs',
-                // highlight-start
-                remarkPlugins: [(await import('remark-math')).default],
-                rehypePlugins: [(await import('rehype-katex')).default],
-                // highlight-end
-              },
-            },
-          ],
-        ],
-      };
-    };
-    ```
-
-        </details>
-
-3.  Include the KaTeX CSS in your config under `stylesheets`:
-
-    ```js
-    export default {
-      //...
-      stylesheets: [
-        {
-          href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
-          type: 'text/css',
-          integrity:
-            'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
-          crossorigin: 'anonymous',
+// highlight-start
+export default {
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          path: 'docs',
+          // highlight-start
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
+          // highlight-end
         },
-      ],
-    };
-    ```
+      },
+    ],
+  ],
+};
+```
 
 <details>
-<summary>See a config file example</summary>
+<summary>
+[**CommonJS**](https://nodejs.org/api/modules.html#modules-commonjs-modules) 설정 파일을 사용하시나요?
+</summary>
+
+CommonJS 설정 파일을 사용하기로 결정한 경우, 동적 임포트와 비동기 설정 생성자 함수를 통해 ES 모듈 플러그인을 로드할 수 있습니다:
+
+```js title="CommonJS module docusaurus.config.js"
+// highlight-start
+module.exports = async function createConfigAsync() {
+  // highlight-end
+  return {
+    presets: [
+      [
+        '@docusaurus/preset-classic',
+        {
+          docs: {
+            path: 'docs',
+            // highlight-start
+            remarkPlugins: [(await import('remark-math')).default],
+            rehypePlugins: [(await import('rehype-katex')).default],
+            // highlight-end
+          },
+        },
+      ],
+    ],
+  };
+};
+```
+
+</details>
+
+3. 설정의 `stylesheets`에 KaTeX CSS를 포함하세요:
+
+```js
+export default {
+  //...
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    },
+  ],
+};
+```
+
+<details>
+<summary>설정 파일 예시 보기</summary>
 
 ```js title="docusaurus.config.js"
 // highlight-start
@@ -186,9 +183,9 @@ export default {
 
 </details>
 
-## Self-hosting KaTeX assets {#self-hosting-katex-assets}
+## KaTeX 에셋 자체 호스팅 {#self-hosting-katex-assets}
 
-Loading stylesheets, fonts, and JavaScript libraries from CDN sources is a good practice for popular libraries and assets, since it reduces the amount of assets you have to host. In case you prefer to self-host the `katex.min.css` (along with required KaTeX fonts), you can download the latest version from [KaTeX GitHub releases](https://github.com/KaTeX/KaTeX/releases), extract and copy `katex.min.css` and `fonts` directory (only `.woff2` font types should be enough) to your site's `static` directory, and in `docusaurus.config.js`, replace the stylesheet's `href` from the CDN URL to your local path (say, `/katex/katex.min.css`).
+CDN 소스에서 스타일시트, 폰트 및 JavaScript 라이브러리를 로드하는 것은 인기 있는 라이브러리와 자원을 효율적으로 관리하는 좋은 방법입니다.이를 통해 서버에서 관리해야 할 리소스의 양을 줄일 수 있습니다. 필요한 KaTeX 폰트와 함께 `katex.min.css`를 자체 호스팅하고 싶다면, [KaTeX GitHub 릴리즈](https://github.com/KaTeX/KaTeX/releases)에서 최신 버전을 다운로드한 후 압축을 풀고, `katex.min.css`와 `fonts` 디렉토리(`.woff2` 폰트 유형만으로도 충분)를 사이트의 `static` 디렉토리에 복사한 후, `docusaurus.config.js`에서 스타일시트의 `href`를 CDN URL에서 로컬 경로(예: `/katex/katex.min.css`)로 변경하세요.
 
 ```js title="docusaurus.config.js"
 export default {
