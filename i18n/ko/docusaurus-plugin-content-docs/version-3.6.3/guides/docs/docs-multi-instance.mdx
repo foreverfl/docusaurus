@@ -1,0 +1,213 @@
+---
+id: multi-instance
+description: 단일 Docusaurus 사이트에서 여러 문서 플러그인 인스턴스를 사용합니다.
+slug: /docs-multi-instance
+---
+
+# 문서 다중 인스턴스
+
+`@docusaurus/plugin-content-docs` 플러그인은 [다중 인스턴스](../../using-plugins.mdx#multi-instance-plugins-and-plugin-ids)를 지원할 수 있습니다.
+
+:::note
+
+이 기능은 [버전 관리된 문서](./versioning.mdx)에만 유용합니다. 이 페이지를 읽기 전에 문서 버전 관리에 대해 익숙해지는 것이 좋습니다. [여러 사이드바](./sidebar/multiple-sidebars.mdx)만 원하는 경우 하나의 플러그인 내에서 할 수 있습니다.
+
+:::
+
+## 사용 사례 {#use-cases}
+
+때로는 Docusaurus 사이트가 2개 이상의 구별된 문서 세트를 호스팅하기를 원할 수 있습니다.
+
+이러한 문서들은 심지어 서로 다른 버전 관리/릴리스 수명 주기를 가질 수 있습니다.
+
+### 모바일 SDK 문서 {#mobile-sdks-documentation}
+
+크로스 플랫폼 모바일 SDK를 구축하는 경우, 2개의 문서가 있을 수 있습니다:
+
+- Android SDK 문서 (`v1.0`, `v1.1`)
+- iOS SDK 문서 (`v1.0`, `v2.0`)
+
+이 경우, 모바일 SDK 문서마다 별도의 문서 플러그인 인스턴스를 사용할 수 있습니다.
+
+:::warning
+
+각 문서 인스턴스가 매우 큰 경우, 2개의 별도 Docusaurus 사이트를 만드는 것이 좋습니다.
+
+누군가 iOS 문서를 수정할 때, 변경되지 않은 전체 Android 문서를 포함하여 모든 것을 다시 빌드하는 것이 정말 유용할까요?
+
+:::
+
+### 버전 관리된 문서와 버전 관리되지 않은 문서 {#versioned-and-unversioned-doc}
+
+때로는 일부 문서는 버전 관리를 하고 싶지만, 다른 문서는 더 "전역적"이어서 버전 관리가 불필요하다고 느낄 수 있습니다.
+
+우리는 Docusaurus 웹사이트 자체에서 이러한 패턴을 사용합니다:
+
+- [/docs/\*](/docs) 섹션은 버전 관리됨
+- [/community/\*](/community/support) 섹션은 버전 관리되지 않음
+
+## 설정 {#setup}
+
+2개의 문서가 있다고 가정해봅시다:
+
+- Product: 제품에 대한 버전 관리된 문서
+- Community: 제품 주변 커뮤니티에 대한 버전 관리되지 않은 문서
+
+이 경우, 사이트 구성에서 동일한 플러그인을 두 번 사용해야 합니다.
+
+:::warning
+
+`@docusaurus/preset-classic`는 이미 문서 플러그인 인스턴스를 포함하고 있습니다!
+
+:::
+
+프리셋 사용 시:
+
+```js title="docusaurus.config.js"
+export default {
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          // highlight-start
+          // id: 'product', // 생략됨 => 기본 인스턴스
+          // highlight-end
+          path: 'product',
+          routeBasePath: 'product',
+          sidebarPath: './sidebarsProduct.js',
+          // ... 기타 옵션
+        },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        // highlight-start
+        id: 'community',
+        // highlight-end
+        path: 'community',
+        routeBasePath: 'community',
+        sidebarPath: './sidebarsCommunity.js',
+        // ... 기타 옵션
+      },
+    ],
+  ],
+};
+```
+
+프리셋을 사용하지 않을 때:
+
+```js title="docusaurus.config.js"
+export default {
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        // highlight-start
+        // id: 'product', // 생략됨 => 기본 인스턴스
+        // highlight-end
+        path: 'product',
+        routeBasePath: 'product',
+        sidebarPath: './sidebarsProduct.js',
+        // ... 기타 옵션
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        // highlight-start
+        id: 'community',
+        // highlight-end
+        path: 'community',
+        routeBasePath: 'community',
+        sidebarPath: './sidebarsCommunity.js',
+        // ... 기타 옵션
+      },
+    ],
+  ],
+};
+```
+
+플러그인 인스턴스에 고유한 `id` 속성을 할당하는 것을 잊지 마세요.
+
+:::note
+
+우리는 `product` 인스턴스가 가장 중요하다고 생각하고, ID를 할당하지 않음으로써 "기본" 인스턴스로 만듭니다.
+
+:::
+
+## 버전 관리된 경로 {#versioned-paths}
+
+각 플러그인 인스턴스는 버전 관리된 문서를 별도의 폴더에 저장합니다.
+
+기본 플러그인 인스턴스는 다음 경로를 사용합니다:
+
+- `website/versions.json`
+- `website/versioned_docs`
+- `website/versioned_sidebars`
+
+다른 플러그인 인스턴스(`id` 속성이 있는)는 다음 경로를 사용합니다:
+
+- `website/[pluginId]_versions.json`
+- `website/[pluginId]_versioned_docs`
+- `website/[pluginId]_versioned_sidebars`
+
+:::tip
+
+문서 플러그인 인스턴스 중 하나에 대해 `id` 속성을 생략할 수 있습니다(기본값은 `default`).
+
+인스턴스 경로가 더 단순해지고, 단일 인스턴스 설정과 하위 호환성을 유지할 수 있습니다.
+
+:::
+
+## 새 버전 태그 지정하기 {#tagging-new-versions}
+
+각 플러그인 인스턴스는 새 버전을 태그 지정하기 위한 자체 CLI 명령을 가집니다. 다음을 실행하면 표시됩니다:
+
+```bash npm2yarn
+npm run docusaurus -- --help
+```
+
+product/기본 문서 플러그인 인스턴스의 버전을 지정하려면:
+
+```bash npm2yarn
+npm run docusaurus docs:version 1.0.0
+```
+
+기본이 아닌/community 문서 플러그인 인스턴스의 버전을 지정하려면:
+
+```bash npm2yarn
+npm run docusaurus docs:version:community 1.0.0
+```
+
+## 문서 네비게이션 바 항목 {#docs-navbar-items}
+
+각 문서 관련 [테마 네비게이션 바 항목](../../api/themes/theme-configuration.mdx#navbar)은 선택적 `docsPluginId` 속성을 가집니다.
+
+예를 들어, 각 모바일 SDK(iOS와 Android)에 대해 하나의 버전 드롭다운을 가지려면 다음과 같이 할 수 있습니다:
+
+```js title="docusaurus.config.js"
+export default {
+  themeConfig: {
+    navbar: {
+      items: [
+        {
+          type: 'docsVersionDropdown',
+          // highlight-start
+          docsPluginId: 'ios',
+          // highlight-end
+        },
+        {
+          type: 'docsVersionDropdown',
+          // highlight-start
+          docsPluginId: 'android',
+          // highlight-end
+        },
+      ],
+    },
+  },
+};
+```

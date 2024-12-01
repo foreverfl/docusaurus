@@ -1,0 +1,853 @@
+---
+description: 다양한 정적 사이트 호스팅 서비스에서 프로덕션용 Docusaurus 앱을 배포하는 방법을 알아봅니다.
+---
+
+# 배포 {#deployment}
+
+프로덕션용 웹사이트의 정적 파일을 빌드하려면 다음을 실행하세요:
+
+```bash npm2yarn
+npm run build
+```
+
+완료되면 정적 파일들이 `build` 디렉터리 안에 생성됩니다.
+
+:::note
+
+Docusaurus의 유일한 책임은 사이트를 빌드하고 `build`에 정적 파일을 생성하는 것입니다.
+
+이제 이러한 정적 파일을 어떻게 호스팅할지 선택하는 것은 여러분의 몫입니다.
+
+:::
+
+[Vercel](https://vercel.com/), [GitHub Pages](https://pages.github.com/), [Netlify](https://www.netlify.com/), [Render](https://render.com/docs/static-sites), [Surge](https://surge.sh/help/getting-started-with-surge)와 같은 정적 사이트 호스팅 서비스에 사이트를 배포할 수 있습니다.
+
+Docusaurus 사이트는 정적으로 렌더링되며, 일반적으로 JavaScript 없이도 작동할 수 있습니다!
+
+## 설정 {#configuration}
+
+라우팅을 최적화하고 올바른 위치에서 파일을 제공하기 위해 `docusaurus.config.js`에 다음 매개변수가 필요합니다:
+
+| 이름 | 설명 |
+| --- | --- |
+| `url` | 사이트의 URL입니다. `https://my-org.com/my-project/`에 배포된 사이트의 경우 `url`은 `https://my-org.com/`입니다. |
+| `baseUrl` | 프로젝트의 기본 URL로, 끝에 슬래시가 있어야 합니다. `https://my-org.com/my-project/`에 배포된 사이트의 경우 `baseUrl`은 `/my-project/`입니다. |
+
+## 로컬에서 빌드 테스트하기 {#testing-build-locally}
+
+프로덕션 배포 전에 로컬에서 빌드를 테스트하는 것이 중요합니다. Docusaurus는 이를 위한 [`docusaurus serve`](cli.mdx#docusaurus-serve-sitedir) 명령을 제공합니다:
+
+```bash npm2yarn
+npm run serve
+```
+
+기본적으로 이는 [`http://localhost:3000/`](http://localhost:3000/)에서 사이트를 로드합니다.
+
+## 후행 슬래시 설정 {#trailing-slashes}
+
+Docusaurus는 URL/링크와 생성된 파일 이름 패턴을 사용자 정의할 수 있는 [`trailingSlash` 설정](./api/docusaurus.config.js.mdx#trailingSlash)을 제공합니다.
+
+기본값은 일반적으로 잘 작동합니다. 하지만 안타깝게도 각 정적 호스팅 제공업체마다 **다른 동작**을 보이며, 동일한 사이트를 여러 호스트에 배포하면 다른 결과가 나올 수 있습니다. 호스트에 따라 이 설정을 변경하는 것이 유용할 수 있습니다.
+
+:::tip
+
+[slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide)를 사용하여 호스트의 동작을 더 잘 이해하고 `trailingSlash`를 적절하게 구성하세요.
+
+:::
+
+## 환경 변수 사용하기 {#using-environment-variables}
+
+잠재적으로 민감한 정보를 환경에 넣는 것은 일반적인 관행입니다. 하지만 일반적인 Docusaurus 웹사이트에서 `docusaurus.config.js` 파일은 Node.js 환경에 대한 유일한 인터페이스이며([아키텍처 개요](advanced/architecture.mdx) 참조), 나머지(MDX 페이지, React 컴포넌트 등)는 클라이언트 측이므로 `process` 전역 변수에 직접 접근할 수 없습니다. 이 경우 [`customFields`](api/docusaurus.config.js.mdx#customFields)를 사용하여 환경 변수를 클라이언트 측으로 전달하는 것을 고려할 수 있습니다.
+
+```js title="docusaurus.config.js"
+// dotenv를 사용하는 경우 (https://www.npmjs.com/package/dotenv)
+import 'dotenv/config';
+
+export default {
+  title: '...',
+  url: process.env.URL, // 사이트 세부 사항을 제어하기 위해 환경 변수를 사용할 수도 있습니다
+  // highlight-start
+  customFields: {
+    // 여기에 사용자 정의 환경을 넣으세요
+    teamEmail: process.env.EMAIL,
+  },
+  // highlight-end
+};
+```
+
+```jsx title="home.jsx"
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+
+export default function Home() {
+  const {
+    siteConfig: {customFields},
+  } = useDocusaurusContext();
+  return <div>{customFields.teamEmail}로 연락하세요!</div>;
+}
+```
+
+## 호스팅 제공업체 선택하기 {#choosing-a-hosting-provider}
+
+몇 가지 일반적인 호스팅 옵션이 있습니다:
+
+- Apache2나 Nginx와 같은 HTTP 서버를 사용한 [자체 호스팅](#self-hosting).
+- Jamstack 제공업체(예: [Netlify](#deploying-to-netlify)와 [Vercel](#deploying-to-vercel)). 이들을 참조로 사용하지만, 동일한 논리가 다른 제공업체에도 적용될 수 있습니다.
+- [GitHub Pages](#deploying-to-github-pages) (정의상 이것도 Jamstack이지만, 별도로 비교합니다).
+
+어떤 것을 선택해야 할지 확실하지 않다면, 다음 질문을 해보세요:
+
+<details>
+
+<summary>
+  이것에 얼마나 많은 자원(돈, 인시 등)을 투자할 의향이 있습니까?
+</summary>
+
+- 🔴 자체 호스팅은 네트워킹과 Linux 및 웹 서버 관리 경험이 필요합니다. 가장 어려운 옵션이며, 성공적으로 관리하는 데 가장 많은 시간이 필요합니다. 비용 측면에서는 클라우드 서비스가 거의 무료가 아니며, 온사이트 서버를 구매/배포하는 것은 더 비쌀 수 있습니다.
+- 🟢 Jamstack 제공업체는 거의 즉시 작동하는 웹사이트를 설정하는 데 도움을 줄 수 있으며 쉽게 구성할 수 있는 서버 측 리디렉션과 같은 기능을 제공합니다. 많은 제공업체가 무료 플랜에서도 관대한 빌드 시간 할당량을 제공하여 거의 초과하지 않을 것입니다. 하지만 무료 플랜에는 한계가 있으며, 이러한 한계에 도달하면 비용을 지불해야 합니다. 자세한 내용은 제공업체의 가격 페이지를 확인하세요.
+- 🟡 GitHub Pages 배포 워크플로우는 설정하기 번거로울 수 있습니다. (증거: [GitHub Pages에 배포하기](#deploying-to-github-pages) 섹션의 길이를 보세요!) 하지만 이 서비스(빌드 및 배포 포함)는 공개 저장소의 경우 항상 무료이며, 작동하도록 도와주는 자세한 지침이 있습니다.
+
+</details>
+
+<details>
+
+<summary>서버 측 사용자 정의가 얼마나 필요합니까?</summary>
+
+- 🟢 자체 호스팅을 사용하면 서버의 전체 구성에 액세스할 수 있습니다. 요청 URL을 기반으로 다른 콘텐츠를 제공하도록 가상 호스트를 구성하고, 복잡한 서버 측 리디렉션을 수행하고, 인증을 구현하는 등의 작업을 할 수 있습니다. 서버 측 기능이 많이 필요한 경우 웹사이트를 자체 호스팅하세요.
+- 🟡 Jamstack은 일반적으로 일부 서버 측 구성(예: URL 형식(후행 슬래시), 서버 측 리디렉션 등)을 제공합니다.
+- 🔴 GitHub Pages는 HTTPS 적용과 CNAME 레코드 설정 외에는 서버 측 구성을 노출하지 않습니다.
+
+</details>
+
+<details>
+
+<summary>협업에 친숙한 배포 워크플로우가 필요합니까?</summary>
+
+- 🟡 자체 호스팅 서비스는 Netlify와 같은 지속적 배포 기능을 활용할 수 있지만, 더 많은 작업이 필요합니다. 일반적으로 특정 사람을 배포 관리자로 지정하며, 워크플로우는 다른 두 옵션에 비해 git 기반이 아닐 것입니다.
+- 🟢 Netlify와 Vercel은 프로덕션에 병합하기 전에 팀이 작업을 검토할 수 있도록 모든 풀 리퀘스트에 대한 배포 미리보기를 제공합니다. 또한 배포에 대한 다양한 멤버 액세스 권한이 있는 팀을 관리할 수 있습니다.
+- 🟡 GitHub Pages는 복잡하지 않은 방식으로 배포 미리보기를 할 수 없습니다. 하나의 저장소는 하나의 사이트 배포에만 연결될 수 있습니다. 반면에 사이트 배포에 대한 쓰기 액세스 권한이 있는 사람을 제어할 수 있습니다.
+
+</details>
+
+만능 해결책은 없습니다. 선택하기 전에 필요한 사항과 사용 가능한 자원을 잘 고려해야 합니다.
+
+## 자체 호스팅 {#self-hosting}
+
+Docusaurus는 [`docusaurus serve`](cli.mdx#docusaurus-serve-sitedir)를 사용하여 자체 호스팅할 수 있습니다. `--port`를 사용하여 포트를 변경하고 `--host`를 사용하여 호스트를 변경하세요.
+
+```bash npm2yarn
+npm run serve -- --build --port 80 --host 0.0.0.0
+```
+
+:::warning
+
+정적 호스팅 제공업체 / CDN과 비교했을 때 최선의 선택이 아닙니다.
+
+:::
+
+:::warning
+
+다음 섹션에서는 Docusaurus 사이트를 가장 효율적으로 배포하도록 구성해야 하는 몇 가지 일반적인 호스팅 제공업체와 그 방법을 소개합니다. Docusaurus는 이러한 서비스와 제휴하지 않았으며, 이 정보는 편의를 위해서만 제공됩니다. 일부 설명은 제3자가 제공한 것이며, 최근의 API 변경 사항이 우리 측에 반영되지 않았을 수 있습니다. 오래된 내용이 보이면 PR을 환영합니다.
+
+우리는 이 콘텐츠를 최선의 노력으로만 제공할 수 있기 때문에, 새로운 호스팅 옵션을 추가하는 PR의 수락을 중단했습니다. 하지만 다른 사이트(예: 블로그 또는 제공업체의 공식 웹사이트)에 설명을 게시하고 해당 설명에 대한 링크를 포함하도록 요청할 수 있습니다.
+
+:::
+
+## Netlify에 배포하기 {#deploying-to-netlify}
+
+[Netlify](https://www.netlify.com/)에 Docusaurus 사이트를 배포하려면 먼저 다음 옵션이 올바르게 구성되어 있는지 확인하세요:
+
+```js title="docusaurus.config.js"
+export default {
+  // highlight-start
+  url: 'https://docusaurus-2.netlify.app', // 후행 슬래시가 없는 사이트 URL
+  baseUrl: '/', // 저장소를 기준으로 한 사이트의 기본 디렉터리
+  // highlight-end
+  // ...
+};
+```
+
+그런 다음, [Netlify로 사이트를 생성](https://app.netlify.com/start)하세요.
+
+사이트를 설정하는 동안 빌드 명령과 디렉터리를 다음과 같이 지정하세요:
+
+- 빌드 명령: `npm run build`
+- 게시 디렉터리: `build`
+
+이러한 빌드 옵션을 구성하지 않은 경우에도 사이트가 생성된 후 "Site settings" -> "Build & deploy"에서 설정할 수 있습니다.
+
+위의 옵션으로 올바르게 구성되면, 사이트는 배포 브랜치(기본값은 `main`)에 병합할 때 자동으로 배포되고 재배포됩니다.
+
+:::warning
+
+일부 Docusaurus 사이트는 `docs` 폴더를 `website` 외부에 둡니다(대부분 이전 Docusaurus v1 사이트):
+
+```bash
+repo           # git 루트
+├── docs       # MD 파일
+└── website    # Docusaurus 루트
+```
+
+Netlify의 기본 디렉터리로 `website` 폴더를 사용하기로 결정한 경우, Netlify는 `docs` 폴더를 업데이트할 때 빌드를 자동으로 실행하지 않습니다. 이를 해결하려면, [사용자 정의 `ignore` 명령](https://docs.netlify.com/configure-builds/common-configurations/ignore-builds/)을 구성해야 합니다:
+
+```toml title="website/netlify.toml"
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF . ../docs/"
+```
+
+:::
+
+:::warning
+
+기본적으로 Netlify는 Docusaurus URL에 후행 슬래시를 추가합니다.
+
+불필요한 리디렉션과 404 오류, 소문자 URL을 방지하기 위해 Netlify 설정 `Post Processing > Asset Optimization > Pretty Urls`를 비활성화하는 것이 좋습니다.
+
+**매우 주의하세요**: `Disable asset optimization` 전역 체크박스는 실제로는 `Pretty URLs` 설정을 비활성화하지 않습니다. **독립적으로 체크를 해제**해야 합니다.
+
+Netlify `Pretty Urls` 설정을 유지하려면 Docusaurus `trailingSlash` 설정을 적절히 조정하세요.
+
+자세한 내용은 [slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide)를 참조하세요.
+
+:::
+
+## Vercel에 배포하기 {#deploying-to-vercel}
+
+[Vercel](https://vercel.com/)에 Docusaurus 프로젝트를 배포하면 성능과 사용 편의성 측면에서 [다양한 이점](https://vercel.com/)을 얻을 수 있습니다.
+
+[Vercel for Git Integration](https://vercel.com/docs/concepts/git)을 사용하여 Docusaurus 프로젝트를 배포하려면 먼저 Git 저장소에 푸시되어 있어야 합니다.
+
+[Import Flow](https://vercel.com/import/git)를 사용하여 프로젝트를 Vercel로 가져옵니다. 가져오는 동안 모든 관련 옵션이 미리 구성되어 있는 것을 확인할 수 있습니다. 하지만 이러한 [옵션](https://vercel.com/docs/build-step#build-&-development-settings) 중 어느 것이든 변경할 수 있습니다.
+
+프로젝트가 가져오기된 후에는 브랜치에 대한 모든 후속 푸시가 [미리보기 배포](https://vercel.com/docs/platform/deployments#preview)를 생성하며, [프로덕션 브랜치](https://vercel.com/docs/git-integrations#production-branch)(일반적으로 "main" 또는 "master")에 대한 모든 변경 사항은 [프로덕션 배포](https://vercel.com/docs/platform/deployments#production)로 이어집니다.
+
+## GitHub Pages에 배포하기 {#deploying-to-github-pages}
+
+Docusaurus는 모든 GitHub 저장소에서 무료로 제공되는 [GitHub Pages](https://pages.github.com/)에 쉽게 게시할 수 있는 방법을 제공합니다.
+
+### 개요 {#github-pages-overview}
+
+일반적으로 게시 프로세스에는 두 개의 저장소(최소한 두 개의 브랜치)가 관련됩니다. 소스 파일이 포함된 브랜치와 GitHub Pages로 제공될 빌드 출력이 포함된 브랜치입니다. 다음 튜토리얼에서는 이들을 각각 "**소스**"와 "**배포**"라고 부를 것입니다.
+
+각 GitHub 저장소는 GitHub Pages 서비스와 연결되어 있습니다. 배포 저장소가 `my-org/my-project`인 경우(`my-org`는 조직 이름 또는 사용자 이름), 배포된 사이트는 `https://my-org.github.io/my-project/`에 표시됩니다. 배포 저장소가 `my-org/my-org.github.io`(_조직 GitHub Pages 저장소_)인 경우, 사이트는 `https://my-org.github.io/`에 표시됩니다.
+
+:::info
+
+GitHub Pages에서 사용자 정의 도메인을 사용하려면 `static` 디렉터리에 `CNAME` 파일을 생성하세요. `static` 디렉터리 내의 모든 것은 배포를 위해 `build` 디렉터리의 루트로 복사됩니다. 사용자 정의 도메인을 사용할 때는 `baseUrl: '/projectName/'`에서 `baseUrl: '/'`로 돌아갈 수 있으며, `url`도 사용자 정의 도메인으로 설정할 수 있습니다.
+
+자세한 내용은 GitHub Pages의 [사용자, 조직 및 프로젝트 페이지](https://help.github.com/en/articles/user-organization-and-project-pages) 문서를 참조하세요.
+
+:::
+
+GitHub Pages는 기본 브랜치(`master` / `main`, 일반적으로) 또는 `gh-pages` 브랜치에서 배포 준비가 된 파일(`docusaurus build`의 출력)을 가져오며, 루트 또는 `/docs` 폴더에서 가져옵니다. 저장소의 `Settings > Pages`에서 이를 구성할 수 있습니다. 이 브랜치를 "배포 브랜치"라고 부릅니다.
+
+우리는 소스 브랜치에서 배포 브랜치로 사이트를 배포하는 데 도움이 되는 `docusaurus deploy` 명령을 제공합니다: 클론, 빌드, 그리고 커밋을 한 번의 명령으로 수행합니다.
+
+### `docusaurus.config.js` 설정 {#docusaurusconfigjs-settings}
+
+먼저, `docusaurus.config.js`를 수정하고 다음 매개변수를 추가하세요:
+
+| 이름 | 설명 |
+| --- | --- |
+| `organizationName` | 배포 저장소를 소유한 GitHub 사용자 또는 조직입니다. |
+| `projectName` | 배포 저장소의 이름입니다. |
+| `deploymentBranch` | 배포 브랜치의 이름입니다. 비조직 GitHub Pages 저장소(`projectName`이 `.github.io`로 끝나지 않는 경우)의 경우 기본값은 `'gh-pages'`입니다. 그렇지 않은 경우 설정 필드나 환경 변수로 명시적으로 지정해야 합니다. |
+
+이러한 필드에는 더 높은 우선순위를 가진 환경 변수 대응값도 있습니다: `ORGANIZATION_NAME`, `PROJECT_NAME`, 그리고 `DEPLOYMENT_BRANCH`.
+
+:::warning
+
+GitHub Pages는 기본적으로 Docusaurus URL에 후행 슬래시를 추가합니다. `trailingSlash` 설정(`true` 또는 `false`, `undefined`가 아님)을 설정하는 것이 좋습니다.
+
+:::
+
+예시:
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  url: 'https://endiliey.github.io', // 웹사이트 URL
+  baseUrl: '/',
+  // highlight-start
+  projectName: 'endiliey.github.io',
+  organizationName: 'endiliey',
+  trailingSlash: false,
+  // highlight-end
+  // ...
+};
+```
+
+:::warning
+
+기본적으로 GitHub Pages는 게시된 파일을 [Jekyll](https://jekyllrb.com/)을 통해 실행합니다. Jekyll은 `_`로 시작하는 모든 파일을 무시하므로, `static` 디렉터리에 `.nojekyll`이라는 빈 파일을 추가하여 Jekyll을 비활성화하는 것이 좋습니다.
+
+:::
+
+### 환경 설정 {#environment-settings}
+
+| 이름 | 설명 |
+| --- | --- |
+| `USE_SSH` | GitHub 저장소 연결에 기본 HTTPS 대신 SSH를 사용하려면 `true`로 설정합니다. 소스 저장소 URL이 SSH URL인 경우(예: `git@github.com:facebook/docusaurus.git`), `USE_SSH`는 `true`로 추론됩니다. |
+| `GIT_USER` | **배포 저장소에 대한 푸시 액세스 권한이 있는** GitHub 계정의 사용자 이름입니다. 자신의 저장소의 경우 일반적으로 GitHub 사용자 이름이 됩니다. SSH를 사용하지 않는 경우 필수이며, 그렇지 않으면 무시됩니다. |
+| `GIT_PASS` | git 사용자(GIT_USER로 지정)의 개인 액세스 토큰으로, 비대화형 배포(예: 지속적 배포)를 용이하게 합니다. |
+| `CURRENT_BRANCH` | 소스 브랜치입니다. 일반적으로 브랜치는 `main` 또는 `master`가 되지만 `gh-pages`를 제외한 어떤 브랜치도 될 수 있습니다. 이 변수가 설정되지 않은 경우 `docusaurus deploy`가 호출된 현재 브랜치가 사용됩니다. |
+| `GIT_USER_NAME` | 배포되는 저장소에 푸시할 때 사용할 `git config user.name` 값입니다. |
+| `GIT_USER_EMAIL` | 배포되는 저장소에 푸시할 때 사용할 `git config user.email` 값입니다. |
+
+GitHub 엔터프라이즈 설치는 github.com과 동일한 방식으로 작동해야 합니다. 조직의 GitHub 엔터프라이즈 호스트를 환경 변수로 설정하기만 하면 됩니다:
+
+| 이름          | 설명                                            |
+| ------------- | ----------------------------------------------- |
+| `GITHUB_HOST` | GitHub 엔터프라이즈 사이트의 도메인 이름입니다. |
+| `GITHUB_PORT` | GitHub 엔터프라이즈 사이트의 포트입니다.        |
+
+### 배포 {#deploy}
+
+마지막으로, GitHub Pages에 사이트를 배포하려면 다음을 실행하세요:
+
+```mdx-code-block
+<Tabs>
+<TabItem value="bash" label="Bash">
+```
+
+```bash
+GIT_USER=<GITHUB_USERNAME> yarn deploy
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="windows" label="Windows">
+```
+
+```batch
+cmd /C "set "GIT_USER=<GITHUB_USERNAME>" && yarn deploy"
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="powershell" label="PowerShell">
+```
+
+```powershell
+cmd /C 'set "GIT_USER=<GITHUB_USERNAME>" && yarn deploy'
+```
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+:::warning
+
+2021년 8월부터 GitHub는 모든 명령줄 로그인에 대해 패스워드 대신 **개인 액세스 토큰**을 사용하도록 요구합니다. GitHub가 비밀번호를 묻는 경우 PAT를 입력하세요. 자세한 내용은 [GitHub 문서](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)를 참조하세요.
+
+또는 SSH(`USE_SSH=true`)를 사용하여 로그인할 수 있습니다.
+
+:::
+
+### GitHub Actions로 배포 트리거하기 {#triggering-deployment-with-github-actions}
+
+[GitHub Actions](https://help.github.com/en/actions)를 사용하면 저장소에서 직접 소프트웨어 개발 워크플로우를 자동화, 사용자 정의 및 실행할 수 있습니다.
+
+아래의 워크플로우 예제는 웹사이트 소스가 저장소의 `main` 브랜치에 있다고 가정합니다. 다시 말해, *소스 브랜치*는 `main`입니다. 그리고 [게시 소스](https://help.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)가 [사용자 정의 GitHub Actions 워크플로우로 게시](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow)하도록 구성되어 있습니다.
+
+우리의 목표는 다음과 같습니다:
+
+1. `main`에 새로운 풀 리퀘스트가 생성될 때, 실제로 배포하지 않고 사이트가 성공적으로 빌드되는지 확인하는 작업이 있습니다. 이 작업은 `test-deploy`라고 불립니다.
+2. 풀 리퀘스트가 `main` 브랜치에 병합되거나 누군가가 `main` 브랜치에 직접 푸시할 때, GitHub Pages에 빌드되고 배포됩니다. 이 작업은 `deploy`라고 불립니다.
+
+GitHub Actions로 문서를 배포하는 두 가지 접근 방식이 있습니다. 배포 저장소의 위치에 따라 아래의 관련 탭을 선택하세요:
+
+- 소스 저장소와 배포 저장소가 **동일한** 저장소입니다.
+- 배포 저장소가 소스와 다른 **원격** 저장소입니다. 이 시나리오에 대한 지침은 [배포용 브랜치](https://help.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)가 `gh-pages` 브랜치라고 가정합니다.
+
+```mdx-code-block
+<Tabs>
+<TabItem value="same" label="동일">
+```
+
+두 작업을 같은 워크플로우 파일에서 정의할 수 있지만, 기존의 배포 워크플로우는 PR 확인 상태에서 항상 건너뛴 것으로 표시됩니다. 이는 실제 상태를 반영하지 않으며, 검토 과정에서도 별다른 도움을 주지 않습니다. 따라서 두 작업을 별도의 워크플로우로 관리할 것을 제안합니다.
+
+<details>
+<summary>GitHub action 파일</summary>
+
+다음 두 개의 워크플로우 파일을 추가하세요:
+
+:::warning 설정에 맞게 매개변수 조정
+
+이 파일들은 Yarn을 사용한다고 가정합니다. npm을 사용하는 경우 `cache: yarn`, `yarn install --frozen-lockfile`, `yarn build`를 `cache: npm`, `npm ci`, `npm run build`로 각각 변경하세요.
+
+Docusaurus 프로젝트가 저장소의 루트에 없는 경우 [기본 작업 디렉터리](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-set-the-default-shell-and-working-directory)를 구성하고 경로를 적절히 조정해야 할 수 있습니다.
+
+:::
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # 트리거, 경로 등을 추가로 정의하려면 gh actions 문서 참조
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build website
+        run: yarn build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Pages 배포에 필요한 권한을 GITHUB_TOKEN에 부여
+    permissions:
+      pages: write # Pages에 배포하기 위해
+      id-token: write # 배포가 적절한 소스에서 시작되었는지 확인하기 위해
+
+    # github-pages 환경에 배포
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+```yml title=".github/workflows/test-deploy.yml"
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    # 트리거, 경로 등을 추가로 정의하려면 gh actions 문서 참조
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  test-deploy:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test build website
+        run: yarn build
+```
+
+</details>
+
+```mdx-code-block
+</TabItem>
+<TabItem value="remote" label="원격">
+```
+
+저장소 간 게시는 권한 검사가 있는 다른 저장소에 푸시해야 하기 때문에 설정하기가 더 어렵습니다. 인증을 위해 SSH를 사용할 것입니다.
+
+1. 새로운 [SSH 키](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)를 생성하세요. 이 SSH 키는 CI에서 사용될 것이므로 암호를 입력하지 마세요.
+2. 기본적으로 공개 키는 `~/.ssh/id_rsa.pub`에 생성되었을 것입니다. 그렇지 않은 경우 이전 단계에서 제공한 이름을 사용하여 키를 [GitHub 배포 키](https://developer.github.com/v3/guides/managing-deploy-keys/)에 추가하세요.
+3. `pbcopy < ~/.ssh/id_rsa.pub`로 키를 클립보드에 복사하고 배포 저장소의 [배포 키](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys)로 붙여넣으세요. 명령줄이 작동하지 않는 경우 파일 내용을 복사하세요. 배포 키를 저장하기 전에 `Allow write access` 상자를 체크하세요.
+4. Docusaurus가 배포를 실행할 수 있도록 [GitHub 시크릿](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets)으로 개인 키가 필요합니다.
+5. `pbcopy < ~/.ssh/id_rsa`로 개인 키를 복사하고 소스 저장소에 `GH_PAGES_DEPLOY`라는 이름의 GitHub 시크릿으로 붙여넣으세요. 명령줄이 작동하지 않는 경우 파일 내용을 복사하세요. 시크릿을 저장하세요.
+6. `.github/workflows/` 디렉터리에 [문서화 워크플로우](https://docs.github.com/en/actions/use-cases-and-examples/creating-an-example-workflow)를 생성하세요. 이 예제에서는 `deploy.yml` 파일입니다.
+
+이 시점에서 다음이 있어야 합니다:
+
+- 개인 SSH 키가 GitHub 시크릿으로 설정된 GitHub 워크플로우가 있는 소스 저장소
+- GitHub 배포 키에 공개 SSH 키가 설정된 배포 저장소
+
+<details>
+
+<summary>GitHub action 파일</summary>
+
+:::warning
+
+`actions@github.com`을 GitHub 이메일로, `gh-actions`를 이름으로 변경했는지 확인하세요.
+
+이 파일은 Yarn을 사용한다고 가정합니다. npm을 사용하는 경우 `cache: yarn`, `yarn install --frozen-lockfile`, `yarn build`를 `cache: npm`, `npm ci`, `npm run build`로 각각 변경하세요.
+
+:::
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test-deploy:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test build website
+        run: yarn build
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+      - uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - name: Deploy to GitHub Pages
+        env:
+          USE_SSH: true
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "gh-actions"
+          yarn install --frozen-lockfile
+          yarn deploy
+```
+
+</details>
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+<details>
+
+<summary>사이트가 제대로 배포되지 않았나요?</summary>
+
+main에 푸시한 후 원하는 위치에서 사이트가 게시되지 않는 경우(예: "There isn't a GitHub Pages site here"가 표시되거나 저장소의 README.md 파일이 표시되는 경우) 다음을 시도해보세요:
+
+- 약 3분 정도 기다렸다가 새로고침하세요. GitHub pages가 새 파일을 적용하는 데 몇 분이 걸릴 수 있습니다.
+- 저장소 랜딩 페이지에서 마지막 커밋 제목 옆에 있는 작은 초록색 체크 표시를 확인하세요. 이는 CI가 통과했음을 나타냅니다. 빨간색 X표시가 보이면 빌드나 배포가 실패했다는 의미이며, 더 많은 디버깅 정보를 위해 로그를 확인해야 합니다.
+- 체크 표시를 클릭하고 "Deploy to GitHub Pages" 워크플로우가 있는지 확인하세요. "pages build and deployment / deploy"와 같은 이름은 GitHub의 기본 워크플로우를 나타내며, 사용자 정의 배포 워크플로우가 전혀 실행되지 않았음을 나타냅니다. YAML 파일이 `.github/workflows` 폴더 아래에 있는지, 그리고 트리거 조건이 올바르게 설정되어 있는지 확인하세요(예: 기본 브랜치가 "main" 대신 "master"인 경우 `on.push` 속성을 변경해야 합니다).
+- 저장소의 Settings > Pages에서 "Source"(_배포_ 파일의 소스이며, 우리 용어의 "source"가 아님)가 "gh-pages" + "/ (root)"로 설정되어 있는지 확인하세요. 우리는 `gh-pages`를 배포 브랜치로 사용하고 있기 때문입니다.
+
+사용자 정의 도메인을 사용하는 경우:
+
+- 사용자 정의 도메인을 사용하는 경우 올바른 DNS 레코드가 설정되어 있는지 확인하세요. [사용자 정의 도메인 구성에 대한 GitHub pages 문서](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages)를 참조하세요. 또한 DNS 변경사항이 인터넷을 통해 전파되는 데 최대 24시간이 걸릴 수 있다는 점을 알아두세요.
+
+</details>
+
+### Travis CI로 배포 자동화하기 {#triggering-deployment-with-travis-ci}
+
+지속적 통합(CI) 서비스는 일반적으로 새로운 커밋이 소스 컨트롤에 체크인될 때마다 반복적인 작업을 수행하는 데 사용됩니다. 이러한 작업은 단위 테스트 및 통합 테스트 실행, 빌드 자동화, npm에 패키지 게시, 웹사이트 변경사항 배포 등의 조합일 수 있습니다. 웹사이트 배포를 자동화하기 위해 해야 할 일은 웹사이트가 업데이트될 때마다 `yarn deploy` 스크립트를 호출하는 것뿐입니다. 다음 섹션에서는 인기 있는 지속적 통합 서비스 제공업체인 [Travis CI](https://travis-ci.com/)를 사용하여 이를 수행하는 방법을 설명합니다.
+
+1. https://github.com/settings/tokens로 이동하여 새로운 [개인 액세스 토큰](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)을 생성하세요. 토큰을 생성할 때 필요한 권한이 있도록 `repo` 범위를 부여하세요.
+2. GitHub 계정을 사용하여 활성화하려는 저장소에 [Travis CI 앱을 추가](https://github.com/marketplace/travis-ci)하세요.
+3. Travis CI 대시보드를 여세요. URL은 `https://travis-ci.com/USERNAME/REPO`와 같으며, 저장소의 `More options > Setting > Environment Variables` 섹션으로 이동하세요.
+4. 새로 생성된 토큰을 값으로 하는 `GH_TOKEN`이라는 새로운 환경 변수와 `GH_EMAIL`(이메일 주소) 및 `GH_NAME`(GitHub 사용자 이름)을 생성하세요.
+5. 저장소의 루트에 다음과 같은 내용이 포함된 `.travis.yml`을 생성하세요:
+
+```yml title=".travis.yml"
+language: node_js
+node_js:
+  - 18
+branches:
+  only:
+    - main
+cache:
+  yarn: true
+script:
+  - git config --global user.name "${GH_NAME}"
+  - git config --global user.email "${GH_EMAIL}"
+  - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+  - yarn install
+  - GIT_USER="${GH_NAME}" yarn deploy
+```
+
+이제 새로운 커밋이 `main`에 들어올 때마다 Travis CI는 테스트 스위트를 실행하고 모든 것이 통과되면 `yarn deploy` 스크립트를 통해 웹사이트가 배포됩니다.
+
+### Buddy로 배포 자동화하기 {#triggering-deployment-with-buddy}
+
+[Buddy](https://buddy.works/)는 포털을 GitHub Pages를 포함한 다양한 환경에 배포하는 작업을 자동화할 수 있게 해주는 사용하기 쉬운 CI/CD 도구입니다.
+
+선택한 브랜치의 변경 사항을 푸시할 때마다 자동으로 웹사이트의 새 버전을 배포하는 파이프라인을 만들려면 다음 단계를 따르세요:
+
+1. https://github.com/settings/tokens로 이동하여 새로운 [개인 액세스 토큰](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)을 생성하세요. 토큰을 생성할 때 필요한 권한이 있도록 `repo` 범위를 부여하세요.
+2. Buddy 계정에 로그인하고 새 프로젝트를 생성하세요.
+3. git 호스팅 제공업체로 GitHub를 선택하고 웹사이트 코드가 있는 저장소를 선택하세요.
+4. 왼쪽 탐색 패널을 사용하여 `Pipelines` 뷰로 전환하세요.
+5. 새 파이프라인을 생성하세요. 이름을 정의하고 실행 모드를 `On push`로 설정하고 파이프라인 실행을 트리거할 브랜치를 선택하세요.
+6. `Node.js` 액션을 추가하세요.
+7. 액션의 터미널에 다음 명령을 추가하세요:
+
+```bash
+GIT_USER=<GH_PERSONAL_ACCESS_TOKEN>
+git config --global user.email "<YOUR_GH_EMAIL>"
+git config --global user.name "<YOUR_GH_USERNAME>"
+yarn deploy
+```
+
+이 간단한 파이프라인을 생성한 후, 선택한 브랜치에 푸시된 각각의 새로운 커밋은 `yarn deploy`를 사용하여 GitHub Pages에 웹사이트를 배포합니다. Docusaurus를 위한 CI/CD 파이프라인 설정에 대해 더 자세히 알아보려면 [이 가이드](https://buddy.works/guides/react-docusaurus)를 읽어보세요.
+
+### Azure Pipelines 사용하기 {#using-azure-pipelines}
+
+1. 아직 가입하지 않았다면 [Azure Pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/)에 가입하세요.
+2. 조직을 생성하세요. 조직 내에서 프로젝트를 생성하고 GitHub에서 저장소를 연결하세요.
+3. https://github.com/settings/tokens로 이동하여 `repo` 범위를 가진 새 [개인 액세스 토큰](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)을 생성하세요.
+4. 프로젝트 페이지(`https://dev.azure.com/ORG_NAME/REPO_NAME/_build`와 같은 형식)에서 다음 텍스트로 새 파이프라인을 생성하세요. 또한 편집을 클릭하고 새로 생성된 토큰을 값으로 하는 `GH_TOKEN`이라는 새로운 환경 변수와 `GH_EMAIL`(이메일 주소) 및 `GH_NAME`(GitHub 사용자 이름)을 추가하세요. 비밀로 표시하는 것을 잊지 마세요. 또는 저장소 루트에 `azure-pipelines.yml`이라는 파일을 추가할 수도 있습니다.
+
+```yml title="azure-pipelines.yml"
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18'
+    displayName: Node.js 설치
+
+  - script: |
+      git config --global user.name "${GH_NAME}"
+      git config --global user.email "${GH_EMAIL}"
+      git checkout -b main
+      echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+      yarn install
+      GIT_USER="${GH_NAME}" yarn deploy
+    env:
+      GH_NAME: $(GH_NAME)
+      GH_EMAIL: $(GH_EMAIL)
+      GH_TOKEN: $(GH_TOKEN)
+    displayName: 설치 및 빌드
+```
+
+### Drone 사용하기 {#using-drone}
+
+1. 프로젝트의 [배포 키](https://docs.github.com/en/free-pro-team@latest/developers/overview/managing-deploy-keys#deploy-keys)가 될 새로운 SSH 키를 생성하세요.
+2. 다른 [SSH 키](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)와 겹치지 않도록 개인 키와 공개 키의 이름을 구체적으로 지정하세요.
+3. `https://github.com/USERNAME/REPO/settings/keys`로 이동하여 방금 생성한 공개 키를 붙여넣어 새 배포 키를 추가하세요.
+4. Drone.io 대시보드를 열고 로그인하세요. URL은 `https://cloud.drone.io/USERNAME/REPO`와 같은 형식입니다.
+5. 저장소를 클릭하고, 저장소 활성화를 클릭한 다음, 방금 생성한 개인 키 값으로 `git_deploy_private_key`라는 시크릿을 추가하세요.
+6. 저장소의 루트에 아래 텍스트가 포함된 `.drone.yml`을 생성하세요.
+
+```yml title=".drone.yml"
+kind: pipeline
+type: docker
+trigger:
+  event:
+    - tag
+- name: Website
+  image: node
+  commands:
+    - mkdir -p $HOME/.ssh
+    - ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
+    - echo "$GITHUB_PRIVATE_KEY" > "$HOME/.ssh/id_rsa"
+    - chmod 0600 $HOME/.ssh/id_rsa
+    - cd website
+    - yarn install
+    - yarn deploy
+  environment:
+    USE_SSH: true
+    GITHUB_PRIVATE_KEY:
+      from_secret: git_deploy_private_key
+```
+
+이제 GitHub에 새 태그를 푸시할 때마다 이 트리거가 웹사이트를 게시하는 drone CI 작업을 시작합니다.
+
+## Flightcontrol에 배포하기 {#deploying-to-flightcontrol}
+
+[Flightcontrol](https://www.flightcontrol.dev/?ref=docusaurus)은 Git 저장소에서 직접 웹 앱을 자동으로 빌드하고 AWS Fargate에 배포하는 서비스입니다. 기존 PaaS의 제한 없이 인프라를 검사하고 변경할 수 있는 전체 액세스 권한을 제공합니다.
+
+[Flightcontrol의 단계별 Docusaurus 가이드](https://www.flightcontrol.dev/docs/reference/examples/docusaurus/?ref=docusaurus)를 따라 시작하세요.
+
+## Koyeb에 배포하기 {#deploying-to-koyeb}
+
+[Koyeb](https://www.koyeb.com)은 앱을 전역적으로 배포하기 위한 개발자 친화적인 서버리스 플랫폼입니다. 이 플랫폼은 git 기반 배포, 네이티브 자동 확장, 글로벌 엣지 네트워크, 내장 서비스 메시 및 검색 기능을 통해 Docker 컨테이너, 웹 앱 및 API를 원활하게 실행할 수 있게 해줍니다. 시작하려면 [Koyeb의 Docusaurus 배포 가이드](https://www.koyeb.com/tutorials/deploy-docusaurus-on-koyeb)를 확인하세요.
+
+## Render에 배포하기 {#deploying-to-render}
+
+[Render](https://render.com)는 완전히 관리되는 SSL, 사용자 정의 도메인, 글로벌 CDN 및 Git 저장소에서의 지속적인 자동 배포와 함께 [무료 정적 사이트 호스팅](https://render.com/docs/static-sites)을 제공합니다. [Render의 Docusaurus 배포 가이드](https://render.com/docs/deploy-docusaurus)를 따라 몇 분 안에 시작하세요.
+
+## Qovery에 배포하기 {#deploying-to-qovery}
+
+[Qovery](https://www.qovery.com)는 AWS, Digital Ocean 및 Scaleway 계정에서 실행되는 완전 관리형 클라우드 플랫폼으로, 정적 사이트, 백엔드 API, 데이터베이스, cron 작업 및 기타 모든 앱을 한 곳에서 호스팅할 수 있습니다.
+
+1. Qovery 계정 생성. 계정이 없다면 [Qovery 대시보드](https://console.qovery.com)를 방문하여 계정을 만드세요.
+2. 프로젝트 생성.
+   - **Create project**를 클릭하고 프로젝트 이름을 지정하세요.
+   - **Next**를 클릭하세요.
+3. 새 환경 생성.
+   - **Create environment**를 클릭하고 이름을 지정하세요(예: staging, production).
+4. 애플리케이션 추가.
+   - **Create an application**을 클릭하고 이름을 지정한 다음 Docusaurus 앱이 있는 GitHub 또는 GitLab 저장소를 선택하세요.
+   - 메인 브랜치 이름과 루트 애플리케이션 경로를 정의하세요.
+   - **Create**를 클릭하세요. 애플리케이션이 생성된 후:
+   - 애플리케이션 **Settings**로 이동
+   - **Port** 선택
+   - Docusaurus 애플리케이션이 사용하는 포트 추가
+5. 배포
+   - 이제 애플리케이션으로 이동하여 **Deploy**를 클릭하기만 하면 됩니다.
+
+![앱 배포](https://hub.qovery.com/img/heroku/heroku-1.png)
+
+이게 전부입니다. 상태를 지켜보고 앱이 배포될 때까지 기다리세요. 브라우저에서 애플리케이션을 열려면 애플리케이션 개요에서 **Action**과 **Open**을 클릭하세요.
+
+## Hostman에 배포하기 {#deploying-to-hostman}
+
+[Hostman](https://hostman.com/)을 사용하면 정적 웹사이트를 무료로 호스팅할 수 있습니다. Hostman은 모든 것을 자동화하므로, 저장소를 연결하고 다음과 같은 간단한 단계만 따르면 됩니다:
+
+1. 서비스 생성.
+
+   - Docusaurus 정적 웹사이트를 배포하려면 [대시보드](https://dashboard.hostman.com/)의 왼쪽 상단에서 **Create**를 클릭하고 **Front-end app or static website**를 선택하세요.
+
+2. 배포할 프로젝트 선택.
+
+   - GitHub, GitLab 또는 Bitbucket 계정으로 Hostman에 로그인한 경우 비공개 프로젝트를 포함한 프로젝트의 저장소가 표시됩니다.
+
+   - 배포하려는 프로젝트를 선택하세요. 프로젝트 파일이 있는 디렉터리(예: `website`)가 포함되어 있어야 합니다.
+
+   - 다른 저장소에 액세스하려면 **Connect another repository**를 클릭하세요.
+
+   - Git 계정 자격 증명을 사용하여 로그인하지 않은 경우 지금 필요한 계정에 액세스할 수 있으며, 그 후 프로젝트를 선택할 수 있습니다.
+
+3. 빌드 설정 구성.
+
+   - 다음으로 **Website customization** 창이 나타납니다. 프레임워크 목록에서 **Static website** 옵션을 선택하세요.
+
+   - **Directory with app**은 빌드 후 프로젝트 파일이 포함될 디렉터리를 가리킵니다. 2단계에서 웹사이트(또는 `my_website`) 디렉터리의 내용이 있는 저장소를 선택한 경우 이를 비워둘 수 있습니다.
+
+   - Docusaurus의 표준 빌드 명령은 다음과 같습니다:
+
+     ```bash npm2yarn
+     npm run build
+     ```
+
+   - 필요한 경우 빌드 명령을 수정할 수 있습니다. `&&`로 구분된 여러 명령을 입력할 수 있습니다.
+
+4. 배포.
+
+   - 빌드 프로세스를 시작하려면 **Deploy**를 클릭하세요.
+
+   - 시작되면 배포 로그로 들어가게 됩니다. 코드에 문제가 있는 경우 문제의 원인을 지정하는 경고 또는 오류 메시지가 로그에 표시됩니다. 일반적으로 로그에는 디버깅에 필요한 모든 데이터가 포함됩니다.
+
+   - 배포가 완료되면 이메일 알림을 받고 로그 항목도 볼 수 있습니다. 모두 완료되었습니다! 프로젝트가 준비되어 실행 중입니다.
+
+## Surge에 배포하기 {#deploying-to-surge}
+
+Surge는 Docusaurus 프로젝트를 명령줄에서 몇 초 만에 배포할 수 있는 [정적 웹 호스팅 플랫폼](https://surge.sh/help/getting-started-with-surge)입니다. Surge를 사용하면 프로젝트를 쉽고 무료로 배포할 수 있습니다(사용자 정의 도메인 및 SSL 인증서 포함).
+
+다음 단계에 따라 Surge를 사용하여 몇 초 만에 앱을 배포하세요:
+
+1. 먼저 npm을 사용하여 다음 명령으로 Surge를 설치하세요:
+   ```bash npm2yarn
+   npm install -g surge
+   ```
+2. 프로젝트의 루트 디렉터리에서 프로덕션용 사이트의 정적 파일을 빌드하려면 다음을 실행하세요:
+   ```bash npm2yarn
+   npm run build
+   ```
+3. 그런 다음 프로젝트의 루트 디렉터리에서 이 명령을 실행하세요:
+   ```bash
+   surge build/
+   ```
+
+Surge를 처음 사용하는 사용자는 명령줄에서 계정을 만들라는 메시지가 표시됩니다(한 번만 발생).
+
+게시하려는 사이트가 `build` 디렉터리에 있는지 확인하세요. 임의로 생성된 `*.surge.sh` 서브도메인이 항상 제공됩니다(편집 가능).
+
+### 도메인 사용하기 {#using-your-domain}
+
+도메인 이름이 있는 경우 다음 명령을 사용하여 사이트를 배포할 수 있습니다:
+
+```bash
+surge build/ your-domain.com
+```
+
+이제 선택한 방법에 따라 사이트가 `subdomain.surge.sh` 또는 `your-domain.com`에 무료로 배포됩니다.
+
+### CNAME 파일 설정하기 {#setting-up-cname-file}
+
+다음 명령으로 향후 배포를 위해 CNAME 파일에 도메인을 저장하세요:
+
+```bash
+echo subdomain.surge.sh > CNAME
+```
+
+이후에는 `surge` 명령으로 다른 변경 사항을 배포할 수 있습니다.
+
+## Stormkit에 배포하기 {#deploying-to-stormkit}
+
+Docusaurus 프로젝트를 [Stormkit](https://www.stormkit.io)에 배포할 수 있습니다. Stormkit은 정적 웹사이트, 단일 페이지 애플리케이션(SPA) 및 서버리스 함수를 위한 배포 플랫폼입니다. 자세한 지침은 이 [가이드](https://www.stormkit.io/blog/how-to-deploy-docusarous)를 참조하세요.
+
+## QuantCDN에 배포하기 {#deploying-to-quantcdn}
+
+1. [Quant CLI](https://docs.quantcdn.io/docs/cli/get-started) 설치
+2. [가입](https://dashboard.quantcdn.io/register)하여 QuantCDN 계정 만들기
+3. `quant init`로 프로젝트를 초기화하고 자격 증명 입력:
+   ```bash
+   quant init
+   ```
+4. 사이트 배포.
+   ```bash
+   quant deploy
+   ```
+
+QuantCDN 배포에 대한 더 많은 예제와 사용 사례는 [문서](https://docs.quantcdn.io/docs/cli/continuous-integration)와 [블로그](https://www.quantcdn.io/blog)를 참조하세요.
+
+## Layer0에 배포하기 {#deploying-to-layer0}
+
+[Layer0](https://www.layer0.co)는 헤드리스 프론트엔드를 개발, 배포, 미리보기, 실험, 모니터링 및 실행하기 위한 올인원 플랫폼입니다. EdgeJS(JavaScript 기반 콘텐츠 전송 네트워크), 예측 프리페칭 및 성능 모니터링을 통한 동적 대규모 웹사이트와 최고 수준의 성능에 중점을 둡니다. Layer0는 무료 티어를 제공합니다. [Layer0의 Docusaurus 배포 가이드](https://docs.layer0.co/guides/docusaurus)를 따라 몇 분 안에 시작하세요.
+
+## Cloudflare Pages에 배포하기 {#deploying-to-cloudflare-pages}
+
+[Cloudflare Pages](https://pages.cloudflare.com/)는 프론트엔드 개발자가 웹사이트를 협업하고 배포할 수 있는 Jamstack 플랫폼입니다. [이 문서](https://dev.to/apidev234/deploying-docusaurus-to-cloudflare-pages-565g)를 따라 몇 분 안에 시작하세요.
+
+## Azure Static Web Apps에 배포하기 {#deploying-to-azure-static-web-apps}
+
+[Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/overview)는 코드 저장소에서 직접 Azure로 전체 스택 웹 앱을 자동으로 빌드하고 배포하는 서비스로, CI/CD를 위한 개발자 경험을 단순화합니다. Static Web Apps는 웹 애플리케이션의 정적 자산을 동적(API) 엔드포인트와 분리합니다. 정적 자산은 전역적으로 분산된 콘텐츠 서버에서 제공되어 클라이언트가 근처 서버에서 파일을 검색할 수 있어 더 빠릅니다. 동적 API는 이벤트 기반 함수 기반 접근 방식을 사용하는 서버리스 아키텍처로 확장되어 더 비용 효율적이고 요구에 따라 확장됩니다. [이 단계별 가이드](https://dev.to/azure/11-share-content-with-docusaurus-azure-static-web-apps-30hc)를 따라 몇 분 안에 시작하세요.
+
+## Kinsta에 배포하기 {#deploying-to-kinsta}
+
+[Kinsta Static Site Hosting](https://kinsta.com/static-site-hosting)을 사용하면 최대 100개의 정적 사이트를 무료로 배포할 수 있으며, SSL이 적용된 사용자 정의 도메인, 월 100GB 대역폭, 260개 이상의 Cloudflare CDN 위치를 제공합니다.
+
+[Kinsta의 Docusaurus](https://kinsta.com/docs/docusaurus-example/) 문서를 따라 몇 번의 클릭만으로 시작하세요.

@@ -181,6 +181,14 @@ export default async function createConfigAsync() {
     i18n: {
       defaultLocale: 'ko',
       locales: ['ko', 'ja'],
+      localeConfigs: {
+        ko: {
+          label: '한국어',
+        },
+        ja: {
+          label: '日本語',
+        },
+      },
     },
     markdown: {
       format: 'detect',

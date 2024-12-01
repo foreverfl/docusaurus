@@ -1,0 +1,367 @@
+---
+id: react
+description: MDX 덕분에 Docusaurus Markdown 문서에서 React의 강점을 활용하기
+slug: /markdown-features/react
+---
+
+# MDX와 React
+
+```mdx-code-block
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import styles from './markdown-features-react.module.css';
+```
+
+Docusaurus는 [MDX](https://mdxjs.com/)를 기본적으로 지원합니다. 이를 통해 Markdown 파일 내에서 JSX를 작성하고 React 컴포넌트로 렌더링할 수 있습니다.
+
+MDX로 할 수 있는 멋진 것들을 보려면 [MDX 문서](https://mdxjs.com/)를 확인해보세요.
+
+:::tip MDX 디버깅
+
+MDX 형식은 매우 엄격하여 컴파일 오류가 발생할 수 있습니다.
+
+[**MDX 플레이그라운드**](https://mdxjs.com/playground/)를 사용하여 디버깅하고 구문이 유효한지 확인하세요.
+
+:::
+
+### 컴포넌트 내보내기 {#exporting-components}
+
+MDX 파일 내에서 사용자 정의 컴포넌트를 정의하려면 내보내기를 해야 합니다. `export`로 시작하는 단락만 일반 텍스트 대신 컴포넌트로 파싱됩니다.
+
+```jsx
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '2px',
+      color: '#fff',
+      padding: '0.2rem',
+    }}>
+    {children}
+  </span>
+);
+
+<Highlight color="#25c2a0">Docusaurus green</Highlight>과 <Highlight color="#1877F2">Facebook blue</Highlight>는 제가 가장 좋아하는 색상입니다.
+
+**Markdown**과 _JSX_를 함께 작성할 수 있습니다!
+```
+
+React 컴포넌트의 마크업과 Markdown 구문이 어떻게 함께 렌더링되는지 주목하세요:
+
+```mdx-code-block
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '2px',
+      color: '#fff',
+      padding: '0.2rem',
+    }}>
+    {children}
+  </span>
+);
+
+<BrowserWindow minHeight={240}>
+
+<><Highlight color="#25c2a0">Docusaurus green</Highlight>
+{` `}과 <Highlight color="#1877F2">Facebook blue</Highlight>는 제가 가장 좋아하는 색상입니다.</>
+
+**Markdown**과 _JSX_를 함께 작성할 수 있습니다!
+
+</BrowserWindow>
+```
+
+:::warning MDX는 JSX입니다
+
+모든 문서 파일이 MDX를 사용하여 파싱되므로, HTML처럼 보이는 모든 것은 실제로 JSX입니다. 따라서 컴포넌트에 인라인 스타일을 적용해야 할 경우, JSX 방식을 따라 스타일 객체를 제공하세요.
+
+{/* prettier-ignore */}
+```jsx
+/* 이렇게 하지 마세요: */
+<span style="background-color: red">Foo</span>
+/* 대신 이렇게 하세요: */
+<span style={{backgroundColor: 'red'}}>Foo</span>
+```
+
+:::
+
+### 컴포넌트 가져오기 {#importing-components}
+
+다른 파일에 정의된 자체 컴포넌트나 npm을 통해 설치된 서드파티 컴포넌트를 가져올 수도 있습니다.
+
+{/* prettier-ignore */}
+```md
+<!-- Docusaurus 테마 컴포넌트 -->
+import TOCInline from '@theme/TOCInline';
+<!-- 외부 컴포넌트 -->
+import Button from '@mui/material/Button';
+<!-- 사용자 정의 컴포넌트 -->
+import BrowserWindow from '@site/src/components/BrowserWindow';
+```
+
+:::tip
+
+`@site` 별칭은 웹사이트 디렉토리를 가리키며, 보통 `docusaurus.config.js` 파일이 있는 위치입니다. 상대 경로(`'../../src/components/BrowserWindow'`) 대신 별칭을 사용하면 파일을 이동하거나 [문서 버전 관리](../docs/versioning.mdx) 및 [번역](../../i18n/i18n-tutorial.mdx)을 할 때 가져오기 경로를 업데이트할 필요가 없습니다.
+
+:::
+
+Markdown 내에서 컴포넌트를 선언하는 것은 간단한 경우에는 매우 편리하지만, 제한된 에디터 지원, 파싱 오류 위험, 낮은 재사용성 때문에 유지보수가 어려워집니다. 복잡한 JS 로직이 포함된 컴포넌트의 경우 별도의 `.js` 파일을 사용하세요:
+
+```jsx title="src/components/Highlight.js"
+import React from 'react';
+
+export default function Highlight({children, color}) {
+  return (
+    <span
+      style={{
+        backgroundColor: color,
+        borderRadius: '2px',
+        color: '#fff',
+        padding: '0.2rem',
+      }}>
+      {children}
+    </span>
+  );
+}
+```
+
+```md title="markdown-file.mdx"
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#25c2a0">Docusaurus green</Highlight>
+```
+
+:::tip
+
+같은 컴포넌트를 여러 파일에서 사용한다면 매번 가져올 필요 없이 전역 스코프에 추가하는 것을 고려해보세요. [아래 참조](#mdx-component-scope)
+
+:::
+
+### MDX 컴포넌트 스코프 {#mdx-component-scope}
+
+[컴포넌트 가져오기](#importing-components)와 [컴포넌트 내보내기](#exporting-components) 외에도, MDX에서 컴포넌트를 사용하는 세 번째 방법은 **전역 스코프에 등록**하는 것입니다. 이렇게 하면 모든 MDX 파일에서 자동으로 사용할 수 있어 가져오기 문을 작성할 필요가 없습니다.
+
+예를 들어, 다음과 같은 MDX 파일이 있다고 가정해봅시다:
+
+```md
+- a
+- list!
+
+그리고 몇 가지 <Highlight>사용자 정의 마크업</Highlight>...
+```
+
+이는 `ul`, `li`, `p`, `Highlight` 요소를 포함하는 React 컴포넌트로 컴파일됩니다. `Highlight`는 네이티브 html 요소가 아니므로, 이에 대한 React 컴포넌트 구현을 직접 제공해야 합니다.
+
+Docusaurus에서 MDX 컴포넌트 스코프는 `@theme/MDXComponents` 파일에 의해 제공됩니다. 이는 `@theme/` 별칭 아래의 대부분의 다른 내보내기와 달리 React 컴포넌트가 아닙니다: 이는 `Highlight`와 같은 태그 이름에서 해당 React 컴포넌트 구현으로의 레코드입니다.
+
+이 컴포넌트를 [스위즐](../../swizzling.mdx)하면 구현된 모든 태그를 찾을 수 있으며, `@theme/MDXComponents/Code`와 같은 각 서브 컴포넌트를 스위즐하여 우리의 구현을 더 커스터마이즈할 수 있습니다 (이는 [Markdown 코드 블록](./markdown-features-code-blocks.mdx)을 렌더링하는 데 사용됩니다).
+
+추가 태그 이름을 등록하려면 (위의 `<Highlight>` 태그와 같이), 기존 매핑을 모두 유지할 필요가 없도록 [`@theme/MDXComponents`를 래핑](../../swizzling.mdx#wrapping)하는 것을 고려해야 합니다. 스위즐 CLI는 아직 비컴포넌트 파일의 래핑을 허용하지 않으므로 래퍼를 수동으로 생성해야 합니다:
+
+```js title="src/theme/MDXComponents.js"
+import React from 'react';
+// 원본 매퍼 가져오기
+import MDXComponents from '@theme-original/MDXComponents';
+// highlight-next-line
+import Highlight from '@site/src/components/Highlight';
+
+export default {
+  // 기본 매핑 재사용
+  ...MDXComponents,
+  // "<Highlight>" 태그를 우리의 Highlight 컴포넌트에 매핑
+  // `Highlight`는 MDX에서 `<Highlight>`에 전달된 모든 props를 받습니다
+  // highlight-next-line
+  Highlight,
+};
+```
+
+이제 모든 페이지에서 가져오기 문을 작성하지 않고도 `<Highlight>`를 자유롭게 사용할 수 있습니다:
+
+```md
+어디서나 편리하게 <Highlight color="#25c2a0">Docusaurus green</Highlight>을 사용할 수 있습니다!
+```
+
+```mdx-code-block
+<BrowserWindow>
+
+어디서나 편리하게 <Highlight color="#25c2a0">Docusaurus green</Highlight>을 사용할 수 있습니다!
+
+</BrowserWindow>
+```
+
+:::warning
+
+우리는 의도적으로 `Highlight`와 같은 **대문자** 태그 이름을 사용합니다.
+
+MDX v3+ 이후(Docusaurus v3+)부터는 소문자 태그 이름은 항상 네이티브 html 요소로 렌더링되며, 제공한 컴포넌트 매핑을 사용하지 않습니다.
+
+:::
+
+:::warning
+
+이 기능은 [MDXProvider](https://mdxjs.com/docs/using-mdx/#mdx-provider)에 의해 구동됩니다. React 페이지에서 Markdown을 가져오는 경우, `MDXContent` 테마 컴포넌트를 통해 이 제공자를 직접 제공해야 합니다.
+
+```jsx title="src/pages/index.js"
+import React from 'react';
+import FeatureDisplay from './_featureDisplay.mdx';
+// highlight-next-line
+import MDXContent from '@theme/MDXContent';
+
+export default function LandingPage() {
+  return (
+    <div>
+      {/* highlight-start */}
+      <MDXContent>
+        <FeatureDisplay />
+      </MDXContent>
+      {/* highlight-end */}
+    </div>
+  );
+}
+```
+
+가져온 MDX를 `MDXContent`로 감싸지 않으면 전역 스코프를 사용할 수 없습니다.
+
+:::
+
+### Markdown과 JSX의 상호운용성 {#markdown-and-jsx-interoperability}
+
+Docusaurus v3는 [MDX v3](https://mdxjs.com/blog/v3/)를 사용합니다.
+
+[MDX 구문](https://mdxjs.com/docs/what-is-mdx/#mdx-syntax)은 대부분 [CommonMark](https://commonmark.org/)와 호환되지만, `.mdx` 파일에서 JSX를 사용할 수 있고 실제 React 컴포넌트로 컴파일되기 때문에 훨씬 더 엄격합니다([플레이그라운드](https://mdxjs.com/playground/) 참조).
+
+일부 유효한 CommonMark 기능은 MDX에서 작동하지 않습니다([자세한 정보](https://mdxjs.com/docs/what-is-mdx/#markdown)), 특히:
+
+- 들여쓰기된 코드 블록: 대신 세 개의 백틱을 사용하세요
+- 자동 링크(`<http://localhost:3000>`): 대신 일반 링크 구문을 사용하세요(`[http://localhost:3000](http://localhost:3000)`)
+- HTML 구문(`<p style="color: red;">`): 대신 JSX를 사용하세요(`<p style={{color: 'red'}}>`)
+- 이스케이프되지 않은 `{`와 `<`: 대신 `\`로 이스케이프하세요(`\{`와 `\<`)
+
+:::danger 실험적 CommonMark 지원
+
+Docusaurus v3는 다음 옵션을 통해 덜 엄격하고 표준 [CommonMark](https://commonmark.org/) 지원을 사용할 수 있는 선택적으로 활성화 할 수 있습니다:
+
+- 프론트매터의 `format: md`
+- `.md` 파일 확장자와 `siteConfig.markdown.format: "detect"` 설정 조합
+
+이 기능은 **실험적**이며 현재 몇 가지 [제한 사항](https://github.com/facebook/docusaurus/issues/9092)이 있습니다.
+
+:::
+
+## 코드 스니펫 가져오기 {#importing-code-snippets}
+
+컴포넌트 정의가 포함된 파일뿐만 아니라 [Webpack raw-loader](https://webpack.js.org/loaders/raw-loader/) 덕분에 모든 코드 파일을 원시 텍스트로 가져와 코드 블록에 삽입할 수 있습니다. `raw-loader`를 사용하려면 먼저 프로젝트에 설치해야 합니다:
+
+```bash npm2yarn
+npm install --save raw-loader
+```
+
+이제 다른 파일에서 코드 스니펫을 그대로 가져올 수 있습니다:
+
+{/* prettier-ignore */}
+```jsx title="myMarkdownFile.mdx"
+import CodeBlock from '@theme/CodeBlock';
+import MyComponentSource from '!!raw-loader!./myComponent';
+
+<CodeBlock language="jsx">{MyComponentSource}</CodeBlock>
+```
+
+```mdx-code-block
+import CodeBlock from '@theme/CodeBlock';
+import MyComponentSource from '!!raw-loader!@site/src/pages/examples/_myComponent';
+
+<BrowserWindow>
+
+<CodeBlock language="jsx">{MyComponentSource}</CodeBlock>
+
+</BrowserWindow>
+```
+
+`<CodeBlock>` 컴포넌트에 대한 자세한 내용은 [JSX에서 코드 블록 사용하기](./markdown-features-code-blocks.mdx#usage-in-jsx)를 참조하세요.
+
+:::note
+
+Markdown 트리플 백틱 ` ``` ` 대신 `<CodeBlock>`을 사용해야 합니다. 트리플 백틱은 내용을 그대로 출력하지만, 여기서는 가져온 텍스트를 삽입하고 싶기 때문입니다.
+
+:::
+
+:::warning
+
+이 기능은 실험적이며 향후 API가 변경될 수 있습니다.
+
+:::
+
+## Markdown 가져오기 {#importing-markdown}
+
+Markdown 파일을 컴포넌트로 사용하고 다른 곳에서 가져올 수 있습니다. Markdown 파일이나 React 페이지 모두에서 가능합니다.
+
+관례적으로, **`_` 파일 이름 접두사**를 사용하면 문서 페이지가 생성되지 않으며 이는 다른 파일에서 가져올 "**부분**"임을 의미합니다.
+
+```md title="_markdown-partial-example.mdx"
+<span>안녕하세요 {props.name}</span>
+
+이 텍스트는 `_markdown-partial-example.mdx`의 일부 내용입니다.
+```
+
+{/* prettier-ignore */}
+```jsx title="someOtherDoc.mdx"
+import PartialExample from './_markdown-partial-example.mdx';
+
+<PartialExample name="세바스찬" />
+```
+
+```mdx-code-block
+import PartialExample from './_markdown-partial-example.mdx';
+
+<BrowserWindow>
+  <PartialExample name="세바스찬" />
+</BrowserWindow>
+```
+
+이렇게 하면 여러 페이지에서 내용을 재사용하고 자료 중복을 피할 수 있습니다.
+
+## 사용 가능한 내보내기 {#available-exports}
+
+MDX 페이지 내에서 다음 변수를 전역 변수로 사용할 수 있습니다:
+
+- `frontMatter`: 문자열 키와 값의 레코드로 된 프론트매터;
+- `toc`: 제목 트리 형태의 목차. 더 구체적인 사용 사례는 [인라인 TOC](./markdown-features-toc.mdx#inline-table-of-contents)를 참조하세요.
+- `contentTitle`: Markdown 제목으로, Markdown 텍스트의 첫 번째 `h1` 제목입니다. 없으면 `undefined`입니다(예: 프론트매터에 지정된 제목).
+
+```jsx
+import TOCInline from '@theme/TOCInline';
+import CodeBlock from '@theme/CodeBlock';
+
+이 페이지의 목차를 직렬화한 결과입니다:
+
+<CodeBlock className="language-json">{JSON.stringify(toc, null, 2)}</CodeBlock>
+
+이 페이지의 프론트매터:
+
+<ul>
+  {Object.entries(frontMatter).map(([key, value]) => <li key={key}><b>{key}</b>: {value}</li>)}
+</ul>
+
+<p>이 페이지의 제목은: <b>{contentTitle}</b>입니다</p>
+```
+
+```mdx-code-block
+import TOCInline from '@theme/TOCInline';
+
+<BrowserWindow>
+
+이 페이지의 목차를 직렬화한 결과입니다:
+
+<CodeBlock className="language-json">{JSON.stringify(toc, null, 2)}</CodeBlock>
+
+이 페이지의 프론트매터:
+
+<ul>
+  {Object.entries(frontMatter).map(([key, value]) => <li key={key}><b>{key}</b>: {value}</li>)}
+</ul>
+
+<p>이 페이지의 제목은: <b>{contentTitle}</b>입니다</p>
+
+</BrowserWindow>
+```
