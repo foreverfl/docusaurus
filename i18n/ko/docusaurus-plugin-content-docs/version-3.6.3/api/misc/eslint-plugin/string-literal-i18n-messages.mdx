@@ -1,0 +1,50 @@
+---
+slug: /api/misc/@docusaurus/eslint-plugin/string-literal-i18n-messages
+---
+
+# string-literal-i18n-messages {#string-literal-i18n-messages}
+
+번역 API가 일반 텍스트 레이블에서 호출되도록 강제합니다.
+
+Docusaurus는 번역 가능하다고 표시된 텍스트 레이블을 정적으로 추출하는 [`docusaurus write-translations`](../../../cli.mdx#docusaurus-write-translations-sitedir) API를 제공합니다. `<Translate>` 또는 `translate()` 호출에서 사용되는 동적 값은 추출에 실패할 것입니다. 이 규칙은 모든 번역 호출이 정적으로 추출 가능하도록 보장합니다.
+
+## 규칙 세부사항 {#details}
+
+이 규칙에 대한 **잘못된** 코드 예시:
+
+```js
+const text = 'Some text to be translated'
+
+// 유효하지 않은 <Translate> 자식
+<Translate>{text}</Translate>
+
+// 유효하지 않은 message 속성
+translate({message: text})
+```
+
+이 규칙에 대한 **올바른** 코드 예시:
+
+```js
+// 유효한 <Translate> 자식
+<Translate>Some text to be translated</Translate>
+
+// 유효한 message 속성
+translate({message: 'Some text to be translated'})
+
+// prop으로 values 객체를 사용하는 유효한 <Translate> 자식
+<Translate values={{firstName: 'Sébastien'}}>
+  {'Welcome, {firstName}! How are you?'}
+</Translate>
+
+// 두 번째 인자로 values 객체를 사용하는 유효한 message 속성
+translate({message: 'The logo of site {siteName}'}, {siteName: 'Docusaurus'})
+```
+
+## 사용하지 말아야 할 경우 {#when-not-to-use}
+
+[i18n 기능](../../../i18n/i18n-introduction.mdx)을 사용하지 않는 경우 이 규칙을 비활성화할 수 있습니다.
+
+## 추가 읽을거리 {#further-reading}
+
+- https://docusaurus.io/docs/docusaurus-core#translate
+- https://docusaurus.io/docs/docusaurus-core#translate-imperative

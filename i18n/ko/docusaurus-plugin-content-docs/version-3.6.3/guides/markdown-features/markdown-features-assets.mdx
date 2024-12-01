@@ -1,0 +1,235 @@
+---
+id: assets
+description: Docusaurus Markdown에서 리소스 다루기
+slug: /markdown-features/assets
+---
+
+# 리소스 {#assets}
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+때로는 Markdown 파일에서 docx 파일, 이미지와 같은 리소스에 링크하고 싶을 수 있습니다. 이때 해당 리소스를 사용하는 Markdown 파일과 같은 위치에 두면 더 편리합니다.
+
+다음과 같은 파일 구조를 가정해 봅시다:
+
+```
+# Your doc
+/website/docs/myFeature.mdx
+
+# Some assets you want to use
+/website/docs/assets/docusaurus-asset-example-banner.png
+/website/docs/assets/docusaurus-asset-example.docx
+```
+
+## 이미지 {#images}
+
+이미지는 Markdown 구문, CJS require, 또는 ES 임포트 구문의 세 가지 방법으로 표시할 수 있습니다.
+
+```mdx-code-block
+<Tabs>
+<TabItem value="Markdown syntax">
+```
+
+간단한 Markdown 구문을 사용하여 이미지 표시:
+
+```md
+![Example banner](./assets/docusaurus-asset-example-banner.png)
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="CommonJS require">
+```
+
+JSX 이미지 태그에서 인라인 CommonJS `require` 사용하여 이미지 표시:
+
+```jsx
+<img
+  src={require('./assets/docusaurus-asset-example-banner.png').default}
+  alt="Example banner"
+/>
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="Import statement">
+```
+
+ES `import` 구문과 JSX 이미지 태그를 사용하여 이미지 표시:
+
+```jsx
+import myImageUrl from './assets/docusaurus-asset-example-banner.png';
+
+<img src={myImageUrl} alt="Example banner" />;
+```
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+위의 모든 방법은 다음과 같이 이미지를 표시합니다:
+
+<BrowserWindow>
+
+![My image alternative text](../../assets/docusaurus-asset-example-banner.png)
+
+</BrowserWindow>
+
+:::note
+
+[@docusaurus/plugin-ideal-image](../../api/plugins/plugin-ideal-image.mdx)를 사용하는 경우, 문서화된 대로 전용 이미지 컴포넌트를 사용해야 합니다.
+
+:::
+
+## 파일 {#files}
+
+마찬가지로, `require`를 사용하여 기존 리소스을 링크하고 반환된 URL을 `video`, `a` 앵커 링크 등에서 사용할 수 있습니다.
+
+```md
+# My Markdown page
+
+<a target="\_blank" href={require('./assets/docusaurus-asset-example.docx').default}> Download this docx </a>
+
+or
+
+[Download this docx using Markdown](./assets/docusaurus-asset-example.docx)
+```
+
+<BrowserWindow>
+
+<a
+  target="_blank"
+  href={require('../../assets/docusaurus-asset-example.docx').default}>
+  {'Download this docx'}
+</a>
+
+[Download this docx using Markdown](../../assets/docusaurus-asset-example.docx)
+
+</BrowserWindow>
+
+:::info Markdown 링크는 항상 파일 경로입니다
+
+Markdown 이미지나 링크 구문을 사용하는 경우, 모든 리소스 경로는 Docusaurus에 의해 파일 경로로 해석되고 자동으로 `require()` 호출로 변환됩니다. JSX 구문을 사용하지 않는 한 Markdown에서 `require()`를 사용할 필요가 없습니다.
+
+:::
+
+## 인라인 SVG {#inline-svgs}
+
+Docusaurus는 기본적으로 SVG 인라인화를 지원합니다.
+
+```jsx
+import DocusaurusSvg from './docusaurus.svg';
+
+<DocusaurusSvg />;
+```
+
+<BrowserWindow>
+
+import DocusaurusSvg from '@site/static/img/docusaurus.svg';
+
+<DocusaurusSvg />
+
+</BrowserWindow>
+
+이는 CSS를 통해 SVG 이미지의 일부를 변경하고 싶을 때 유용할 수 있습니다. 예를 들어, 현재 테마에 따라 SVG 색상 중 하나를 변경할 수 있습니다.
+
+```jsx
+import DocusaurusSvg from './docusaurus.svg';
+
+<DocusaurusSvg className="themedDocusaurus" />;
+```
+
+```css
+[data-theme='light'] .themedDocusaurus [fill='#FFFF50'] {
+  fill: greenyellow;
+}
+
+[data-theme='dark'] .themedDocusaurus [fill='#FFFF50'] {
+  fill: seagreen;
+}
+```
+
+<BrowserWindow>
+  <DocusaurusSvg className="themedDocusaurus" />
+</BrowserWindow>
+
+## 테마 이미지 {#themed-images}
+
+Docusaurus는 테마 이미지를 지원합니다. 테마에 포함되는 `ThemedImage` 컴포넌트를 사용하면 현재 테마에 따라 이미지 소스를 전환할 수 있습니다.
+
+```jsx
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+<ThemedImage
+  alt="Docusaurus themed image"
+  // highlight-start
+  sources={{
+    light: useBaseUrl('/img/docusaurus_light.svg'),
+    dark: useBaseUrl('/img/docusaurus_dark.svg'),
+  }}
+  // highlight-end
+/>;
+```
+
+```mdx-code-block
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+<BrowserWindow>
+<ThemedImage
+  alt="Docusaurus themed image"
+  sources={{
+    light: useBaseUrl('/img/docusaurus_keytar.svg'),
+    dark: useBaseUrl('/img/docusaurus_speed.svg'),
+  }}
+/>
+</BrowserWindow>
+```
+
+### GitHub 스타일 테마 이미지 {#github-style-themed-images}
+
+GitHub는 경로 접미사를 사용하여 자체적인 [이미지 테마 접근 방식](https://github.blog/changelog/2021-11-24-specify-theme-context-for-images-in-markdown/)을 사용하며, 이를 쉽게 구현할 수 있습니다.
+
+GitHub의 경우 `#gh-dark-mode-only`와 `#gh-light-mode-only`를 사용하듯, 이미지의 표시 여부를 경로 접미사로 조정하려면, 사용자 정의 CSS에 다음을 추가하세요. GitHub에 연결되지 않으려면 자신만의 접미사를 사용할 수도 있습니다:
+
+```css title="src/css/custom.css"
+[data-theme='light'] img[src$='#gh-dark-mode-only'],
+[data-theme='dark'] img[src$='#gh-light-mode-only'] {
+  display: none;
+}
+```
+
+```md
+![Docusaurus themed image](/img/docusaurus_keytar.svg#gh-light-mode-only)![Docusaurus themed image](/img/docusaurus_speed.svg#gh-dark-mode-only)
+```
+
+<BrowserWindow>
+
+![Docusaurus themed image](/img/docusaurus_keytar.svg#gh-light-mode-only)![Docusaurus themed image](/img/docusaurus_speed.svg#gh-dark-mode-only)
+
+</BrowserWindow>
+
+## 정적 리소스 {#static-assets}
+
+Markdown 링크나 이미지가 절대 경로를 가지고 있다면, 해당 경로는 파일 경로로 간주되어 정적 디렉토리에서 해석됩니다. 예를 들어, [정적 디렉토리](../../static-assets.mdx)를 `['public', 'static']`으로 설정했다면, 다음과 같은 이미지의 경우:
+
+```md title="my-doc.md"
+![An image from the static](/img/docusaurus.png)
+```
+
+Docusaurus는 `static/img/docusaurus.png`와 `public/img/docusaurus.png` 모두에서 찾으려고 시도합니다. 그런 다음 링크는 URL로 남아있지 않고 `require()` 호출로 변환됩니다. 이는 다음 두 가지 측면에서 바람직합니다:
+
+1. Docusaurus가 리소스을 제공할 때 처리할 기본 URL에 대해 걱정할 필요가 없습니다.
+2. 이미지는 Webpack의 빌드 파이프라인에 들어가고 이름에 해시가 추가되어, 브라우저가 이미지를 적극적으로 캐시하고 사이트의 성능을 향상시킬 수 있습니다.
+
+URL을 작성하려는 경우 `pathname://` 프로토콜을 사용하여 자동 리소스 링크를 비활성화할 수 있습니다.
+
+```md
+![banner](pathname:///img/docusaurus-asset-example-banner.png)
+```
+
+이 링크는 처리나 파일 존재 확인 없이 `<img src="/img/docusaurus-asset-example-banner.png" alt="banner" />`로 생성됩니다.

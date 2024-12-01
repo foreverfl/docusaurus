@@ -1,0 +1,82 @@
+{
+  "version.label": {
+    "message": "3.6.3",
+    "description": "버전 3.6.3의 레이블"
+  },
+  "sidebar.docs.category.Getting Started": {
+    "message": "시작하기",
+    "description": "문서 사이드바의 '시작하기' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "가이드",
+    "description": "문서 사이드바의 '가이드' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.title": {
+    "message": "Docusaurus 가이드",
+    "description": "문서 사이드바의 '가이드' 카테고리의 생성된 인덱스 페이지 제목"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "가장 중요한 Docusaurus 개념을 배워봅시다!",
+    "description": "문서 사이드바의 '가이드' 카테고리 생성된 인덱스 페이지 설명"
+  },
+  "sidebar.docs.category.Docs": {
+    "message": "문서",
+    "description": "문서 사이드바의 '문서' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Sidebar": {
+    "message": "사이드바",
+    "description": "문서 사이드바의 '사이드바' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Markdown Features": {
+    "message": "Markdown 기능",
+    "description": "문서 사이드바의 'Markdown 기능' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Internationalization": {
+    "message": "국제화",
+    "description": "문서 사이드바의 '국제화' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Advanced Guides": {
+    "message": "고급 가이드",
+    "description": "문서 사이드바의 '고급 가이드' 카테고리 레이블"
+  },
+  "sidebar.docs.category.Upgrading": {
+    "message": "업그레이드",
+    "description": "문서 사이드바의 '업그레이드' 카테고리 레이블"
+  },
+  "sidebar.docs.category.To Docusaurus v2": {
+    "message": "Docusaurus v2로",
+    "description": "문서 사이드바의 'Docusaurus v2로' 카테고리 레이블"
+  },
+  "sidebar.docs.doc.Tutorial": {
+    "message": "튜토리얼",
+    "description": "문서 사이드바의 '튜토리얼' 항목 레이블 (i18n/tutorial 문서로 링크)"
+  },
+  "sidebar.docs.doc.Using Git": {
+    "message": "Git 사용하기",
+    "description": "문서 사이드바의 'Git 사용하기' 항목 레이블 (i18n/git 문서로 링크)"
+  },
+  "sidebar.docs.doc.Using Crowdin": {
+    "message": "Crowdin 사용하기",
+    "description": "문서 사이드바의 'Crowdin 사용하기' 항목 레이블 (i18n/crowdin 문서로 링크)"
+  },
+  "sidebar.api.category.Plugin method references": {
+    "message": "플러그인 메서드 참조",
+    "description": "API 사이드바의 '플러그인 메서드 참조' 카테고리 레이블"
+  },
+  "sidebar.api.category.Plugins": {
+    "message": "플러그인",
+    "description": "API 사이드바의 '플러그인' 카테고리 레이블"
+  },
+  "sidebar.api.category.Themes": {
+    "message": "테마",
+    "description": "API 사이드바의 '테마' 카테고리 레이블"
+  },
+  "sidebar.api.category.Miscellaneous": {
+    "message": "기타",
+    "description": "API 사이드바의 '기타' 카테고리 레이블"
+  },
+  "sidebar.api.category.📦 eslint-plugin": {
+    "message": "📦 eslint 플러그인",
+    "description": "API 사이드바의 '📦 eslint 플러그인' 카테고리 레이블"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "version.label": {
+    "message": "3.6.3",
+    "description": "現在のバージョンのラベル"
+  },
+  "sidebar.docs.category.Getting Started": {
+    "message": "はじめに",
+    "description": "サイドバードキュメントの「はじめに」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "ガイド",
+    "description": "サイドバードキュメントの「ガイド」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.title": {
+    "message": "Docusaurus ガイド",
+    "description": "サイドバードキュメントの「ガイド」カテゴリのgenerated-indexページタイトル"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Docusaurusの最も重要な概念を学びましょう!",
+    "description": "サイドバードキュメントの「ガイド」カテゴリのgenerated-indexページの説明"
+  },
+  "sidebar.docs.category.Docs": {
+    "message": "ドキュメント",
+    "description": "サイドバードキュメントの「ドキュメント」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Sidebar": {
+    "message": "サイドバー",
+    "description": "サイドバードキュメントの「サイドバー」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Markdown Features": {
+    "message": "Markdownの機能",
+    "description": "サイドバードキュメントの「Markdownの機能」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Internationalization": {
+    "message": "国際化",
+    "description": "サイドバードキュメントの「国際化」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Advanced Guides": {
+    "message": "高度なガイド",
+    "description": "サイドバードキュメントの「高度なガイド」カテゴリのラベル"
+  },
+  "sidebar.docs.category.Upgrading": {
+    "message": "アップグレード",
+    "description": "サイドバードキュメントの「アップグレード」カテゴリのラベル"
+  },
+  "sidebar.docs.category.To Docusaurus v2": {
+    "message": "Docusaurus v2への移行",
+    "description": "サイドバードキュメントの「Docusaurus v2への移行」カテゴリのラベル"
+  },
+  "sidebar.docs.doc.Tutorial": {
+    "message": "チュートリアル",
+    "description": "サイドバードキュメントの「チュートリアル」項目のラベル。i18n/tutorialにリンク"
+  },
+  "sidebar.docs.doc.Using Git": {
+    "message": "Gitの使用方法",
+    "description": "サイドバードキュメントの「Gitの使用方法」項目のラベル。i18n/gitにリンク"
+  },
+  "sidebar.docs.doc.Using Crowdin": {
+    "message": "Crowdinの使用方法",
+    "description": "サイドバードキュメントの「Crowdinの使用方法」項目のラベル。i18n/crowdinにリンク"
+  },
+  "sidebar.api.category.Plugin method references": {
+    "message": "プラグインメソッド参照",
+    "description": "サイドバーAPIの「プラグインメソッド参照」カテゴリのラベル"
+  },
+  "sidebar.api.category.Plugins": {
+    "message": "プラグイン",
+    "description": "サイドバーAPIの「プラグイン」カテゴリのラベル"
+  },
+  "sidebar.api.category.Themes": {
+    "message": "テーマ",
+    "description": "サイドバーAPIの「テーマ」カテゴリのラベル"
+  },
+  "sidebar.api.category.Miscellaneous": {
+    "message": "その他",
+    "description": "サイドバーAPIの「その他」カテゴリのラベル"
+  },
+  "sidebar.api.category.📦 eslint-plugin": {
+    "message": "📦 eslint-plugin",
+    "description": "サイドバーAPIの「📦 eslint-plugin」カテゴリのラベル"
+  }
+}
