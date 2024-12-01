@@ -2,20 +2,20 @@
 slug: /sidebar/multiple-sidebars
 ---
 
-# Using multiple sidebars
+# 여러 사이드바 사용하기
 
-You can create a sidebar for each **set of Markdown files** that you want to **group together**.
+**함께 그룹화**하고 싶은 **Markdown 파일 세트** 각각에 대해 사이드바를 생성할 수 있습니다.
 
 :::tip
 
-The Docusaurus site is a good example of using multiple sidebars:
+Docusaurus 사이트는 여러 사이드바를 사용하는 좋은 예시입니다:
 
-- [Docs](../../../introduction.mdx)
+- [문서](../../../introduction.mdx)
 - [API](../../../cli.mdx)
 
 :::
 
-Consider this example:
+다음 예시를 살펴보세요:
 
 ```js title="sidebars.js"
 export default {
@@ -26,11 +26,11 @@ export default {
 };
 ```
 
-When browsing `doc1` or `doc2`, the `tutorialSidebar` will be displayed; when browsing `doc3` or `doc4`, the `apiSidebar` will be displayed.
+`doc1` 또는 `doc2`를 탐색할 때는 `tutorialSidebar`가 표시되고, `doc3` 또는 `doc4`를 탐색할 때는 `apiSidebar`가 표시됩니다.
 
-## Understanding sidebar association {#sidebar-association}
+## 사이드바 연결 이해하기 {#sidebar-association}
 
-Following the example above, if a `commonDoc` is included in both sidebars:
+위의 예시에서, `commonDoc`이 두 사이드바에 모두 포함된 경우:
 
 ```js title="sidebars.js"
 export default {
@@ -41,14 +41,14 @@ export default {
 };
 ```
 
-How does Docusaurus know which sidebar to display when browsing `commonDoc`? Answer: it doesn't, and we don't guarantee which sidebar it will pick.
+Docusaurus는 `commonDoc`을 탐색할 때 어떤 사이드바를 표시할지 어떻게 알까요? 정답은 Docusaurus는 이를 알지 못하며, 어떤 사이드바를 선택할지 보장하지 않습니다.
 
-When you add doc Y to sidebar X, it creates a two-way binding: sidebar X contains a link to doc Y, and when browsing doc Y, sidebar X will be displayed. But sometimes, we want to break either implicit binding:
+문서 Y를 사이드바 X에 추가하면 양방향 바인딩이 생성됩니다: 사이드바 X는 문서 Y에 대한 링크를 포함하고, 문서 Y를 탐색할 때 사이드바 X가 표시됩니다. 하지만 때로는 암시적 바인딩 중 하나를 깨고 싶을 수 있습니다:
 
-1. _How do I generate a link to doc Y in sidebar X without making sidebar X displayed on Y?_ For example, when I include doc Y in multiple sidebars as in the example above, and I want to explicitly tell Docusaurus to display one sidebar?
-2. _How do I make sidebar X displayed when browsing doc Y, but sidebar X shouldn't contain the link to Y?_ For example, when Y is a "doc home page" and the sidebar is purely used for navigation?
+1. _사이드바 X에서 문서 Y에 대한 링크를 생성하되, Y에서 X를 표시하지 않으려면 어떻게 해야 하나요?_ 예를 들어, 위의 예시처럼 문서 Y를 여러 사이드바에 포함시키고 Docusaurus에게 특정 사이드바를 표시하도록 명시적으로 지시하고 싶을 때입니다.
+2. _문서 Y를 탐색할 때 사이드바 X를 표시하되, X에는 Y에 대한 링크를 포함하지 않으려면 어떻게 해야 하나요?_ 예를 들어, Y가 "문서 홈페이지"이고 사이드바가 순수하게 탐색용일 때입니다.
 
-Front matter option `displayed_sidebar` will forcibly set the sidebar association. For the same example, you can still use doc shorthands without any special configuration:
+프론트 매터 옵션 `displayed_sidebar`는 강제로 사이드바 연결을 설정합니다. 같은 예시에서, 특별한 설정 없이 문서 축약형을 계속 사용할 수 있습니다:
 
 ```js title="sidebars.js"
 export default {
@@ -59,7 +59,7 @@ export default {
 };
 ```
 
-And then add a front matter:
+그리고 프론트 매터를 추가합니다:
 
 ```md title="commonDoc.md"
 ---
@@ -67,7 +67,7 @@ displayed_sidebar: apiSidebar
 ---
 ```
 
-Which explicitly tells Docusaurus to display `apiSidebar` when browsing `commonDoc`. Using the same method, you can make sidebar X which doesn't contain doc Y appear on doc Y:
+이는 `commonDoc`을 탐색할 때 `apiSidebar`를 표시하도록 Docusaurus에게 명시적으로 지시합니다. 같은 방법을 사용하여, 문서 Y를 포함하지 않는 사이드바 X가 문서 Y에서 나타나게 할 수 있습니다:
 
 ```md title="home.md"
 ---
@@ -75,17 +75,17 @@ displayed_sidebar: tutorialSidebar
 ---
 ```
 
-Even when `tutorialSidebar` doesn't contain a link to `home`, it will still be displayed when viewing `home`.
+`tutorialSidebar`가 `home`에 대한 링크를 포함하지 않더라도, `home`을 볼 때 여전히 표시됩니다.
 
-If you set `displayed_sidebar: null`, no sidebar will be displayed whatsoever on this page, and subsequently, no pagination either.
+`displayed_sidebar: null`을 설정하면, 이 페이지에는 사이드바가 전혀 표시되지 않으며, 따라서 페이지네이션도 표시되지 않습니다.
 
-## Generating pagination {#generating-pagination}
+## 페이지네이션 생성하기 {#generating-pagination}
 
-Docusaurus uses the sidebar to generate the "next" and "previous" pagination links at the bottom of each doc page. It strictly uses the sidebar that is displayed: if no sidebar is associated, it doesn't generate pagination either. However, the docs linked as "next" and "previous" are not guaranteed to display the same sidebar: they are included in this sidebar, but in their front matter, they may have a different `displayed_sidebar`.
+Docusaurus는 사이드바를 사용하여 각 문서 페이지 하단에 "다음"과 "이전" 페이지네이션 링크를 생성합니다. 표시된 사이드바를 기준으로 동작합니다. 연결된 사이드바가 없으면 페이지네이션도 생성하지 않습니다. 하지만 "다음"과 "이전"으로 연결된 문서가 동일한 사이드바를 표시한다는 보장은 없습니다. 이들은 이 사이드바에 포함되어 있지만, 프론트 매터에서 다른 `displayed_sidebar`를 가질 수 있습니다.
 
-If a sidebar is displayed by setting `displayed_sidebar` front matter, and this sidebar doesn't contain the doc itself, no pagination is displayed.
+`displayed_sidebar` 프론트 매터를 설정하여 사이드바가 표시되고, 이 사이드바가 문서 자체를 포함하지 않는 경우 페이지네이션이 표시되지 않습니다.
 
-You can customize pagination with front matter `pagination_next` and `pagination_prev`. Consider this sidebar:
+프론트 매터 `pagination_next`와 `pagination_prev`로 페이지네이션을 커스터마이즈할 수 있습니다. 다음 사이드바를 고려해보세요:
 
 ```js title="sidebars.js"
 export default {
@@ -99,7 +99,7 @@ export default {
 };
 ```
 
-The pagination next link on "windows" points to "linux", but that doesn't make sense: you would want readers to proceed to "getting started" after installation. In this case, you can set the pagination manually:
+"windows"의 다음 페이지네이션 링크는 "linux"를 가리키지만, 이는 의미가 없습니다: 독자들이 설치 후에 "getting started"로 진행하기를 원할 것입니다. 이 경우 페이지네이션을 수동으로 설정할 수 있습니다:
 
 ```md title="windows.md"
 ---
@@ -110,17 +110,17 @@ pagination_next: getting-started
 # Installation on Windows
 ```
 
-You can also disable displaying a pagination link with `pagination_next: null` or `pagination_prev: null`.
+`pagination_next: null` 또는 `pagination_prev: null`을 사용하여 페이지네이션 링크 표시를 비활성화할 수도 있습니다.
 
-The pagination label by default is the sidebar label. You can use the front matter `pagination_label` to customize how this doc appears in the pagination.
+페이지네이션 레이블은 기본적으로 사이드바 레이블입니다. 프론트 매터 `pagination_label`을 사용하여 이 문서가 페이지네이션에서 어떻게 나타날지 커스터마이즈할 수 있습니다.
 
-## The `ref` item {#sidebar-item-ref}
+## `ref` 항목 {#sidebar-item-ref}
 
-The `ref` type is identical to the [`doc` type](./items.mdx#sidebar-item-doc) in every way, except that it doesn't participate in generating navigation metadata. It only registers itself as a link. When [generating pagination](#generating-pagination) and [displaying sidebar](#sidebar-association), `ref` items are completely ignored.
+`ref` 유형은 [`doc` 유형](./items.mdx#sidebar-item-doc)과 모든 면에서 동일하지만, 탐색 메타데이터 생성에는 참여하지 않습니다. 단지 자신을 링크로 등록할 뿐입니다. [페이지네이션 생성](#generating-pagination)과 [사이드바 표시](#sidebar-association)에서 `ref` 항목은 완전히 무시됩니다.
 
-It is particularly useful where you wish to link to the same document from multiple sidebars. The document only belongs to one sidebar (the one where it's registered as `type: 'doc'` or from an autogenerated directory), but its link will appear in all sidebars that it's registered in.
+같은 문서를 여러 사이드바에서 링크하고 싶을 때 특히 유용합니다. 문서는 하나의 사이드바에만 속합니다(`type: 'doc'`으로 등록되거나 자동 생성된 디렉토리에서), 하지만 링크는 등록된 모든 사이드바에 나타납니다.
 
-Consider this example:
+다음 예시를 고려해보세요:
 
 ```js title="sidebars.js"
 export default {
@@ -137,7 +137,7 @@ export default {
 };
 ```
 
-You can think of the `ref` type as the equivalent to doing the following:
+`ref` 유형은 다음을 수행하는 것과 동일하다고 생각할 수 있습니다:
 
-- Setting `displayed_sidebar: tutorialSidebar` for `commonDoc` (`ref` is ignored in sidebar association)
-- Setting `pagination_next: doc5` for `doc2` and setting `pagination_prev: doc2` for `doc5` (`ref` is ignored in pagination generation)
+- `commonDoc`에 대해 `displayed_sidebar: tutorialSidebar` 설정 (`ref`는 사이드바 연결에서 무시됨)
+- `doc2`에 대해 `pagination_next: doc5` 설정하고 `doc5`에 대해 `pagination_prev: doc2` 설정 (`ref`는 페이지네이션 생성에서 무시됨)

@@ -1,235 +1,213 @@
 ---
-id: assets
-description: Handling assets in Docusaurus Markdown
-slug: /markdown-features/assets
+id: multi-instance
+description: Use multiple docs plugin instances on a single Docusaurus site.
+slug: /docs-multi-instance
 ---
 
-# Assets
+# Docs Multi-instance
 
-import BrowserWindow from '@site/src/components/BrowserWindow';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-Sometimes you want to link to assets (e.g. docx files, images...) directly from Markdown files, and it is convenient to co-locate the asset next to the Markdown file using it.
-
-Let's imagine the following file structure:
-
-```
-# Your doc
-/website/docs/myFeature.mdx
-
-# Some assets you want to use
-/website/docs/assets/docusaurus-asset-example-banner.png
-/website/docs/assets/docusaurus-asset-example.docx
-```
-
-## Images {#images}
-
-You can display images in three different ways: Markdown syntax, CJS require, or ES imports syntax.
-
-```mdx-code-block
-<Tabs>
-<TabItem value="Markdown syntax">
-```
-
-Display images using simple Markdown syntax:
-
-```md
-![Example banner](./assets/docusaurus-asset-example-banner.png)
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="CommonJS require">
-```
-
-Display images using inline CommonJS `require` in JSX image tag:
-
-```jsx
-<img
-  src={require('./assets/docusaurus-asset-example-banner.png').default}
-  alt="Example banner"
-/>
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="Import statement">
-```
-
-Display images using ES `import` syntax and JSX image tag:
-
-```jsx
-import myImageUrl from './assets/docusaurus-asset-example-banner.png';
-
-<img src={myImageUrl} alt="Example banner" />;
-```
-
-```mdx-code-block
-</TabItem>
-</Tabs>
-```
-
-All of the above result in displaying the image:
-
-<BrowserWindow>
-
-![My image alternative text](../../assets/docusaurus-asset-example-banner.png)
-
-</BrowserWindow>
+The `@docusaurus/plugin-content-docs` plugin can support [multi-instance](../../using-plugins.mdx#multi-instance-plugins-and-plugin-ids).
 
 :::note
 
-If you are using [@docusaurus/plugin-ideal-image](../../api/plugins/plugin-ideal-image.mdx), you need to use the dedicated image component, as documented.
+This feature is only useful for [versioned documentation](./versioning.mdx). It is recommended to be familiar with docs versioning before reading this page. If you just want [multiple sidebars](./sidebar/multiple-sidebars.mdx), you can do so within one plugin.
 
 :::
 
-## Files {#files}
+## Use-cases {#use-cases}
 
-In the same way, you can link to existing assets by `require`'ing them and using the returned URL in `video`s, `a` anchor links, etc.
+Sometimes you want a Docusaurus site to host 2 distinct sets of documentation (or more).
 
-```md
-# My Markdown page
+These documentations may even have different versioning/release lifecycles.
 
-<a target="\_blank" href={require('./assets/docusaurus-asset-example.docx').default}> Download this docx </a>
+### Mobile SDKs documentation {#mobile-sdks-documentation}
 
-or
+If you build a cross-platform mobile SDK, you may have 2 documentations:
 
-[Download this docx using Markdown](./assets/docusaurus-asset-example.docx)
-```
+- Android SDK documentation (`v1.0`, `v1.1`)
+- iOS SDK documentation (`v1.0`, `v2.0`)
 
-<BrowserWindow>
+In this case, you can use a distinct docs plugin instance per mobile SDK documentation.
 
-<a
-  target="_blank"
-  href={require('../../assets/docusaurus-asset-example.docx').default}>
-  {'Download this docx'}
-</a>
+:::warning
 
-[Download this docx using Markdown](../../assets/docusaurus-asset-example.docx)
+If each documentation instance is very large, you should rather create 2 distinct Docusaurus sites.
 
-</BrowserWindow>
-
-:::info Markdown links are always file paths
-
-If you use the Markdown image or link syntax, all asset paths will be resolved as file paths by Docusaurus and automatically converted to `require()` calls. You don't need to use `require()` in Markdown unless you use the JSX syntax, which you do have to handle yourself.
+If someone edits the iOS documentation, is it really useful to rebuild everything, including the whole Android documentation that did not change?
 
 :::
 
-## Inline SVGs {#inline-svgs}
+### Versioned and unversioned doc {#versioned-and-unversioned-doc}
 
-Docusaurus supports inlining SVGs out of the box.
+Sometimes, you want some documents to be versioned, while other documents are more "global", and it feels useless to version them.
 
-```jsx
-import DocusaurusSvg from './docusaurus.svg';
+We use this pattern on the Docusaurus website itself:
 
-<DocusaurusSvg />;
+- The [/docs/\*](/docs) section is versioned
+- The [/community/\*](/community/support) section is unversioned
+
+## Setup {#setup}
+
+Suppose you have 2 documentations:
+
+- Product: some versioned doc about your product
+- Community: some unversioned doc about the community around your product
+
+In this case, you should use the same plugin twice in your site configuration.
+
+:::warning
+
+`@docusaurus/preset-classic` already includes a docs plugin instance for you!
+
+:::
+
+When using the preset:
+
+```js title="docusaurus.config.js"
+export default {
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          // highlight-start
+          // id: 'product', // omitted => default instance
+          // highlight-end
+          path: 'product',
+          routeBasePath: 'product',
+          sidebarPath: './sidebarsProduct.js',
+          // ... other options
+        },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        // highlight-start
+        id: 'community',
+        // highlight-end
+        path: 'community',
+        routeBasePath: 'community',
+        sidebarPath: './sidebarsCommunity.js',
+        // ... other options
+      },
+    ],
+  ],
+};
 ```
 
-<BrowserWindow>
+When not using the preset:
 
-import DocusaurusSvg from '@site/static/img/docusaurus.svg';
-
-<DocusaurusSvg />
-
-</BrowserWindow>
-
-This can be useful if you want to alter the part of the SVG image via CSS. For example, you can change one of the SVG colors based on the current theme.
-
-```jsx
-import DocusaurusSvg from './docusaurus.svg';
-
-<DocusaurusSvg className="themedDocusaurus" />;
+```js title="docusaurus.config.js"
+export default {
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        // highlight-start
+        // id: 'product', // omitted => default instance
+        // highlight-end
+        path: 'product',
+        routeBasePath: 'product',
+        sidebarPath: './sidebarsProduct.js',
+        // ... other options
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        // highlight-start
+        id: 'community',
+        // highlight-end
+        path: 'community',
+        routeBasePath: 'community',
+        sidebarPath: './sidebarsCommunity.js',
+        // ... other options
+      },
+    ],
+  ],
+};
 ```
 
-```css
-[data-theme='light'] .themedDocusaurus [fill='#FFFF50'] {
-  fill: greenyellow;
-}
+Don't forget to assign a unique `id` attribute to plugin instances.
 
-[data-theme='dark'] .themedDocusaurus [fill='#FFFF50'] {
-  fill: seagreen;
-}
+:::note
+
+We consider that the `product` instance is the most important one, and make it the "default" instance by not assigning any ID.
+
+:::
+
+## Versioned paths {#versioned-paths}
+
+Each plugin instance will store versioned docs in a distinct folder.
+
+The default plugin instance will use these paths:
+
+- `website/versions.json`
+- `website/versioned_docs`
+- `website/versioned_sidebars`
+
+The other plugin instances (with an `id` attribute) will use these paths:
+
+- `website/[pluginId]_versions.json`
+- `website/[pluginId]_versioned_docs`
+- `website/[pluginId]_versioned_sidebars`
+
+:::tip
+
+You can omit the `id` attribute (defaults to `default`) for one of the docs plugin instances.
+
+The instance paths will be simpler, and retro-compatible with a single-instance setup.
+
+:::
+
+## Tagging new versions {#tagging-new-versions}
+
+Each plugin instance will have its own CLI command to tag a new version. They will be displayed if you run:
+
+```bash npm2yarn
+npm run docusaurus -- --help
 ```
 
-<BrowserWindow>
-  <DocusaurusSvg className="themedDocusaurus" />
-</BrowserWindow>
+To version the product/default docs plugin instance:
 
-## Themed Images {#themed-images}
-
-Docusaurus supports themed images: the `ThemedImage` component (included in the themes) allows you to switch the image source based on the current theme.
-
-```jsx
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import ThemedImage from '@theme/ThemedImage';
-
-<ThemedImage
-  alt="Docusaurus themed image"
-  // highlight-start
-  sources={{
-    light: useBaseUrl('/img/docusaurus_light.svg'),
-    dark: useBaseUrl('/img/docusaurus_dark.svg'),
-  }}
-  // highlight-end
-/>;
+```bash npm2yarn
+npm run docusaurus docs:version 1.0.0
 ```
 
-```mdx-code-block
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import ThemedImage from '@theme/ThemedImage';
+To version the non-default/community docs plugin instance:
 
-<BrowserWindow>
-<ThemedImage
-  alt="Docusaurus themed image"
-  sources={{
-    light: useBaseUrl('/img/docusaurus_keytar.svg'),
-    dark: useBaseUrl('/img/docusaurus_speed.svg'),
-  }}
-/>
-</BrowserWindow>
+```bash npm2yarn
+npm run docusaurus docs:version:community 1.0.0
 ```
 
-### GitHub-style themed images {#github-style-themed-images}
+## Docs navbar items {#docs-navbar-items}
 
-GitHub uses its own [image theming approach](https://github.blog/changelog/2021-11-24-specify-theme-context-for-images-in-markdown/) with path fragments, which you can easily implement yourself.
+Each docs-related [theme navbar items](../../api/themes/theme-configuration.mdx#navbar) take an optional `docsPluginId` attribute.
 
-To toggle the visibility of an image using the path fragment (for GitHub, it's `#gh-dark-mode-only` and `#gh-light-mode-only`), add the following to your custom CSS (you can also use your own suffix if you don't want to be coupled to GitHub):
+For example, if you want to have one version dropdown for each mobile SDK (iOS and Android), you could do:
 
-```css title="src/css/custom.css"
-[data-theme='light'] img[src$='#gh-dark-mode-only'],
-[data-theme='dark'] img[src$='#gh-light-mode-only'] {
-  display: none;
-}
+```js title="docusaurus.config.js"
+export default {
+  themeConfig: {
+    navbar: {
+      items: [
+        {
+          type: 'docsVersionDropdown',
+          // highlight-start
+          docsPluginId: 'ios',
+          // highlight-end
+        },
+        {
+          type: 'docsVersionDropdown',
+          // highlight-start
+          docsPluginId: 'android',
+          // highlight-end
+        },
+      ],
+    },
+  },
+};
 ```
-
-```md
-![Docusaurus themed image](/img/docusaurus_keytar.svg#gh-light-mode-only)![Docusaurus themed image](/img/docusaurus_speed.svg#gh-dark-mode-only)
-```
-
-<BrowserWindow>
-
-![Docusaurus themed image](/img/docusaurus_keytar.svg#gh-light-mode-only)![Docusaurus themed image](/img/docusaurus_speed.svg#gh-dark-mode-only)
-
-</BrowserWindow>
-
-## Static assets {#static-assets}
-
-If a Markdown link or image has an absolute path, the path will be seen as a file path and will be resolved from the static directories. For example, if you have configured [static directories](../../static-assets.mdx) to be `['public', 'static']`, then for the following image:
-
-```md title="my-doc.md"
-![An image from the static](/img/docusaurus.png)
-```
-
-Docusaurus will try to look for it in both `static/img/docusaurus.png` and `public/img/docusaurus.png`. The link will then be converted to a `require()` call instead of staying as a URL. This is desirable in two regards:
-
-1. You don't have to worry about the base URL, which Docusaurus will take care of when serving the asset;
-2. The image enters Webpack's build pipeline and its name will be appended by a hash, which enables browsers to aggressively cache the image and improves your site's performance.
-
-If you intend to write URLs, you can use the `pathname://` protocol to disable automatic asset linking.
-
-```md
-![banner](pathname:///img/docusaurus-asset-example-banner.png)
-```
-
-This link will be generated as `<img src="/img/docusaurus-asset-example-banner.png" alt="banner" />`, without any processing or file existence checking.

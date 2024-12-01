@@ -160,7 +160,7 @@ export default async function createConfigAsync() {
     projectName: 'docusaurus',
     baseUrl,
     baseUrlIssueBanner: true,
-    url: 'https://docusaurus.io',
+    url: 'https://docusaurus.mogumogu.dev',
     future: {
       experimental_faster: false,
       experimental_storage: {
@@ -307,7 +307,7 @@ export default async function createConfigAsync() {
             },
             ...dogfoodingRedirects,
           ],
-        } satisfies ClientRedirectsOptions,
+        },
       ],
       [
         'ideal-image',
@@ -392,7 +392,7 @@ export default async function createConfigAsync() {
         {
           debug: true, // force debug plugin usage
           docs: {
-            path: 'docs/en',
+            path: 'docs',
             sidebarPath: 'sidebars.ts',
             // sidebarCollapsible: false,
             // sidebarCollapsed: true,
@@ -577,16 +577,6 @@ export default async function createConfigAsync() {
             type: 'docsVersionDropdown',
             position: 'right',
             dropdownActiveClassDisabled: true,
-            dropdownItemsAfter: [
-              {
-                type: 'html',
-                value: '<hr class="dropdown-separator">',
-              },
-              {
-                to: '/versions',
-                label: 'All versions',
-              },
-            ],
           },
           {
             type: 'localeDropdown',
