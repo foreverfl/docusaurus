@@ -3,44 +3,44 @@ sidebar_position: 11
 slug: /api/plugins/@docusaurus/plugin-vercel-analytics
 ---
 
-# 📦 plugin-vercel-analytics
+# 📦 plugin-vercel-analytics {#plugin-vercel-analytics}
 
 import APITable from '@site/src/components/APITable';
 
-[Vercel Analytics](https://vercel.com/docs/analytics) provides comprehensive insights into your website's visitors, tracking top pages, referrers, and demographics like location, operating systems, and browser info.
+[Vercel Analytics](https://vercel.com/docs/analytics)는 웹사이트 방문자에 대한 심층적인 인사이트를 제공하며, 상위 페이지, 방문자 유입 경로, 접속 위치, 운영체제, 브라우저 정보와 같은 통계를 추적합니다.
 
-:::warning production only
+:::warning 프로덕션 전용
 
-This plugin is always inactive in development and **only active in production** (`docusaurus build`) to avoid polluting the analytics statistics.
+이 플러그인은 통계 데이터가 왜곡되지 않도록 개발 환경에서는 항상 비활성화되어 있으며 **프로덕션 환경에서만 활성화**(`docusaurus build`)됩니다.
 
 :::
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-vercel-analytics
 ```
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `mode` | `string` | `'auto'` | Override the automatic environment detection. Read the [official docs](https://vercel.com/docs/analytics/package#mode) for details. |
-| `debug` | `boolean` | `undefined` | Enable browser console logging of analytics events. Read the [official docs](https://vercel.com/docs/analytics/package#debug) for details. |
+| `mode` | `string` | `'auto'` | 자동 환경 감지를 재정의합니다. 자세한 내용은 [공식 문서](https://vercel.com/docs/analytics/package#mode)를 참조하세요. |
+| `debug` | `boolean` | `undefined` | 분석 이벤트의 브라우저 콘솔 로깅을 활성화합니다. 자세한 내용은 [공식 문서](https://vercel.com/docs/analytics/package#debug)를 참조하세요. |
 
 ```mdx-code-block
 </APITable>
 ```
 
-### Example configuration {#ex-config}
+### 구성 예시 {#ex-config}
 
-You can configure this plugin through plugin options.
+플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 ```js title="docusaurus.config.js"
 export default {

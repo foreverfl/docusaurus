@@ -3,29 +3,29 @@ sidebar_position: 6
 slug: /api/plugins/@docusaurus/plugin-google-analytics
 ---
 
-# 📦 plugin-google-analytics
+# 📦 plugin-google-analytics {#plugin-google-analytics}
 
 import APITable from '@site/src/components/APITable';
 
-The default [Google Analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/) plugin. It is a JavaScript library for measuring how users interact with your website **in the production build**. If you are using Google Analytics 4 you might need to consider using [plugin-google-gtag](./plugin-google-gtag.mdx) instead.
+기본 [Google Analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/) 플러그인입니다. **프로덕션 빌드**에서 사용자가 웹사이트와 어떻게 상호작용하는지 측정하는 JavaScript 라이브러리입니다. Google Analytics 4를 사용하는 경우 대신 [plugin-google-gtag](./plugin-google-gtag.mdx)를 사용하는 것을 고려해야 할 수 있습니다.
 
-:::danger Deprecated
+:::danger 더 이상 사용되지 않음
 
-This plugin is **deprecated** and became useless on July 1, 2023.
+이 플러그인은 **더 이상 사용되지 않으며** 2023년 7월 1일부로 쓸모없어졌습니다.
 
-Google is [moving away from Universal Analytics](https://blog.google/products/marketingplatform/analytics/prepare-for-future-with-google-analytics-4/).
+Google은 [Universal Analytics에서 벗어나고 있습니다](https://blog.google/products/marketingplatform/analytics/prepare-for-future-with-google-analytics-4/).
 
-If you are still using this plugin with a `UA-*` tracking id, you should create a Google Analytics 4 account as soon as possible, and use [`@docusaurus/plugin-google-gtag`](./plugin-google-gtag.mdx) instead of this plugin. More details [here](https://github.com/facebook/docusaurus/issues/7221).
-
-:::
-
-:::warning production only
-
-This plugin is always inactive in development and **only active in production** to avoid polluting the analytics statistics.
+아직 `UA-*` 추적 ID로 이 플러그인을 사용하고 있다면, 가능한 한 빨리 Google Analytics 4 계정을 만들고 이 플러그인 대신 [`@docusaurus/plugin-google-gtag`](./plugin-google-gtag.mdx)를 사용해야 합니다. 자세한 내용은 [여기](https://github.com/facebook/docusaurus/issues/7221)를 참조하세요.
 
 :::
 
-## Installation {#installation}
+:::warning 프로덕션 전용
+
+이 플러그인은 통계 데이터가 오염되는 것을 방지하기 위해 개발 환경에서는 항상 비활성화되어 있으며 **프로덕션 환경에서만 활성화**됩니다.
+
+:::
+
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-google-analytics
@@ -33,36 +33,36 @@ npm install --save @docusaurus/plugin-google-analytics
 
 :::tip
 
-If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+`@docusaurus/preset-classic` 프리셋을 사용하는 경우 이 플러그인을 의존성으로 설치할 필요가 없습니다.
 
-You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+[프리셋 옵션](../../using-plugins.mdx#docusauruspreset-classic)을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `trackingID` | `string` | **Required** | The tracking ID of your analytics service. |
-| `anonymizeIP` | `boolean` | `false` | Whether the IP should be anonymized when sending requests. |
+| `trackingID` | `string` | **필수** | 분석 서비스의 추적 ID입니다. |
+| `anonymizeIP` | `boolean` | `false` | 요청을 보낼 때 IP를 익명화할지 여부입니다. |
 
 ```mdx-code-block
 </APITable>
 ```
 
-### Example configuration {#ex-config}
+### 구성 예시 {#ex-config}
 
-You can configure this plugin through preset options or plugin options.
+프리셋 옵션이나 플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::tip
 
-Most Docusaurus users configure this plugin through the preset options.
+대부분의 Docusaurus 사용자는 프리셋 옵션을 통해 이 플러그인을 구성합니다.
 
 :::
 

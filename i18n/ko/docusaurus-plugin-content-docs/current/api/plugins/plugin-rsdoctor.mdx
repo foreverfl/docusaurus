@@ -3,43 +3,43 @@ sidebar_position: 7
 slug: /api/plugins/@docusaurus/plugin-rsdoctor
 ---
 
-# 📦 plugin-rsdoctor
+# 📦 plugin-rsdoctor {#plugin-rsdoctor}
 
 import APITable from '@site/src/components/APITable';
 
-A [Rsdoctor](https://rsdoctor.dev/) plugin can help you troubleshoot the bundling phase of your Docusaurus site, supporting both Webpack and Rspack.
+[Rsdoctor](https://rsdoctor.dev/) 플러그인은 Webpack과 Rspack 모두를 지원하며 Docusaurus 사이트의 번들링 단계 문제를 해결하는 데 도움을 줄 수 있습니다.
 
 :::tip
 
-Use it to figure out which plugin or loader is slowing down the bundler, and focus your efforts on optimizing the bottleneck.
+어떤 플러그인이나 로더가 번들러를 늦추고 있는지 파악하고 병목 현상을 최적화하는 데 집중하기 위해 사용하세요.
 
 :::
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-rsdoctor
 ```
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `rsdoctorOptions` | `object` | `{}` | The [Rsdoctor bundler plugin options](https://rsdoctor.dev/config/options/options), forwarded as is |
+| `rsdoctorOptions` | `object` | `{}` | [Rsdoctor 번들러 플러그인 옵션](https://rsdoctor.dev/config/options/options)이 그대로 전달됩니다 |
 
 ```mdx-code-block
 </APITable>
 ```
 
-### Example configuration {#ex-config}
+### 구성 예시 {#ex-config}
 
-You can configure this plugin through plugin options.
+플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 ```js title="docusaurus.config.js"
 export default {

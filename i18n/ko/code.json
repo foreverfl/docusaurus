@@ -1,15 +1,15 @@
 {
   "Preset options": {
-    "message": "Preset options"
+    "message": "프리셋 옵션"
   },
   "apiDocs.configTabs.presetOptions.description": {
-    "message": "If you use a preset, configure this plugin through the {presetLink}:"
+    "message": "프리셋을 사용하는 경우, {presetLink}를 통해 이 플러그인을 구성하세요:"
   },
   "preset options": {
-    "message": "preset options"
+    "message": "프리셋 옵션"
   },
   "Plugin options": {
-    "message": "Plugin options"
+    "message": "플러그인 옵션"
   },
   "If you are using a standalone plugin, provide options directly to the plugin:": {
     "message": "If you are using a standalone plugin, provide options directly to the plugin:"

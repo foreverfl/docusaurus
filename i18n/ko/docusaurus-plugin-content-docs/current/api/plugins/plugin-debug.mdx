@@ -3,22 +3,22 @@ sidebar_position: 5
 slug: /api/plugins/@docusaurus/plugin-debug
 ---
 
-# 📦 plugin-debug
+# 📦 plugin-debug {#plugin-debug}
 
 ```mdx-code-block
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 ```
 
-The debug plugin will display useful debug information at [`http://localhost:3000/__docusaurus/debug`](http://localhost:3000/__docusaurus/debug).
+디버그 플러그인은 [`http://localhost:3000/__docusaurus/debug`](http://localhost:3000/__docusaurus/debug)에 유용한 디버그 정보를 표시합니다.
 
-It is mostly useful for plugin authors, that will be able to inspect more easily the content of the `.docusaurus` folder (like the creates routes), but also be able to inspect data structures that are never written to disk, like the plugin data loaded through the `contentLoaded` lifecycle.
+주로 플러그인 작성자에게 유용하며, 생성된 라우트 같은 `.docusaurus` 폴더의 내용을 더 쉽게 검사할 수 있을 뿐만 아니라 `contentLoaded` 생명주기를 통해 로드된 플러그인 데이터와 같이 디스크에 절대 기록되지 않는 데이터 구조도 검사할 수 있습니다.
 
 :::info
 
-If you use the plugin via the classic preset, the preset will **enable the plugin in development and disable it in production** by default (`debug: undefined`) to avoid exposing potentially sensitive information. You can use `debug: true` to always enable it or `debug: false` to always disable it.
+클래식 프리셋을 통해 플러그인을 사용하는 경우, 프리셋은 기본적으로 민감한 정보가 노출되는 것을 방지하기 위해 `debug: undefined`를 통해 **개발 환경에서는 플러그인을 활성화하고 프로덕션에서는 비활성화**합니다. 항상 활성화하려면 `debug: true`를, 항상 비활성화하려면 `debug: false`를 사용할 수 있습니다.
 
-If you use a standalone plugin, you may need to achieve the same effect by checking the environment:
+독립형 플러그인을 사용하는 경우 환경을 확인하여 동일한 효과를 얻어야 할 수 있습니다:
 
 ```js title="docusaurus.config.js"
 export default {
@@ -33,13 +33,13 @@ export default {
 
 :::note
 
-If you report a bug, we will probably ask you to have this plugin turned on in the production, so that we can inspect your deployment config more easily.
+버그를 보고하는 경우, 배포 구성을 더 쉽게 검사할 수 있도록 프로덕션에서 이 플러그인을 활성화하도록 요청할 수 있습니다.
 
-If you don't have any sensitive information, you can keep it on in production [like we do](/__docusaurus/debug).
+민감한 정보가 없다면 [우리처럼](/__docusaurus/debug) 프로덕션에서도 활성화 할 수 있습니다.
 
 :::
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-debug
@@ -47,32 +47,32 @@ npm install --save @docusaurus/plugin-debug
 
 :::tip
 
-If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+`@docusaurus/preset-classic` 프리셋을 사용하는 경우 이 플러그인을 의존성으로 설치할 필요가 없습니다.
 
-You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+[프리셋 옵션](../../using-plugins.mdx#docusauruspreset-classic)을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-This plugin currently has no options.
+이 플러그인은 현재 옵션이 없습니다.
 
-### Example configuration {#ex-config}
+### 구성 예시 {#ex-config}
 
-You can configure this plugin through preset options or plugin options.
+프리셋 옵션이나 플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::tip
 
-Most Docusaurus users configure this plugin through the preset options.
+대부분의 Docusaurus 사용자는 프리셋 옵션을 통해 이 플러그인을 구성합니다.
 
 :::
 
 ```mdx-code-block
 <Tabs groupId="api-config-ex">
-<TabItem value="preset" label="Preset options">
+<TabItem value="preset" label="프리셋 옵션">
 ```
 
-If you use a preset, configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic):
+프리셋을 사용하는 경우 [프리셋 옵션](../../using-plugins.mdx#docusauruspreset-classic)을 통해 이 플러그인을 구성하세요:
 
 ```js title="docusaurus.config.js"
 export default {
@@ -81,7 +81,7 @@ export default {
       '@docusaurus/preset-classic',
       {
         // highlight-next-line
-        debug: true, // This will enable the plugin in production
+        debug: true, // 프로덕션에서 플러그인을 활성화합니다
       },
     ],
   ],
@@ -90,10 +90,10 @@ export default {
 
 ```mdx-code-block
 </TabItem>
-<TabItem value="plugin" label="Plugin Options">
+<TabItem value="plugin" label="플러그인 옵션">
 ```
 
-If you are using a standalone plugin, provide options directly to the plugin:
+독립형 플러그인을 사용하는 경우 플러그인에 직접 옵션을 제공하세요:
 
 ```js title="docusaurus.config.js"
 export default {

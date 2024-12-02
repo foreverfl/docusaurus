@@ -3,19 +3,19 @@ sidebar_position: 10
 slug: /api/plugins/@docusaurus/plugin-sitemap
 ---
 
-# 📦 plugin-sitemap
+# 📦 plugin-sitemap {#plugin-sitemap}
 
 import APITable from '@site/src/components/APITable';
 
-This plugin creates sitemaps for your site so that search engine crawlers can crawl your site more accurately.
+이 플러그인은 검색 엔진 크롤러가 사이트를 더 정확하게 크롤링할 수 있도록 사이트맵을 생성합니다.
 
-:::warning production only
+:::warning 프로덕션 전용
 
-This plugin is always inactive in development and **only active in production** because it works on the build output.
+이 플러그인은 빌드 출력물에서 작동하기 때문에 개발 환경에서는 항상 비활성화되어 있으며 **프로덕션 환경에서만 활성화**됩니다.
 
 :::
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-sitemap
@@ -23,34 +23,34 @@ npm install --save @docusaurus/plugin-sitemap
 
 :::tip
 
-If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+`@docusaurus/preset-classic` 프리셋을 사용하는 경우 이 플러그인을 의존성으로 설치할 필요가 없습니다.
 
-You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+[프리셋 옵션](../../using-plugins.mdx#docusauruspreset-classic)을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `lastmod` | `'date' \| 'datetime' \| null` | `null` | `date` is YYYY-MM-DD. `datetime` is a ISO 8601 datetime. `null` is disabled. See [sitemap docs](https://www.sitemaps.org/protocol.html#xmlTagDefinitions). |
-| `changefreq` | `string \| null` | `'weekly'` | See [sitemap docs](https://www.sitemaps.org/protocol.html#xmlTagDefinitions) |
-| `priority` | `number \| null` | `0.5` | See [sitemap docs](https://www.sitemaps.org/protocol.html#xmlTagDefinitions) |
-| `ignorePatterns` | `string[]` | `[]` | A list of glob patterns; matching route paths will be filtered from the sitemap. Note that you may need to include the base URL in here. |
-| `filename` | `string` | `sitemap.xml` | The path to the created sitemap file, relative to the output directory. Useful if you have two plugin instances outputting two files. |
-| `createSitemapItems` | <code>[CreateSitemapItemsFn](#CreateSitemapItemsFn) \| undefined</code> | `undefined` | An optional function which can be used to transform and / or filter the items in the sitemap. |
+| `lastmod` | `'date' \| 'datetime' \| null` | `null` | `date`는 YYYY-MM-DD 형식입니다. `datetime`은 ISO 8601 datetime 형식입니다. `null`은 비활성화됩니다. [사이트맵 문서](https://www.sitemaps.org/protocol.html#xmlTagDefinitions)를 참조하세요. |
+| `changefreq` | `string \| null` | `'weekly'` | [사이트맵 문서](https://www.sitemaps.org/protocol.html#xmlTagDefinitions)를 참조하세요 |
+| `priority` | `number \| null` | `0.5` | [사이트맵 문서](https://www.sitemaps.org/protocol.html#xmlTagDefinitions)를 참조하세요 |
+| `ignorePatterns` | `string[]` | `[]` | glob 패턴 목록입니다. 일치하는 경로는 사이트맵에서 필터링됩니다. 여기에 기본 URL을 포함해야 할 수도 있습니다. |
+| `filename` | `string` | `sitemap.xml` | 생성된 사이트맵 파일의 경로입니다(출력 디렉토리 기준). 두 개의 플러그인 인스턴스가 두 개의 파일을 출력하는 경우 유용합니다. |
+| `createSitemapItems` | <code>[CreateSitemapItemsFn](#CreateSitemapItemsFn) \| undefined</code> | `undefined` | 사이트맵의 항목을 변환하거나 필터링하는 데 사용할 수 있는 선택적 함수입니다. |
 
 ```mdx-code-block
 </APITable>
 ```
 
-### Types {#types}
+### 타입 {#types}
 
 #### `CreateSitemapItemsFn` {#CreateSitemapItemsFn}
 
@@ -64,28 +64,28 @@ type CreateSitemapItemsFn = (params: {
 
 :::info
 
-This plugin also respects some site config:
+이 플러그인은 다음과 같은 사이트 구성도 준수합니다:
 
-- [`noIndex`](../docusaurus.config.js.mdx#noIndex): results in no sitemap generated
-- [`trailingSlash`](../docusaurus.config.js.mdx#trailingSlash): determines if the URLs in the sitemap have trailing slashes
-
-:::
-
-:::note About `lastmod`
-
-The `lastmod` option will only output a sitemap `<lastmod>` tag if plugins provide [route metadata](../plugin-methods/lifecycle-apis.mdx#addRoute) attributes `sourceFilePath` and/or `lastUpdatedAt`.
-
-All the official content plugins provide the metadata for routes backed by a content file (Markdown, MDX or React page components), but it is possible third-party plugin authors do not provide this information, and the plugin will not be able to output a `<lastmod>` tag for their routes.
+- [`noIndex`](../docusaurus.config.js.mdx#noIndex): 사이트맵이 생성되지 않습니다
+- [`trailingSlash`](../docusaurus.config.js.mdx#trailingSlash): 사이트맵의 URL에 후행 슬래시가 있는지 결정합니다
 
 :::
 
-### Example configuration {#ex-config}
+:::note `lastmod`에 대하여
 
-You can configure this plugin through preset options or plugin options.
+`lastmod` 옵션은 플러그인이 [라우트 메타데이터](../plugin-methods/lifecycle-apis.mdx#addRoute) 속성 `sourceFilePath` 및/또는 `lastUpdatedAt`을 제공하는 경우에만 사이트맵 `<lastmod>` 태그를 출력합니다.
+
+모든 공식 콘텐츠 플러그인은 콘텐츠 파일(Markdown, MDX 또는 React 페이지 컴포넌트)이 지원하는 라우트에 대한 메타데이터를 제공하지만, 써드파티 플러그인 작성자가 이 정보를 제공하지 않을 수 있으며, 이 경우 플러그인은 해당 라우트에 대한 `<lastmod>` 태그를 출력할 수 없습니다.
+
+:::
+
+### 구성 예시 {#ex-config}
+
+프리셋 옵션이나 플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::tip
 
-Most Docusaurus users configure this plugin through the preset options.
+대부분의 Docusaurus 사용자는 프리셋 옵션을 통해 이 플러그인을 구성합니다.
 
 :::
 
@@ -107,4 +107,4 @@ const config = {
 };
 ```
 
-You can find your sitemap at `/sitemap.xml`.
+사이트맵은 `/sitemap.xml`에서 찾을 수 있습니다.

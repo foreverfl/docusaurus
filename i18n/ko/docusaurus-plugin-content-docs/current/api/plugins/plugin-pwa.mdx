@@ -3,21 +3,21 @@ sidebar_position: 9
 slug: /api/plugins/@docusaurus/plugin-pwa
 ---
 
-# 📦 plugin-pwa
+# 📦 plugin-pwa {#plugin-pwa}
 
-Docusaurus Plugin to add PWA support using [Workbox](https://developers.google.com/web/tools/workbox). This plugin generates a [Service Worker](https://developers.google.com/web/fundamentals/primers/service-workers) in production build only, and allows you to create fully PWA-compliant documentation site with offline and installation support.
+[Workbox](https://developers.google.com/web/tools/workbox)를 사용하여 PWA 지원을 추가하는 Docusaurus 플러그인입니다. 이 플러그인은 프로덕션 빌드에서만 [Service Worker](https://developers.google.com/web/fundamentals/primers/service-workers)를 생성하며, 오프라인 및 설치 지원이 가능한 완전한 PWA 호환 문서 사이트를 만들 수 있습니다.
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-pwa
 ```
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Create a [PWA manifest](https://web.dev/add-manifest/) at `./static/manifest.json`.
+`./static/manifest.json`에 [PWA 매니페스트](https://web.dev/add-manifest/)를 생성합니다.
 
-Modify `docusaurus.config.js` with a minimal PWA config, like:
+다음과 같이 최소한의 PWA 구성으로 `docusaurus.config.js`를 수정하세요:
 
 ```js title="docusaurus.config.js"
 export default {
@@ -40,7 +40,7 @@ export default {
           {
             tagName: 'link',
             rel: 'manifest',
-            href: '/manifest.json', // your PWA manifest
+            href: '/manifest.json', // PWA 매니페스트
           },
           {
             tagName: 'meta',
@@ -54,98 +54,98 @@ export default {
 };
 ```
 
-## Progressive Web App {#progressive-web-app}
+## 프로그레시브 웹 앱 {#progressive-web-app}
 
-Having a service worker installed is not enough to make your application a PWA. You'll need to at least include a [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest) and have the correct tags in `<head>` ([Options > pwaHead](#pwahead)).
+서비스 워커를 설치하는 것만으로는 애플리케이션을 PWA로 만들기에 충분하지 않습니다. 최소한 [웹 앱 매니페스트](https://developer.mozilla.org/en-US/docs/Web/Manifest)를 포함하고 `<head>`에 올바른 태그가 있어야 합니다 ([Options > pwaHead](#pwahead)).
 
-After deployment, you can use [Lighthouse](https://developers.google.com/web/tools/lighthouse) to run an audit on your site.
+배포 후에는 [Lighthouse](https://developers.google.com/web/tools/lighthouse)를 사용하여 사이트 감사를 실행할 수 있습니다.
 
-For a more exhaustive list of what it takes for your site to be a PWA, refer to the [PWA Checklist](https://developers.google.com/web/progressive-web-apps/checklist)
+사이트를 PWA로 만드는 데 필요한 더 자세한 내용은 [PWA 체크리스트](https://developers.google.com/web/progressive-web-apps/checklist)를 참조하세요.
 
-## App installation support {#app-installation-support}
+## 앱 설치 지원 {#app-installation-support}
 
-If your browser supports it, you should be able to install a Docusaurus site as an app.
+브라우저가 지원하는 경우, Docusaurus 사이트를 앱으로 설치할 수 있어야 합니다.
 
-![A screen recording of the installation process. A button appears in the address bar of the browser, which displays a dialog asking "install this application?" when clicked. After clicking the "Install" button, a new application is opened in the operating system, opening to the Docusaurus homepage.](/img/pwa_install.gif)
+![설치 과정을 보여주는 화면 녹화입니다. 브라우저의 주소 표시줄에 버튼이 나타나며, 클릭하면 "이 애플리케이션을 설치하시겠습니까?"라는 대화 상자가 표시됩니다. "설치" 버튼을 클릭하면 운영 체제에서 새 애플리케이션이 열리고 Docusaurus 홈페이지가 표시됩니다.](/img/pwa_install.gif)
 
 :::note
 
-App installation requires the HTTPS protocol and a valid manifest.
+앱 설치에는 HTTPS 프로토콜과 유효한 매니페스트가 필요합니다.
 
 :::
 
-## Offline mode (precaching) {#offline-mode-precaching}
+## 오프라인 모드 (사전 캐싱) {#offline-mode-precaching}
 
-We enable users to browse a Docusaurus site offline, by using service-worker precaching.
+서비스 워커 사전 캐싱을 사용하여 사용자가 Docusaurus 사이트를 오프라인에서 탐색할 수 있게 합니다.
 
-The [workbox-precaching](https://developers.google.com/web/tools/workbox/modules/workbox-precaching) page explains the idea:
+[workbox-precaching](https://developers.google.com/web/tools/workbox/modules/workbox-precaching) 페이지에서 다음과 같이 설명합니다:
 
-> One feature of service workers is the ability to save a set of files to the cache when the service worker is installing. This is often referred to as "precaching", since you are caching content ahead of the service worker being used.
+> 서비스 워커의 기능 중 하나는 서비스 워커가 설치될 때 일련의 파일을 캐시에 저장하는 것입니다. 이를 "사전 캐싱"이라고 하며, 서비스 워커가 사용되기 전에 콘텐츠를 캐싱하기 때문입니다.
 >
-> The main reason for doing this is that it gives developers control over the cache, meaning they can determine when and how long a file is cached as well as serve it to the browser without going to the network, meaning it can be used to create web apps that work offline.
+> 이렇게 하는 주된 이유는 개발자가 캐시를 제어할 수 있게 되어 파일이 캐시되는 시기와 기간을 결정할 수 있고 네트워크를 거치지 않고 브라우저에 제공할 수 있어 오프라인에서 작동하는 웹 앱을 만들 수 있기 때문입니다.
 >
-> Workbox takes a lot of the heavy lifting out of precaching by simplifying the API and ensuring assets are downloaded efficiently.
+> Workbox는 API를 단순화하고 리소스가 효율적으로 다운로드되도록 보장함으로써 사전 캐싱의 많은 부담을 덜어줍니다.
 
-By default, offline mode is enabled when the site is installed as an app. See the `offlineModeActivationStrategies` option for details.
+기본적으로 오프라인 모드는 사이트가 앱으로 설치될 때 활성화됩니다. 자세한 내용은 `offlineModeActivationStrategies` 옵션을 참조하세요.
 
-After the site has been precached, the service worker will serve cached responses for later visits. When a new build is deployed along with a new service worker, the new one will begin installing and eventually move to a waiting state. During this waiting state, a reload popup will show and ask the user to reload the page for new content. Until the user either clears the application cache or clicks the `reload` button on the popup, the service worker will continue serving the old content.
+사이트가 사전 캐시된 후에는 서비스 워커가 이후 방문 시 캐시된 응답을 제공합니다. 새로운 빌드가 새로운 서비스 워커와 함께 배포되면 새로운 서비스 워커가 설치를 시작하고 결국 대기 상태로 이동합니다. 이 대기 상태 동안 새로고침 팝업이 표시되어 사용자에게 새 콘텐츠를 위해 페이지를 새로고침하도록 요청합니다. 사용자가 애플리케이션 캐시를 지우거나 팝업의 `새로고침` 버튼을 클릭할 때까지 서비스 워커는 계속해서 이전 콘텐츠를 제공합니다.
 
 :::warning
 
-Offline mode / precaching requires downloading all the static assets of the site ahead of time, and can consume unnecessary bandwidth. It may not be a good idea to activate it for all kind of sites.
+오프라인 모드/사전 캐싱을 사용하려면 사이트의 모든 정적 리소스를 미리 다운로드해야 하며 불필요한 대역폭을 소비할 수 있습니다. 모든 종류의 사이트에서 활성화하는 것이 좋지 않을 수 있습니다.
 
 :::
 
-## Options {#options}
+## 옵션 {#options}
 
 ### `debug` {#debug}
 
-- Type: `boolean`
-- Default: `false`
+- 타입: `boolean`
+- 기본값: `false`
 
-Turn debug mode on:
+디버그 모드 켜기:
 
-- Workbox logs
-- Additional Docusaurus logs
-- Unoptimized SW file output
-- Source maps
+- Workbox 로그
+- 추가 Docusaurus 로그
+- 최적화되지 않은 SW 파일 출력
+- 소스 맵
 
 ### `offlineModeActivationStrategies` {#offlinemodeactivationstrategies}
 
-- Type: `('appInstalled' | 'mobile' | 'saveData'| 'queryString' | 'always')[]`
-- Default: `['appInstalled', 'queryString', 'standalone']`
+- 타입: `('appInstalled' | 'mobile' | 'saveData'| 'queryString' | 'always')[]`
+- 기본값: `['appInstalled', 'queryString', 'standalone']`
 
-Strategies used to turn the offline mode on:
+오프라인 모드를 켜는 데 사용되는 전략:
 
-- `appInstalled`: activates for users having installed the site as an app (not 100% reliable)
-- `standalone`: activates for users running the app as standalone (often the case once a PWA is installed)
-- `queryString`: activates if queryString contains `offlineMode=true` (convenient for PWA debugging)
-- `mobile`: activates for mobile users (`width <= 996px`)
-- `saveData`: activates for users with `navigator.connection.saveData === true`
-- `always`: activates for all users
+- `appInstalled`: 사이트를 앱으로 설치한 사용자에게 활성화됩니다 (100% 신뢰할 수 없음)
+- `standalone`: 앱을 독립 실행형으로 실행하는 사용자에게 활성화됩니다 (PWA가 설치된 경우 자주 발생)
+- `queryString`: 쿼리 스트링에 `offlineMode=true`가 포함된 경우 활성화됩니다 (PWA 디버깅에 편리)
+- `mobile`: 모바일 사용자에게 활성화됩니다 (`width <= 996px`)
+- `saveData`: `navigator.connection.saveData === true`인 사용자에게 활성화됩니다
+- `always`: 모든 사용자에게 활성화됩니다
 
 :::warning
 
-Use this carefully: some users may not like to be forced to use the offline mode.
+이 기능은 신중하게 사용하세요: 일부 사용자는 오프라인 모드를 강제로 사용하는 것을 좋아하지 않을 수 있습니다.
 
 :::
 
 :::danger
 
-It is not possible to detect if a page is rendered as a PWA in a reliable manner.
+페이지가 PWA로 렌더링되는지 신뢰할 수 있는 방식으로 감지하는 것은 불가능합니다.
 
-The `appinstalled` event has been [removed from the specification](https://github.com/w3c/manifest/pull/836), and the [`navigator.getInstalledRelatedApps()`](https://web.dev/get-installed-related-apps/) API is only supported in recent Chrome versions and require `related_applications` declared in the manifest.
+`appinstalled` 이벤트는 [명세에서 제거](https://github.com/w3c/manifest/pull/836)되었으며, [`navigator.getInstalledRelatedApps()`](https://web.dev/get-installed-related-apps/) API는 최신 Chrome 버전에서만 지원되며 매니페스트에 `related_applications`가 선언되어 있어야 합니다.
 
-The [`standalone` strategy](https://petelepage.com/blog/2019/07/is-my-pwa-installed/) is a nice fallback to activate the offline mode (at least when running the installed app).
+앱이 설치된 경우라도 [`standalone` 전략](https://petelepage.com/blog/2019/07/is-my-pwa-installed/)은 오프라인 모드를 활성화하는 좋은 대안입니다.
 
 :::
 
 ### `injectManifestConfig` {#injectmanifestconfig}
 
-[Workbox options](https://developer.chrome.com/docs/workbox/reference/workbox-build/#type-InjectManifestOptions) to pass to `workbox.injectManifest()`. This gives you control over which assets will be precached, and be available offline.
+`workbox.injectManifest()`에 전달할 [Workbox 옵션](https://developer.chrome.com/docs/workbox/reference/workbox-build/#type-InjectManifestOptions)입니다. 이를 통해 어떤 리소스가 사전 캐시되고 오프라인에서 사용 가능할지 제어할 수 있습니다.
 
-- Type: `InjectManifestOptions`
-- Default: `{}`
+- 타입: `InjectManifestOptions`
+- 기본값: `{}`
 
 ```js title="docusaurus.config.js"
 export default {
@@ -160,8 +160,8 @@ export default {
           modifyURLPrefix: {
             //...
           },
-          // We already add regular static assets (HTML, images...) to be available offline
-          // You can add more files according to your needs
+          // 이미 오프라인에서 사용할 수 있는 일반 정적 리소스(HTML, 이미지 등)를 추가합니다
+          // 필요에 따라 더 많은 파일을 추가할 수 있습니다
           globPatterns: ['**/*.{pdf,docx,xlsx}'],
           // ...
         },
@@ -173,10 +173,10 @@ export default {
 
 ### `pwaHead` {#pwahead}
 
-- Type: `({ tagName: string; [attributeName: string]: string })[]`
-- Default: `[]`
+- 타입: `({ tagName: string; [attributeName: string]: string })[]`
+- 기본값: `[]`
 
-Array of objects containing `tagName` and key-value pairs for attributes to inject into the `<head>` tag. Technically you can inject any head tag through this, but it's ideally used for tags to make your site PWA compliant. Here's a list of tag to make your app fully compliant:
+`<head>` 태그에 주입할 `tagName`과 속성의 키-값 쌍을 포함하는 객체 배열입니다. 기술적으로는 이를 통해 모든 head 태그를 주입할 수 있지만, 이상적으로는 사이트를 PWA 호환되게 만들기 위한 태그에 사용됩니다. 앱을 완전히 호환되게 만들기 위한 태그 목록은 다음과 같습니다:
 
 ```js
 export default {
@@ -240,25 +240,25 @@ export default {
 
 ### `swCustom` {#swcustom}
 
-- Type: `string | undefined`
-- Default: `undefined`
+- 타입: `string | undefined`
+- 기본값: `undefined`
 
-Useful for additional Workbox rules. You can do whatever a service worker can do here, and use the full power of workbox libraries. The code is transpiled, so you can use modern ES6+ syntax here.
+추가 Workbox 규칙에 유용합니다. 여기서 서비스 워커가 할 수 있는 모든 작업을 수행할 수 있으며 workbox 라이브러리의 모든 기능을 사용할 수 있습니다. 코드가 트랜스파일되므로 여기서 최신 ES6+ 구문을 사용할 수 있습니다.
 
-For example, to cache files from external routes:
+예를 들어, 외부 경로의 파일을 캐시하려면:
 
 ```js
 import {registerRoute} from 'workbox-routing';
 import {StaleWhileRevalidate} from 'workbox-strategies';
 
-// default fn export receiving some useful params
+// 유용한 매개변수를 받는 기본 함수 내보내기
 export default function swCustom(params) {
   const {
     debug, // :boolean
     offlineMode, // :boolean
   } = params;
 
-  // Cache responses from external resources
+  // 외부 리소스의 응답을 캐시
   registerRoute((context) => {
     return [
       /graph\.facebook\.com\/.*\/picture/,
@@ -269,20 +269,20 @@ export default function swCustom(params) {
 }
 ```
 
-The module should have a `default` function export, and receives some params.
+모듈은 `default` 함수를 내보내야 하며 일부 매개변수를 받습니다.
 
 ### `swRegister` {#swregister}
 
-- Type: `string | false`
-- Default: `'docusaurus-plugin-pwa/src/registerSW.js'`
+- 타입: `string | false`
+- 기본값: `'docusaurus-plugin-pwa/src/registerSW.js'`
 
-Adds an entry before the Docusaurus app so that registration can happen before the app runs. The default `registerSW.js` file is enough for simple registration.
+Docusaurus 앱 이전에 엔트리를 추가하여 앱이 실행되기 전에 등록이 이루어질 수 있도록 합니다. 기본 `registerSW.js` 파일은 간단한 등록에 충분합니다.
 
-Passing `false` will disable registration entirely.
+`false`를 전달하면 등록이 완전히 비활성화됩니다.
 
-## Manifest example {#manifest-example}
+## 매니페스트 예시 {#manifest-example}
 
-The Docusaurus site manifest can serve as an inspiration:
+Docusaurus 사이트 매니페스트가 영감이 될 수 있습니다:
 
 ```mdx-code-block
 import CodeBlock from '@theme/CodeBlock';
@@ -292,12 +292,12 @@ import CodeBlock from '@theme/CodeBlock';
 </CodeBlock>
 ```
 
-## Customizing reload popup {#customizing-reload-popup}
+## 새로고침 팝업 커스터마이징 {#customizing-reload-popup}
 
-The `@theme/PwaReloadPopup` component is rendered when a new service worker is waiting to be installed, and we suggest a reload to the user. You can [swizzle](../../swizzling.mdx) this component and implement your own UI. It will receive an `onReload` callback as props, which should be called when the `reload` button is clicked. This will tell the service worker to install the waiting service worker and reload the page.
+새로운 서비스 워커가 설치 대기 중이고 사용자에게 새로고침을 제안할 때 `@theme/PwaReloadPopup` 컴포넌트가 렌더링됩니다. 이 컴포넌트를 [스위즐](../../swizzling.mdx)하여 자신만의 UI를 구현할 수 있습니다. 이 컴포넌트는 props로 `onReload` 콜백을 받으며, 이는 `새로고침` 버튼을 클릭할 때 호출되어야 합니다. 이는 서비스 워커에게 대기 중인 서비스 워커를 설치하고 페이지를 새로고침하도록 지시합니다.
 
-The default theme includes an implementation for the reload popup and uses [Infima Alerts](https://infima.dev/docs/components/alert).
+기본 테마는 새로고침 팝업에 대한 구현을 포함하며 [Infima Alerts](https://infima.dev/docs/components/alert)를 사용합니다.
 
-![A screen recording of the reload process. An alert box shows in the bottom right of the window, saying "New content available". After clicking the "Refresh" button, the page's main heading changes from "Introduction" to "PWA :))".](/img/pwa_reload.gif)
+![새로고침 과정을 보여주는 화면 녹화입니다. 창의 오른쪽 하단에 "새로운 콘텐츠 사용 가능"이라고 표시된 경고 상자가 표시됩니다. "새로고침" 버튼을 클릭하면 페이지의 주요 제목이 "소개"에서 "PWA :))"로 변경됩니다.](/img/pwa_reload.gif)
 
-Your component can render `null`, but this is not recommended: users won't have a way to get up-to-date content.
+컴포넌트는 `null`을 렌더링할 수 있지만, 이는 권장되지 않습니다: 사용자가 최신 콘텐츠를 가져올 방법이 없게 됩니다.

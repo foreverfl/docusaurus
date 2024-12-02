@@ -3,25 +3,25 @@ sidebar_position: 8
 slug: /api/plugins/@docusaurus/plugin-google-tag-manager
 ---
 
-# 📦 plugin-google-tag-manager
+# 📦 plugin-google-tag-manager {#plugin-google-tag-manager}
 
 import APITable from '@site/src/components/APITable';
 
-A plugin for adding [Google Tag Manager (gtm.js)](https://developers.google.com/tag-platform/tag-manager) to a Docusaurus site. Use this plugin in conjunction with the standard [gtag plugin](./plugin-google-gtag.mdx) for in-depth analysis of how users are using your site.
+[Google Tag Manager (gtm.js)](https://developers.google.com/tag-platform/tag-manager)를 Docusaurus 사이트에 추가하기 위한 플러그인입니다. 사용자들이 사이트를 어떻게 사용하는지 심층 분석하려면 이 플러그인을 표준 [gtag 플러그인](./plugin-google-gtag.mdx)과 함께 사용하세요.
 
 :::tip
 
-You can use [Google's Tag Assistant](https://tagassistant.google.com/) tool to check if tag manager is set up correctly!
+[Google의 Tag Assistant](https://tagassistant.google.com/) 도구를 사용하여 태그 매니저가 올바르게 설정되었는지 확인할 수 있습니다!
 
 :::
 
-:::warning production only
+:::warning 프로덕션 전용
 
-This plugin is always inactive in development and **only active in production** to avoid polluting the analytics statistics.
+이 플러그인은 통계 데이터가 왜곡되는 것을 방지하기 위해 개발 환경에서는 항상 비활성화되어 있으며 **프로덕션 환경에서만 활성화**됩니다.
 
 :::
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-google-tag-manager
@@ -29,35 +29,35 @@ npm install --save @docusaurus/plugin-google-tag-manager
 
 :::tip
 
-If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+`@docusaurus/preset-classic` 프리셋을 사용하는 경우 이 플러그인을 의존성으로 설치할 필요가 없습니다.
 
-You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+[프리셋 옵션](../../using-plugins.mdx#docusauruspreset-classic)을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `containerId` | `string` | **Required** | Your Tag Manager container Id (usually starts with `GTM-`). |
+| `containerId` | `string` | **필수** | 태그 매니저 컨테이너 ID(일반적으로 `GTM-`으로 시작) |
 
 ```mdx-code-block
 </APITable>
 ```
 
-### Example configuration {#ex-config}
+### 구성 예시 {#ex-config}
 
-You can configure this plugin through preset options or plugin options.
+프리셋 옵션이나 플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::tip
 
-Most Docusaurus users configure this plugin through the preset options.
+대부분의 Docusaurus 사용자는 프리셋 옵션을 통해 이 플러그인을 구성합니다.
 
 :::
 
