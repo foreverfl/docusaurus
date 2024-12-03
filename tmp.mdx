@@ -1,108 +1,28 @@
 ---
-sidebar_position: 5
-slug: /api/plugins/@docusaurus/plugin-debug
+description: How Docusaurus works to build your app
 ---
 
-# 📦 plugin-debug
+# Architecture
 
 ```mdx-code-block
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Zoom from 'react-medium-image-zoom';
 ```
 
-The debug plugin will display useful debug information at [`http://localhost:3000/__docusaurus/debug`](http://localhost:3000/__docusaurus/debug).
+<Zoom>
 
-It is mostly useful for plugin authors, that will be able to inspect more easily the content of the `.docusaurus` folder (like the creates routes), but also be able to inspect data structures that are never written to disk, like the plugin data loaded through the `contentLoaded` lifecycle.
+![Architecture overview](/img/architecture.png)
 
-:::info
+</Zoom>
 
-If you use the plugin via the classic preset, the preset will **enable the plugin in development and disable it in production** by default (`debug: undefined`) to avoid exposing potentially sensitive information. You can use `debug: true` to always enable it or `debug: false` to always disable it.
+This diagram shows how Docusaurus works to build your app. Plugins each collect their content and emit JSON data; themes provide layout components which receive the JSON data as route modules. The bundler bundles all the components and emits a server bundle and a client bundle.
 
-If you use a standalone plugin, you may need to achieve the same effect by checking the environment:
+Although you (either plugin authors or site creators) are writing JavaScript all the time, bear in mind that the JS is actually run in different environments:
 
-```js title="docusaurus.config.js"
-export default {
-  plugins: [
-    // highlight-next-line
-    process.env.NODE_ENV === 'production' && '@docusaurus/plugin-debug',
-  ].filter(Boolean),
-};
-```
+- All plugin lifecycle methods are run in Node. Therefore, until we support ES Modules in our codebase, plugin source code must be provided as ES modules that can be imported, or CommonJS that can be `require`'d.
+- The theme code is built with Webpack. They can be provided as ESM—following React conventions.
 
-:::
+Plugin code and theme code never directly import each other: they only communicate through protocols (in our case, through JSON temp files and calls to `addRoute`). A useful mental model is to imagine that the plugins are not written in JavaScript, but in another language like Rust. The only way to interact with plugins for the user is through `docusaurus.config.js`, which itself is run in Node (hence you can use `require` and pass callbacks as plugin options).
 
-:::note
-
-If you report a bug, we will probably ask you to have this plugin turned on in the production, so that we can inspect your deployment config more easily.
-
-If you don't have any sensitive information, you can keep it on in production [like we do](/__docusaurus/debug).
-
-:::
-
-## Installation {#installation}
-
-```bash npm2yarn
-npm install --save @docusaurus/plugin-debug
-```
-
-:::tip
-
-If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
-
-You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
-
-:::
-
-## Configuration {#configuration}
-
-This plugin currently has no options.
-
-### Example configuration {#ex-config}
-
-You can configure this plugin through preset options or plugin options.
-
-:::tip
-
-Most Docusaurus users configure this plugin through the preset options.
-
-:::
-
-```mdx-code-block
-<Tabs groupId="api-config-ex">
-<TabItem value="preset" label="Preset options">
-```
-
-If you use a preset, configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic):
-
-```js title="docusaurus.config.js"
-export default {
-  presets: [
-    [
-      '@docusaurus/preset-classic',
-      {
-        // highlight-next-line
-        debug: true, // This will enable the plugin in production
-      },
-    ],
-  ],
-};
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="plugin" label="Plugin Options">
-```
-
-If you are using a standalone plugin, provide options directly to the plugin:
-
-```js title="docusaurus.config.js"
-export default {
-  // highlight-next-line
-  plugins: ['@docusaurus/plugin-debug'],
-};
-```
-
-```mdx-code-block
-</TabItem>
-</Tabs>
-```
+During bundling, the config file itself is serialized and bundled, allowing the theme to access config options like `themeConfig` or `baseUrl` through [`useDocusaurusContext()`](../docusaurus-core.mdx#useDocusaurusContext). However, the `siteConfig` object only contains **serializable values** (values that are preserved after `JSON.stringify()`). Functions, regexes, etc. would be lost on the client side. The `themeConfig` is designed to be entirely serializable.

@@ -3,13 +3,13 @@ sidebar_position: 2
 slug: /api/themes/@docusaurus/theme-classic
 ---
 
-# 📦 theme-classic
+# 📦 theme-classic {#theme-classic}
 
 import APITable from '@site/src/components/APITable';
 
-The classic theme for Docusaurus.
+Docusaurus를 위한 클래식 테마입니다.
 
-You can refer to the [theme configuration page](theme-configuration.mdx) for more details on the configuration.
+더 자세한 구성 정보는 [테마 구성 페이지](theme-configuration.mdx)를 참조하세요.
 
 ```bash npm2yarn
 npm install --save @docusaurus/theme-classic
@@ -17,21 +17,21 @@ npm install --save @docusaurus/theme-classic
 
 :::tip
 
-If you have installed `@docusaurus/preset-classic`, you don't need to install it as a dependency.
+`@docusaurus/preset-classic`을 설치했다면, 이것을 의존성으로 설치할 필요가 없습니다.
 
 :::
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Option | Type | Default | Description |
+| 옵션 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `customCss` | <code>string[] \| string</code> | `[]` | Stylesheets to be imported globally as [client modules](../../advanced/client.mdx#client-modules). Relative paths are resolved against the site directory. |
+| `customCss` | <code>string[] \| string</code> | `[]` | [클라이언트 모듈](../../advanced/client.mdx#client-modules)로 전역적으로 가져올 스타일시트입니다. 상대 경로는 사이트 디렉토리를 기준으로 해석됩니다. |
 
 ```mdx-code-block
 </APITable>
@@ -39,17 +39,17 @@ Accepted fields:
 
 :::note
 
-Most configuration for the theme is done in `themeConfig`, which can be found in [theme configuration](./theme-configuration.mdx).
+테마에 대한 대부분의 구성은 [테마 구성](./theme-configuration.mdx)에서 찾을 수 있는 `themeConfig`에서 수행됩니다.
 
 :::
 
-### Example configuration {#ex-config}
+### 구성 예시 {#ex-config}
 
-You can configure this theme through preset options or plugin options.
+프리셋 옵션이나 플러그인 옵션을 통해 이 테마를 구성할 수 있습니다.
 
 :::tip
 
-Most Docusaurus users configure this plugin through the preset options.
+대부분의 Docusaurus 사용자는 프리셋 옵션을 통해 이 플러그인을 구성합니다.
 
 :::
 

@@ -1,8 +1,8 @@
 ---
-description: How Docusaurus works to build your app
+description: Docusaurus가 앱을 빌드하는 방식
 ---
 
-# Architecture
+# 아키텍처 {#architecture}
 
 ```mdx-code-block
 import Tabs from '@theme/Tabs';
@@ -12,17 +12,17 @@ import Zoom from 'react-medium-image-zoom';
 
 <Zoom>
 
-![Architecture overview](/img/architecture.png)
+![아키텍처 개요](/img/architecture.png)
 
 </Zoom>
 
-This diagram shows how Docusaurus works to build your app. Plugins each collect their content and emit JSON data; themes provide layout components which receive the JSON data as route modules. The bundler bundles all the components and emits a server bundle and a client bundle.
+이 다이어그램은 Docusaurus가 앱을 빌드하는 방식을 보여줍니다. 각 플러그인은 콘텐츠를 수집하고 JSON 데이터를 생성합니다. 테마는 라우트 모듈로 JSON 데이터를 받는 레이아웃 컴포넌트를 제공합니다. 번들러는 모든 컴포넌트를 번들링하여 서버 번들과 클라이언트 번들을 생성합니다.
 
-Although you (either plugin authors or site creators) are writing JavaScript all the time, bear in mind that the JS is actually run in different environments:
+여러분(플러그인 작성자나 사이트 제작자)이 항상 JavaScript를 작성하고 있지만, JavaScript가 실제로 다른 환경에서 실행된다는 점을 유념하세요:
 
-- All plugin lifecycle methods are run in Node. Therefore, until we support ES Modules in our codebase, plugin source code must be provided as ES modules that can be imported, or CommonJS that can be `require`'d.
-- The theme code is built with Webpack. They can be provided as ESM—following React conventions.
+- 모든 플러그인 수명주기 메서드는 Node에서 실행됩니다. 따라서 우리의 코드베이스에서 ES 모듈을 지원할 때까지, 플러그인 소스 코드는 가져올 수 있는 ES 모듈이나 `require`할 수 있는 CommonJS로 제공되어야 합니다.
+- 테마 코드는 Webpack으로 빌드됩니다. React 규칙을 따르는 ESM으로 제공될 수 있습니다.
 
-Plugin code and theme code never directly import each other: they only communicate through protocols (in our case, through JSON temp files and calls to `addRoute`). A useful mental model is to imagine that the plugins are not written in JavaScript, but in another language like Rust. The only way to interact with plugins for the user is through `docusaurus.config.js`, which itself is run in Node (hence you can use `require` and pass callbacks as plugin options).
+플러그인 코드와 테마 코드는 서로 직접 참조하지 않으며, JSON 임시 파일이나 `addRoute` 호출과 같은 프로토콜을 통해서만 상호작용합니다. 플러그인이 JavaScript가 아닌 Rust 같은 다른 언어로 작성되었다고 가정하면 이해하기 더 쉬울 수 있습니다. 사용자가 플러그인과 상호작용하는 유일한 방법은 Node에서 실행되는 `docusaurus.config.js`를 통해서입니다. 따라서 `require`를 사용하고 콜백을 플러그인 옵션으로 전달할 수 있습니다.
 
-During bundling, the config file itself is serialized and bundled, allowing the theme to access config options like `themeConfig` or `baseUrl` through [`useDocusaurusContext()`](../docusaurus-core.mdx#useDocusaurusContext). However, the `siteConfig` object only contains **serializable values** (values that are preserved after `JSON.stringify()`). Functions, regexes, etc. would be lost on the client side. The `themeConfig` is designed to be entirely serializable.
+번들링 중에는 config 파일 자체가 직렬화되고 번들링되어, 테마가 [`useDocusaurusContext()`](../docusaurus-core.mdx#useDocusaurusContext)를 통해 `themeConfig`나 `baseUrl`과 같은 config 옵션에 접근할 수 있게 합니다. 하지만 `siteConfig` 객체는 **직렬화 가능한 값**(`JSON.stringify()`후에 보존되는 값)만 포함합니다. 함수, 정규식 등은 클라이언트 측에서 손실됩니다. `themeConfig`는 완전히 직렬화 가능하도록 설계되었습니다.

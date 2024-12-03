@@ -3,13 +3,13 @@ sidebar_position: 3
 slug: /api/plugins/@docusaurus/plugin-content-pages
 ---
 
-# 📦 plugin-content-pages
+# 📦 plugin-content-pages {#plugin-content-pages}
 
 import APITable from '@site/src/components/APITable';
 
-The default pages plugin for Docusaurus. The classic template ships with this plugin with default configurations. This plugin provides [creating pages](guides/creating-pages.mdx) functionality.
+Docusaurus의 기본 페이지 플러그인입니다. 클래식 템플릿은 기본 구성으로 이 플러그인과 함께 제공됩니다. 이 플러그인은 [페이지 생성](guides/creating-pages.mdx) 기능을 제공합니다.
 
-## Installation {#installation}
+## 설치 {#installation}
 
 ```bash npm2yarn
 npm install --save @docusaurus/plugin-content-pages
@@ -17,42 +17,42 @@ npm install --save @docusaurus/plugin-content-pages
 
 :::tip
 
-If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+`@docusaurus/preset-classic` 프리셋을 사용하는 경우 이 플러그인을 의존성으로 설치할 필요가 없습니다.
 
-You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+[프리셋 옵션](../../using-plugins.mdx#docusauruspreset-classic)을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::
 
-## Configuration {#configuration}
+## 구성 {#configuration}
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `path` | `string` | `'src/pages'` | Path to data on filesystem relative to site dir. Components in this directory will be automatically converted to pages. |
-| `editUrl` | <code>string \| [EditUrlFn](#EditUrlFn)</code> | `undefined` | **Only for Markdown pages**. Base URL to edit your site. The final URL is computed by `editUrl + relativePostPath`. Using a function allows more nuanced control for each file. Omitting this variable entirely will disable edit links. |
-| `editLocalizedFiles` | `boolean` | `false` | **Only for Markdown pages**. The edit URL will target the localized file, instead of the original unlocalized file. Ignored when `editUrl` is a function. |
-| `routeBasePath` | `string` | `'/'` | URL route for the pages section of your site. **DO NOT** include a trailing slash. |
-| `include` | `string[]` | `['**/*.{js,jsx,ts,tsx,md,mdx}']` | Matching files will be included and processed. |
-| `exclude` | `string[]` | _See example configuration_ | No route will be created for matching files. |
-| `mdxPageComponent` | `string` | `'@theme/MDXPage'` | Component used by each MDX page. |
-| `remarkPlugins` | `[]` | `any[]` | Remark plugins passed to MDX. |
-| `rehypePlugins` | `[]` | `any[]` | Rehype plugins passed to MDX. |
-| `rehypePlugins` | `any[]` | `[]` | Recma plugins passed to MDX. |
-| `beforeDefaultRemarkPlugins` | `any[]` | `[]` | Custom Remark plugins passed to MDX before the default Docusaurus Remark plugins. |
-| `beforeDefaultRehypePlugins` | `any[]` | `[]` | Custom Rehype plugins passed to MDX before the default Docusaurus Rehype plugins. |
-| `showLastUpdateAuthor` | `boolean` | `false` | **Only for Markdown pages**. Whether to display the author who last updated the page. |
-| `showLastUpdateTime` | `boolean` | `false` | **Only for Markdown pages**. Whether to display the last date the page post was updated. This requires access to git history during the build, so will not work correctly with shallow clones (a common default for CI systems). With GitHub `actions/checkout`, use`fetch-depth: 0`. |
+| `path` | `string` | `'src/pages'` | 사이트 디렉토리를 기준으로 한 파일 시스템의 데이터 경로입니다. 이 디렉토리의 컴포넌트는 자동으로 페이지로 변환됩니다. |
+| `editUrl` | <code>string \| [EditUrlFn](#EditUrlFn)</code> | `undefined` | **마크다운 페이지 전용**. 사이트를 편집하기 위한 기본 URL입니다. 최종 URL은 `editUrl + relativePostPath`로 계산됩니다. 함수를 사용하면 각 파일에 대해 더 세밀한 제어가 가능합니다. 이 변수를 완전히 생략하면 편집 링크가 비활성화됩니다. |
+| `editLocalizedFiles` | `boolean` | `false` | **마크다운 페이지 전용**. 편집 URL이 원본 비지역화 파일 대신 지역화된 파일을 대상으로 합니다. `editUrl`이 함수일 때는 무시됩니다. |
+| `routeBasePath` | `string` | `'/'` | 사이트의 페이지 섹션에 대한 URL 경로입니다. 후행 슬래시를 포함하지 **마세요**. |
+| `include` | `string[]` | `['**/*.{js,jsx,ts,tsx,md,mdx}']` | 일치하는 파일이 포함되어 처리됩니다. |
+| `exclude` | `string[]` | _예제 구성 참조_ | 일치하는 파일에 대해서는 라우트가 생성되지 않습니다. |
+| `mdxPageComponent` | `string` | `'@theme/MDXPage'` | 각 MDX 페이지에서 사용하는 컴포넌트입니다. |
+| `remarkPlugins` | `[]` | `any[]` | MDX에 전달되는 Remark 플러그인입니다. |
+| `rehypePlugins` | `[]` | `any[]` | MDX에 전달되는 Rehype 플러그인입니다. |
+| `rehypePlugins` | `any[]` | `[]` | MDX에 전달되는 Recma 플러그인입니다. |
+| `beforeDefaultRemarkPlugins` | `any[]` | `[]` | 기본 Docusaurus Remark 플러그인 전에 MDX에 전달되는 사용자 정의 Remark 플러그인입니다. |
+| `beforeDefaultRehypePlugins` | `any[]` | `[]` | 기본 Docusaurus Rehype 플러그인 전에 MDX에 전달되는 사용자 정의 Rehype 플러그인입니다. |
+| `showLastUpdateAuthor` | `boolean` | `false` | **마크다운 페이지 전용**. 페이지를 마지막으로 업데이트한 작성자를 표시할지 여부입니다. |
+| `showLastUpdateTime` | `boolean` | `false` | **마크다운 페이지 전용**. 페이지 게시물이 마지막으로 업데이트된 날짜를 표시할지 여부입니다. 이는 빌드 중에 git 기록에 대한 액세스가 필요하므로, 얕은 클론(CI 시스템의 일반적인 기본값)에서는 제대로 작동하지 않습니다. GitHub `actions/checkout`에서는 `fetch-depth: 0`을 사용하세요. |
 
 ```mdx-code-block
 </APITable>
 ```
 
-### Types {#types}
+### 타입 {#types}
 
 #### `EditUrlFn` {#EditUrlFn}
 
@@ -65,13 +65,13 @@ type EditUrlFunction = (params: {
 }) => string | undefined;
 ```
 
-### Example configuration {#ex-config}
+### 예제 구성 {#ex-config}
 
-You can configure this plugin through preset options or plugin options.
+프리셋 옵션 또는 플러그인 옵션을 통해 이 플러그인을 구성할 수 있습니다.
 
 :::tip
 
-Most Docusaurus users configure this plugin through the preset options.
+대부분의 Docusaurus 사용자는 프리셋 옵션을 통해 이 플러그인을 구성합니다.
 
 :::
 
@@ -97,62 +97,62 @@ const config = {
 };
 ```
 
-## Markdown front matter {#markdown-front-matter}
+## 마크다운 front matter {#markdown-front-matter}
 
-Markdown pages can use the following Markdown [front matter](../../guides/markdown-features/markdown-features-intro.mdx#front-matter) metadata fields, enclosed by a line `---` on either side.
+마크다운 페이지는 양쪽에 `---` 줄로 둘러싸인 다음과 같은 마크다운 [front matter](../../guides/markdown-features/markdown-features-intro.mdx#front-matter) 메타데이터 필드를 사용할 수 있습니다.
 
-Accepted fields:
+허용되는 필드:
 
 ```mdx-code-block
 <APITable>
 ```
 
-| Name | Type | Default | Description |
+| 이름 | 타입 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `title` | `string` | Markdown title | The blog post title. |
-| `description` | `string` | The first line of Markdown content | The description of your page, which will become the `<meta name="description" content="..."/>` and `<meta property="og:description" content="..."/>` in `<head>`, used by search engines. |
-| `keywords` | `string[]` | `undefined` | Keywords meta tag, which will become the `<meta name="keywords" content="keyword1,keyword2,..."/>` in `<head>`, used by search engines. |
-| `image` | `string` | `undefined` | Cover or thumbnail image that will be used as the `<meta property="og:image" content="..."/>` in the `<head>`, enhancing link previews on social media and messaging platforms. |
-| `wrapperClassName` | `string` |  | Class name to be added to the wrapper element to allow targeting specific page content. |
-| `hide_table_of_contents` | `boolean` | `false` | Whether to hide the table of contents to the right. |
-| `draft` | `boolean` | `false` | Draft pages will only be available during development. |
-| `unlisted` | `boolean` | `false` | Unlisted pages will be available in both development and production. They will be "hidden" in production, not indexed, excluded from sitemaps, and can only be accessed by users having a direct link. |
+| `title` | `string` | Markdown title | 블로그 게시물 제목입니다. |
+| `description` | `string` | 마크다운 내용의 첫 줄 | 페이지에 대한 설명으로, 검색 엔진에서 사용되는 `<head>`의 `<meta name="description" content="..."/>`와 `<meta property="og:description" content="..."/>`가 됩니다. |
+| `keywords` | `string[]` | `undefined` | 검색 엔진에서 사용되는 `<head>`의 `<meta name="keywords" content="keyword1,keyword2,..."/>`가 되는 키워드 메타 태그입니다. |
+| `image` | `string` | `undefined` | 소셜 미디어와 메시징 플랫폼의 링크 미리보기를 향상시키는 `<head>`의 `<meta property="og:image" content="..."/>`로 사용될 커버 또는 썸네일 이미지입니다. |
+| `wrapperClassName` | `string` |  | 특정 페이지 콘텐츠를 대상으로 지정할 수 있도록 래퍼 요소에 추가될 클래스 이름입니다. |
+| `hide_table_of_contents` | `boolean` | `false` | 오른쪽의 목차를 숨길지 여부입니다. |
+| `draft` | `boolean` | `false` | 초안 페이지는 개발 중에만 사용할 수 있습니다. |
+| `unlisted` | `boolean` | `false` | 목록에 없는 페이지는 개발 및 프로덕션 모두에서 사용할 수 있습니다. 프로덕션에서는 "숨겨지고", 색인되지 않으며, 사이트맵에서 제외되고, 직접 링크가 있는 사용자만 액세스할 수 있습니다. |
 
 ```mdx-code-block
 </APITable>
 ```
 
-Example:
+예시:
 
 ```md
 ---
-title: Markdown Page
-description: Markdown page SEO description
+title: 마크다운 페이지
+description: 마크다운 페이지 SEO 설명
 wrapperClassName: markdown-page
 hide_table_of_contents: false
 draft: true
 ---
 
-Markdown page content
+마크다운 페이지 내용
 ```
 
 ## i18n {#i18n}
 
-Read the [i18n introduction](../../i18n/i18n-introduction.mdx) first.
+먼저 [i18n 소개](../../i18n/i18n-introduction.mdx)를 읽어보세요.
 
-### Translation files location {#translation-files-location}
+### 번역 파일 위치 {#translation-files-location}
 
-- **Base path**: `website/i18n/[locale]/docusaurus-plugin-content-pages`
-- **Multi-instance path**: `website/i18n/[locale]/docusaurus-plugin-content-pages-[pluginId]`
-- **JSON files**: extracted with [`docusaurus write-translations`](../../cli.mdx#docusaurus-write-translations-sitedir)
-- **Markdown files**: `website/i18n/[locale]/docusaurus-plugin-content-pages`
+- **기본 경로**: `website/i18n/[locale]/docusaurus-plugin-content-pages`
+- **다중 인스턴스 경로**: `website/i18n/[locale]/docusaurus-plugin-content-pages-[pluginId]`
+- **JSON 파일**: [`docusaurus write-translations`](../../cli.mdx#docusaurus-write-translations-sitedir)로 추출됨
+- **마크다운 파일**: `website/i18n/[locale]/docusaurus-plugin-content-pages`
 
-### Example file-system structure {#example-file-system-structure}
+### 예제 파일 시스템 구조 {#example-file-system-structure}
 
 ```bash
 website/i18n/[locale]/docusaurus-plugin-content-pages
 │
-│ # translations for website/src/pages
+│ # website/src/pages의 번역
 ├── first-markdown-page.md
 └── second-markdown-page.md
 ```

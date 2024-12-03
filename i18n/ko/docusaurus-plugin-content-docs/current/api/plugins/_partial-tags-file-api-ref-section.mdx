@@ -1,45 +1,45 @@
-## Tags File {#tags-file}
+## 태그 파일 {#tags-file}
 
-Use the [`tags` plugin option](#tags) to configure the path of a YAML tags file.
+[`tags` 플러그인 옵션](#tags)을 사용하여 YAML 태그 파일의 경로를 구성하세요.
 
-By convention, the plugin will look for a `tags.yml` file at the root of your content folder(s).
+관례적으로, 플러그인은 콘텐츠 폴더의 루트에서 `tags.yml` 파일을 찾습니다.
 
-This file can contain a list of predefined tags. You can reference these tags by their keys in Markdown files thanks to the [`tags` front matter](#markdown-front-matter).
+이 파일은 미리 정의된 태그 목록을 포함할 수 있습니다. [`tags` 프런트 매터](#markdown-front-matter)를 통해 Markdown 파일에서 이러한 태그를 키로 참조할 수 있습니다.
 
-:::tip Keeping tags consistent
+:::tip 태그 일관성 유지하기
 
-Using a tags file, you can ensure that your tags usage is consistent across your plugin content set. Use the [`onInlineTags: 'throw'`](#onInlineTags) plugin option to enforce this consistency and prevent usage of inline tags declared on the fly.
+태그 파일을 사용하면 플러그인 콘텐츠 세트 전체에서 태그 사용의 일관성을 보장할 수 있습니다. [`onInlineTags: 'throw'`](#onInlineTags) 플러그인 옵션을 사용하여 이 일관성을 강제하고 즉석에서 선언된 인라인 태그의 사용을 방지할 수 있습니다.
 
 :::
 
-### Types {#tags-file-types}
+### 타입 {#tags-file-types}
 
-The YAML content of the provided tags file should respect the following shape:
+제공된 태그 파일의 YAML 내용은 다음과 같은 형태를 따라야 합니다:
 
 ```tsx
 type Tag = {
-  label?: string; // Tag display label
-  permalink?: string; // Tag URL pathname segment
-  description?: string; // Tag description displayed in the tag page
+  label?: string; // 태그 표시 레이블
+  permalink?: string; // 태그 URL 경로명 세그먼트
+  description?: string; // 태그 페이지에 표시되는 태그 설명
 };
 
 type TagsFileInput = Record<string, Partial<Tag> | null>;
 ```
 
-### Example {#tags-file-example}
+### 예시 {#tags-file-example}
 
 ```yml title="tags.yml"
 releases:
-  label: 'Product releases'
+  label: '제품 릴리스'
   permalink: '/product-releases'
-  description: 'Content related to product releases.'
+  description: '제품 릴리스와 관련된 콘텐츠.'
 
-# A partial tag definition is also valid
+# 부분적인 태그 정의도 유효합니다
 announcements:
-  label: 'Announcements'
+  label: '공지사항'
 
-# An empty tag definition is also valid
-# Other attributes will be inferred from the key
+# 빈 태그 정의도 유효합니다
+# 다른 속성들은 키에서 추론됩니다
 emptyTag:
 ```
 
@@ -48,7 +48,7 @@ emptyTag:
 tags: [releases, announcements, emptyTag]
 ---
 
-# Title
+# 제목
 
-Content
+콘텐츠
 ```
